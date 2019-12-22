@@ -1,0 +1,94 @@
+{
+  "name": "mom-art",
+  "version": "1.1.0",
+  "description": "Website for mom with custom architecture",
+  "author": "Dmitry Kazakov",
+  "license": "MIT",
+  "scripts": {
+    "update": "yarn install && yarn add --dev file:./eslint-custom && yarn add --dev file:./types-custom && yarn add --dev file:./webpack-custom && yarn add file:./server",
+    "dev": "better-npm-run -s dev",
+    "dev:ts": "better-npm-run -s dev:ts",
+    "build": "better-npm-run build",
+    "start": "better-npm-run start",
+    "analyze:js": "eslint --ignore-path .formatignore --ext \".js,.ts,.tsx\" -c ./eslint.config.js ./src",
+    "analyze:style": "stylelint --ignore-path .formatignore --config ./stylelint.config.js \"**/*.scss\"",
+    "format:js": "eslint --ignore-path .formatignore --ext \".js,.ts,.tsx\" -c ./eslint.config.js --fix",
+    "format:style": "stylelint --ignore-path .formatignore --config ./stylelint.config.js --fix",
+    "check-types": "tsc --project tsconfig.json --noEmit"
+  },
+  "betterScripts": {
+    "dev": {
+      "command": "better-npm-run -s build",
+      "env": {
+        "START_SERVER_AFTER_BUILD": true
+      }
+    },
+    "dev:ts": {
+      "command": "better-npm-run -s build",
+      "env": {
+        "START_SERVER_AFTER_BUILD": true,
+        "USE_TS_LOADER": true
+      }
+    },
+    "build": {
+      "command": "babel-node --extensions .js,.jsx,.ts,.tsx ./webpack-custom/webpackBuider.ts"
+    },
+    "reload-browser": {
+      "command": "babel-node --extensions .js,.jsx,.ts,.tsx ./server/watchServer.ts"
+    },
+    "start": {
+      "command": "nodemon -q ./build/server.js"
+    }
+  },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 ChromeAndroid versions",
+    "last 2 FirefoxAndroid versions",
+    "last 2 Firefox versions",
+    "Firefox ESR",
+    "last 2 Safari versions",
+    "iOS >= 11",
+    "last 2 Edge versions",
+    "last 2 Opera versions"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "dependencies": {
+    "@sentry/browser": "5.15.5",
+    "axios": "0.19.2",
+    "better-npm-run": "0.1.1",
+    "classnames": "2.2.6",
+    "core-js": "3.6.5",
+    "inferno": "7.4.2",
+    "inferno-compat": "7.4.2",
+    "inferno-create-element": "7.4.2",
+    "inferno-hydrate": "7.4.2",
+    "inferno-mobx": "7.4.2",
+    "inferno-server": "7.4.2",
+    "lodash": "4.17.15",
+    "mobx": "5.15.4",
+    "mobx-react": "6.2.2",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-markdown": "4.3.1",
+    "server": "file:./server"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.8.4",
+    "@babel/core": "7.9.6",
+    "@babel/node": "7.8.7",
+    "@babel/plugin-proposal-class-properties": "7.8.3",
+    "@babel/plugin-proposal-decorators": "7.8.3",
+    "@babel/preset-env": "7.9.6",
+    "@babel/preset-typescript": "7.9.0",
+    "eslint-custom": "file:./eslint-custom",
+    "husky": "4.2.5",
+    "lint-staged": "10.2.2",
+    "types-custom": "file:./types-custom",
+    "typescript": "3.8.3",
+    "webpack-custom": "file:./webpack-custom"
+  }
+}

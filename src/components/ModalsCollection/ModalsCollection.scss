@@ -1,0 +1,33 @@
+@import "mixins.scss";
+
+.modalUploadImage {
+  padding-top: 30px;
+
+  .buttonsLine {
+    display: flex;
+    flex-flow: row nowrap;
+    padding-top: 30px;
+  }
+
+  .removeButton,
+  .saveButton {
+    width: 50%;
+    margin-top: 0;
+
+    &.removeButton {
+      @include button-red;
+
+      margin-right: 10px;
+    }
+
+    &.saveButton {
+      margin-left: 10px;
+    }
+
+    &.fullWidth {
+      margin-left: 0;
+      margin-right: 0;
+      width: 100%;
+    }
+  }
+}

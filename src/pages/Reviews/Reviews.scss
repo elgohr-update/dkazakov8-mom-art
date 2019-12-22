@@ -1,0 +1,9 @@
+@import "mixins.scss";
+
+.wrapper {
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 20px 50px 20px;
+  text-align: justify;
+}

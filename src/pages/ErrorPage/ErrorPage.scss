@@ -1,0 +1,141 @@
+@import "mixins.scss";
+
+$cloud_bg: #cccccc;
+
+.wrapper {
+  position: relative;
+  overflow: hidden;
+  padding: 20px 0 100px;
+
+  .textContainer {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+
+    .errorTitle {
+      font-size: 130px;
+      line-height: 130px;
+      letter-spacing: 15px;
+      padding-bottom: 20px;
+    }
+
+    .errorSubtitle {
+      letter-spacing: 8px;
+      font-size: 36px;
+      line-height: 50px;
+    }
+
+    .errorReason {
+      font-size: 20px;
+      line-height: 28px;
+    }
+  }
+
+  .cloudWrapper {
+    position: absolute;
+    z-index: 0;
+    animation-name: moveclouds;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+
+    &.x0 {
+      top: 40px;
+      margin-left: 250px;
+      animation-duration: 17s;
+    }
+
+    &.x1 {
+      top: 70px;
+      margin-left: 100px;
+      opacity: 0.3;
+      animation-duration: 15s;
+    }
+
+    &.x2 {
+      top: 150px;
+      margin-left: 450px;
+      opacity: 0.6;
+      animation-duration: 15s;
+    }
+
+    &.x3 {
+      top: 70px;
+      margin-left: 250px;
+      opacity: 0.8;
+      animation-duration: 25s;
+    }
+
+    &.x4 {
+      bottom: 0;
+      margin-left: 370px;
+      opacity: 0.75;
+      animation-duration: 30s;
+    }
+
+    &.x5 {
+      top: 300px;
+      margin-left: 200px;
+      opacity: 0.8;
+      animation-duration: 20s;
+    }
+  }
+
+  .cloud {
+    width: 350px;
+    height: 120px;
+    border-radius: 100px;
+    background: $cloud_bg;
+
+    &:after,
+    &:before {
+      content: "";
+      position: absolute;
+      background: $cloud_bg;
+      z-index: 0;
+    }
+
+    &:after {
+      width: 100px;
+      height: 100px;
+      top: -50px;
+      left: 50px;
+      border-radius: 100px;
+    }
+
+    &:before {
+      width: 180px;
+      height: 180px;
+      top: -90px;
+      right: 50px;
+      border-radius: 200px;
+    }
+
+    &.x0 {
+      transform: scale(0.3);
+    }
+    &.x1 {
+      transform: scale(0.3);
+    }
+    &.x2 {
+      transform: scale(0.6);
+    }
+    &.x3 {
+      transform: scale(0.5);
+    }
+    &.x4 {
+      transform: scale(0.75);
+    }
+    &.x5 {
+      transform: scale(0.5);
+    }
+  }
+}
+
+@keyframes moveclouds {
+  0% {
+    left: 100%;
+  }
+  100% {
+    left: -1000px;
+  }
+}

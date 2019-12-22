@@ -1,0 +1,91 @@
+@import "mixins.scss";
+
+.lightbox {
+}
+
+.backdrop {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: $W2alpha;
+  user-select: none;
+  animation-name: fadeIn;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+  animation-duration: 0.3s;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    position: absolute;
+    z-index: 10;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px 70px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .close {
+    position: absolute;
+    z-index: 11;
+    color: $W8;
+    font-size: 30px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    padding: 18px;
+    top: 0;
+    right: 0;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .spinner {
+    position: absolute;
+    z-index: 9;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .arrowLeft,
+  .arrowRight {
+    position: absolute;
+    z-index: 11;
+    color: $W8;
+    top: 50%;
+    font-size: 40px;
+    cursor: pointer;
+    transform: translateY(-50%);
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    padding: 10px;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+  .arrowLeft {
+    left: 0;
+  }
+  .arrowRight {
+    right: 0;
+  }
+
+  &.leaving {
+    animation-name: fadeOut;
+  }
+
+  &.loaded {
+    img {
+      opacity: 1;
+    }
+  }
+}

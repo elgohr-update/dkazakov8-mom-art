@@ -1,0 +1,41 @@
+@import "mixins.scss";
+
+.translations {
+  width: 780px;
+  margin: 0 auto;
+  padding-bottom: 50px;
+
+  .saveButton {
+    @include button-yellow;
+
+    margin-bottom: 20px;
+  }
+
+  .item {
+    margin-top: 20px;
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+    padding: 20px;
+
+    .value {
+      .input {
+        @include inline-top;
+
+        width: 95%;
+        border: 1px solid #ccc;
+        padding: 0 15px;
+        height: 25px;
+        font-size: 14px;
+      }
+
+      .textarea {
+        @include inline-top;
+
+        width: 95%;
+        height: 150px;
+        font-size: 14px;
+        padding: 10px 15px;
+      }
+    }
+  }
+}

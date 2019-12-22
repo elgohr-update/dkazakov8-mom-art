@@ -1,0 +1,98 @@
+@import "constants.scss";
+@import "animations.scss";
+
+@mixin loader($color) {
+  position: relative;
+
+  &:after {
+    display: none;
+    content: "";
+    border: 2px solid $color;
+    border-right-color: transparent;
+    border-radius: 30px;
+    animation: rotating 1s linear infinite;
+    transform-origin: center;
+    vertical-align: top;
+    width: 16px;
+    height: 16px;
+    margin-top: 17px;
+    margin-left: 15px;
+  }
+
+  &.loading {
+    &:after {
+      display: inline-block;
+    }
+  }
+}
+
+@mixin inline-top {
+  display: inline-block;
+  vertical-align: top;
+}
+
+@mixin ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin button-disabled {
+  &:disabled {
+    cursor: default;
+    color: #000 !important;
+    background: $W6 !important;
+  }
+}
+
+@mixin button {
+  @include inline-top;
+
+  color: #fff;
+  white-space: nowrap;
+  padding: 0 20px;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  border-radius: 3px;
+  font-weight: 500;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  outline: none;
+  text-align: center;
+  border: 0;
+  height: 50px;
+  line-height: 50px;
+  font-size: 18px;
+
+  @include button-disabled;
+  @include loader(#fff);
+}
+
+@mixin button-yellow {
+  @include button;
+
+  background: $Y_500;
+  color: #181919 !important;
+
+  &:hover {
+    background: $Y_400;
+  }
+}
+
+@mixin button-red {
+  @include button;
+
+  background: $R_500;
+
+  &:hover {
+    background: $R_400;
+  }
+}
+
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}

@@ -1,0 +1,25 @@
+name: Publish Docker
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get release version
+        id: get_version
+        run: echo ::set-env name=RELEASE_VERSION::${{github.sha}}
+      - name: Build & Publish to Registry
+        uses: elgohr/Publish-Docker-Github-Action@2.14
+        env:
+          GIT_COMMIT: ${{ github.sha }}
+          YANDEX_STORAGE_ACCESS_KEY_ID: ${{ secrets.YANDEX_STORAGE_ACCESS_KEY_ID }}
+          YANDEX_STORAGE_SECRET_ACCESS_KEY: ${{ secrets.YANDEX_STORAGE_SECRET_ACCESS_KEY }}
+          ALLOWED_EMAILS: ${{ secrets.ALLOWED_EMAILS }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+        with:
+          name: dkazakov8/mom-art/momart
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          buildargs: GIT_COMMIT,YANDEX_STORAGE_ACCESS_KEY_ID,YANDEX_STORAGE_SECRET_ACCESS_KEY,ALLOWED_EMAILS,SESSION_SECRET
+          tags: "latest,${{ env.RELEASE_VERSION }}"

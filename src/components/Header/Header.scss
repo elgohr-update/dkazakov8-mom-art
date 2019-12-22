@@ -1,0 +1,114 @@
+@import "mixins.scss";
+
+$separator_size: 4px;
+
+.header {
+  .title {
+    font-size: 30px;
+    line-height: 35px;
+    text-align: center;
+    padding: 50px 0;
+    font-weight: 300;
+  }
+
+  .menu {
+    font-size: 16px;
+    line-height: 16px;
+    text-align: center;
+    padding-bottom: 30px;
+
+    .menuItem {
+      position: relative;
+      display: inline-block;
+      vertical-align: top;
+      color: $W6;
+      transition: color 0.2s;
+      margin-left: 30px + $separator_size;
+      text-transform: uppercase;
+      user-select: none;
+      padding: 5px;
+
+      &:first-child {
+        margin-left: 0;
+
+        &:before {
+          display: none;
+        }
+      }
+
+      &.active,
+      &:hover {
+        color: $B_700;
+
+        &.active {
+          cursor: default;
+        }
+      }
+
+      &:before {
+        content: "";
+        display: block;
+        position: absolute;
+        z-index: 0;
+        top: 10px;
+        left: -15px - $separator_size;
+        width: $separator_size;
+        height: $separator_size;
+        border-radius: 50%;
+        background: $W6;
+      }
+    }
+  }
+
+  .topRightBlock {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    .buttonsBlock {
+      @include inline-top;
+
+      margin-right: 10px;
+    }
+  }
+
+  .themeToggler,
+  .logout {
+    @include inline-top;
+
+    cursor: pointer;
+    padding: 3px;
+    color: $W6;
+    transition: color 0.2s;
+    font-size: 16px;
+
+    &:hover {
+      color: $W8;
+    }
+
+    &.active {
+      cursor: default;
+      color: $Y_500;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .title {
+      font-size: 24px;
+      line-height: 28px;
+      padding: 50px 0 30px 0;
+    }
+
+    .menu {
+      font-size: 14px;
+
+      .menuItem {
+        margin-left: 14px + $separator_size;
+
+        &:before {
+          left: -6px - $separator_size;
+        }
+      }
+    }
+  }
+}
