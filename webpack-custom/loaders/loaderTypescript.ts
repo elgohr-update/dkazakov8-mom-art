@@ -3,6 +3,8 @@
  *
  */
 
-export const loaderTypescript = {
+import webpack from 'webpack';
+
+export const loaderTypescript: webpack.RuleSetLoader = {
   loader: 'ts-loader',
 };

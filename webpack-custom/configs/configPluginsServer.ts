@@ -3,8 +3,13 @@
  *
  */
 
-import { pluginWatchIgnore } from '../plugins/pluginWatchIgnore';
-import { pluginDefineServer } from '../plugins/pluginDefineServer';
-import { pluginCreateExportFiles } from '../plugins/pluginCreateExportFiles';
+import webpack from 'webpack';
 
-export const configPluginsServer = [pluginWatchIgnore, pluginDefineServer, pluginCreateExportFiles];
+import { env } from '../../env';
+import { pluginDefineServer } from '../plugins/pluginDefineServer';
+import { pluginChangedFiles } from '../plugins/pluginChangedFiles';
+
+export const configPluginsServer: webpack.Configuration['plugins'] = [
+  pluginDefineServer,
+  env.LOGS_WATCHED_FILES && pluginChangedFiles('[WEBPACK server]'),
+].filter(Boolean);

@@ -3,9 +3,10 @@
  *
  */
 
+import webpack from 'webpack';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 
-export const pluginCircularDependency = new CircularDependencyPlugin({
+export const pluginCircularDependency: webpack.Plugin = new CircularDependencyPlugin({
   exclude: /node_modules/,
   failOnError: true,
   allowAsyncCycles: false,

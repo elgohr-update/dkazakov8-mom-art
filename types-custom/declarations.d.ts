@@ -1,7 +1,7 @@
 /* eslint-disable init-declarations */
 
 interface Window {
-  INITIAL_DATA: object;
+  INITIAL_DATA: Record<string, any>;
   MEASURES: string;
 }
 
@@ -29,5 +29,3 @@ declare module '*.jpg';
 declare const IS_CLIENT: boolean;
 declare const HOT_RELOAD: boolean;
 declare const SENTRY_URL: string;
-declare const ASSETS_PATH: string;
-declare const GOOGLE_CLIENT_ID: string;

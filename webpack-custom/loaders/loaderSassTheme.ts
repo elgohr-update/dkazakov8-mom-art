@@ -1,5 +1,7 @@
 import path from 'path';
 
-export const loaderSassTheme = {
+import webpack from 'webpack';
+
+export const loaderSassTheme: webpack.RuleSetLoader = {
   loader: path.resolve(__dirname, '../utils/sassVariablesLoader.ts'),
 };

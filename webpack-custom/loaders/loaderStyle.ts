@@ -3,6 +3,8 @@
  *
  */
 
-export const loaderStyle = {
+import webpack from 'webpack';
+
+export const loaderStyle: webpack.RuleSetLoader = {
   loader: 'style-loader',
 };

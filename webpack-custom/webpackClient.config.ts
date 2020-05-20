@@ -1,5 +1,3 @@
-import webpack from 'webpack';
-
 import { configMode } from './configs/configMode';
 import { configNode } from './configs/configNode';
 import { configStats } from './configs/configStats';
@@ -14,7 +12,7 @@ import { configOptimization } from './configs/configOptimization';
 import { configWatchOptions } from './configs/configWatchOptions';
 import { pluginSpeedMeasure } from './plugins/pluginSpeedMeasure';
 
-export default (pluginSpeedMeasure as { wrap: (config: webpack.Configuration) => void }).wrap({
+export default pluginSpeedMeasure.wrap({
   mode: configMode,
   node: configNode,
   entry: configEntry,

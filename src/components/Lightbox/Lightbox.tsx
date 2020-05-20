@@ -1,25 +1,28 @@
 import cn from 'classnames';
 import React from 'react';
+import { observer } from 'mobx-react';
 
-import { connectComponent } from 'utils';
 import { Icon } from 'components/Icon';
 import { Spinner } from 'components/Spinner';
-import { ConnectedProps } from 'commonUnsafe';
+import { StoreContext } from 'stores/StoreRoot';
 
 import styles from './Lightbox.scss';
 
 interface LightboxProps {
-  srcGetter: (obj: object) => string;
+  srcGetter: (obj: Record<string, any>) => string;
 }
 
-@connectComponent
-export class Lightbox extends React.Component<ConnectedProps & LightboxProps> {
+@observer
+export class Lightbox extends React.Component<LightboxProps> {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
   componentDidMount() {
     window.addEventListener('keydown', this.onKeyDown);
   }
 
   componentWillUnmount() {
-    const { store } = this.props;
+    const { store } = this.context;
 
     window.removeEventListener('keydown', this.onKeyDown);
 
@@ -27,7 +30,7 @@ export class Lightbox extends React.Component<ConnectedProps & LightboxProps> {
   }
 
   onKeyDown = event => {
-    const { store } = this.props;
+    const { store } = this.context;
 
     if (store.ui.lightbox.currentIndex === -1) {
       return false;
@@ -56,7 +59,8 @@ export class Lightbox extends React.Component<ConnectedProps & LightboxProps> {
   };
 
   render() {
-    const { srcGetter, store } = this.props;
+    const { store } = this.context;
+    const { srcGetter } = this.props;
     const { currentIndex, elementsArray, isRemoving } = store.ui.lightbox;
 
     const currentItem = elementsArray[currentIndex] || {};

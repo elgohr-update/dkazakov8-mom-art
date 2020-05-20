@@ -7,9 +7,9 @@ import webpack from 'webpack';
 
 // eslint-disable-next-line import/extensions
 import pkg from '../../package.json';
-import { commitHash } from '../utils/commitHash';
+import { env } from '../../env';
 
-export const pluginBanner = new webpack.BannerPlugin({
-  banner: `@env ${commitHash}:${pkg.version} @commit ${commitHash}`,
+export const pluginBanner: webpack.Plugin = new webpack.BannerPlugin({
+  banner: `@env ${env.NODE_ENV}:${pkg.version} @commit ${env.GIT_COMMIT}`,
   entryOnly: false,
 });

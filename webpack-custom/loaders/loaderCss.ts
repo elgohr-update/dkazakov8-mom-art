@@ -3,7 +3,9 @@
  *
  */
 
-export const loaderCss = {
+import webpack from 'webpack';
+
+export const loaderCss: webpack.RuleSetLoader = {
   loader: 'css-loader',
   options: {
     importLoaders: 1,

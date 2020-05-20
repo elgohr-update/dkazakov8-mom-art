@@ -5,14 +5,16 @@ import { env } from '../../env';
 export function getTerserConfig() {
   return new TerserPlugin({
     sourceMap: true,
+    parallel: true,
     terserOptions: {
       warnings: false,
+      keep_fnames: true,
       compress: {
-        drop_console: env.getParamAsBoolean('DROP_CONSOLE'),
+        drop_console: env.DROP_CONSOLE,
       },
       output: {
         beautify: false,
-        comments: false,
+        comments: /^!\s@env/,
       },
     },
   });

@@ -1,15 +1,16 @@
-import { validators } from 'utils/validateObject';
+import { ApiRoute } from '../models/ApiRoute';
 
-const { isPlainObject } = validators;
+type TypeRequestParams = {
+  formData: any;
+};
 
-export const saveAllLocalization = {
+type TypeResponseParams = undefined;
+
+type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
+
+export const saveAllLocalization: TypeApiRoute = {
   name: `saveAllLocalization`,
   url: `/save_all_localization`,
   method: 'POST',
-  params: {
-    formData: isPlainObject,
-  },
-  response: {},
-  mock: {},
   isMocked: false,
 };

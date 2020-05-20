@@ -3,9 +3,10 @@
  *
  */
 
+import webpack from 'webpack';
 import CompressionPlugin from 'compression-webpack-plugin';
 
-export const pluginCompressionGzip = new CompressionPlugin({
+export const pluginCompressionGzip: webpack.Plugin = new CompressionPlugin({
   test: /\.(js|css)$/i,
   cache: true,
   filename: '[path].gz[query]',

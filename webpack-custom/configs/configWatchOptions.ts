@@ -3,8 +3,11 @@
  *
  */
 
+import webpack from 'webpack';
+
 import { env } from '../../env';
 
-export const configWatchOptions = {
-  aggregateTimeout: env.getParamAsNumber('AGGREGATION_TIMEOUT'),
+export const configWatchOptions: webpack.Configuration['watchOptions'] = {
+  aggregateTimeout: env.AGGREGATION_TIMEOUT,
+  ignored: [/\.s?css\.d\.ts$/],
 };

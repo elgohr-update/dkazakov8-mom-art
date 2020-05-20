@@ -10,11 +10,12 @@
     "dev:ts": "better-npm-run -s dev:ts",
     "build": "better-npm-run build",
     "start": "better-npm-run start",
-    "analyze:js": "eslint --ignore-path .formatignore --ext \".js,.ts,.tsx\" -c ./eslint.config.js ./src",
+    "analyze:js": "eslint --ignore-path .formatignore --ext \".js,.ts,.tsx\" -c ./eslint.config.js ./",
     "analyze:style": "stylelint --ignore-path .formatignore --config ./stylelint.config.js \"**/*.scss\"",
     "format:js": "eslint --ignore-path .formatignore --ext \".js,.ts,.tsx\" -c ./eslint.config.js --fix",
     "format:style": "stylelint --ignore-path .formatignore --config ./stylelint.config.js --fix",
-    "check-types": "tsc --project tsconfig.json --noEmit"
+    "check-types": "tsc --project tsconfig.json --noEmit",
+    "gen-store": "tsc --project tsconfig-store.json"
   },
   "betterScripts": {
     "dev": {
@@ -57,7 +58,7 @@
     }
   },
   "dependencies": {
-    "@sentry/browser": "5.15.5",
+    "@sentry/browser": "5.17.0",
     "axios": "0.19.2",
     "better-npm-run": "0.1.1",
     "classnames": "2.2.6",
@@ -71,24 +72,23 @@
     "lodash": "4.17.15",
     "mobx": "5.15.4",
     "mobx-react": "6.2.2",
+    "nodemon": "2.0.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-markdown": "4.3.1",
-    "server": "file:./server"
+    "server": "file:./server",
+    "ts-interface-checker": "0.1.11"
   },
   "devDependencies": {
-    "@babel/cli": "7.8.4",
-    "@babel/core": "7.9.6",
-    "@babel/node": "7.8.7",
-    "@babel/plugin-proposal-class-properties": "7.8.3",
-    "@babel/plugin-proposal-decorators": "7.8.3",
-    "@babel/preset-env": "7.9.6",
-    "@babel/preset-typescript": "7.9.0",
+    "@babel/cli": "7.10.1",
+    "@babel/core": "7.10.2",
+    "@babel/node": "7.10.1",
     "eslint-custom": "file:./eslint-custom",
     "husky": "4.2.5",
-    "lint-staged": "10.2.2",
+    "lint-staged": "10.2.10",
+    "ts-interface-builder": "0.2.2",
     "types-custom": "file:./types-custom",
-    "typescript": "3.8.3",
+    "typescript": "3.9.5",
     "webpack-custom": "file:./webpack-custom"
   }
 }

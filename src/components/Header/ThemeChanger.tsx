@@ -1,23 +1,26 @@
 import _ from 'lodash';
 import cn from 'classnames';
 import React from 'react';
+import { observer } from 'mobx-react';
 
-import { connectComponent } from 'utils';
-import { ConnectedProps } from 'commonUnsafe';
+import { StoreContext } from 'stores/StoreRoot';
 
 import { Icon } from '../Icon';
 
 import styles from './Header.scss';
 
-@connectComponent
-export class ThemeChanger extends React.Component<ConnectedProps> {
+@observer
+export class ThemeChanger extends React.Component {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
   render() {
     const {
       store,
       store: {
         ui: { currentTheme, themesList },
       },
-    } = this.props;
+    } = this.context;
 
     return (
       <div className={styles.buttonsBlock}>

@@ -1,23 +1,27 @@
-import ReactMarkdown from 'react-markdown';
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 
-import { connectComponent } from 'utils';
 import { Header } from 'components/Header';
-import { ConnectedProps } from 'commonUnsafe';
-import { StoreRoot } from 'stores/StoreRoot';
+import { StoreContext } from 'stores/StoreRoot';
 
 import styles from './Reviews.scss';
 import { messages } from './messages';
 
-@connectComponent
-export class Reviews extends React.Component<ConnectedProps> {
-  static meta = (store: StoreRoot) => ({
-    title: store.getLn(messages.metaTitle),
-    description: store.getLn(messages.metaDescription),
-  });
+export class Reviews extends React.Component {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
+  UNSAFE_componentWillMount() {
+    const { store } = this.context;
+
+    store.router.metaData = {
+      title: store.getLn(messages.metaTitle),
+      description: store.getLn(messages.metaDescription),
+    };
+  }
 
   render() {
-    const { store } = this.props;
+    const { store } = this.context;
 
     return (
       <>

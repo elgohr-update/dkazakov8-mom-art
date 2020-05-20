@@ -1,12 +1,15 @@
 import _ from 'lodash';
 import React from 'react';
+import { observer } from 'mobx-react';
 
-import { connectComponent } from 'utils';
 import { routeComponents } from 'routeComponents';
-import { ConnectedProps } from 'commonUnsafe';
+import { StoreContext } from 'stores/StoreRoot';
 
-@connectComponent
-export class Router extends React.Component<ConnectedProps> {
+@observer
+export class Router extends React.Component {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
   render() {
     const {
       store: {
@@ -14,7 +17,7 @@ export class Router extends React.Component<ConnectedProps> {
           currentRoute: { name },
         },
       },
-    } = this.props;
+    } = this.context;
 
     const Component = _.get(routeComponents, `${name}.Component`);
 

@@ -1,12 +1,13 @@
 import _ from 'lodash';
 
-import { apiRoutes } from 'const';
-import { handleApiError, validateBodyParams } from 'serverUtils';
+import * as apiRoutes from 'api';
+import { handleApiError } from 'serverUtils';
 import * as routeControllers from 'routeControllers';
+import { validateRequestParams } from 'actions/request';
 
 export function handleApiRoutes(app) {
   // Automatically create route handlers for all controllers exported by routeControllers
-  _.values(apiRoutes).forEach(routeConfig => {
+  _.values({ ...apiRoutes }).forEach(routeConfig => {
     const controllerFn = routeControllers[`${routeConfig.name}Controller`];
     const method = routeConfig.method.toLowerCase();
 
@@ -15,8 +16,10 @@ export function handleApiRoutes(app) {
     }
 
     app[method](routeConfig.url, (req, res) => {
+      const params = JSON.stringify(req.body) === '{}' ? undefined : req.body;
+
       return Promise.resolve()
-        .then(() => validateBodyParams(routeConfig, req.body))
+        .then(() => validateRequestParams({ route: routeConfig, params }))
         .then(() => controllerFn({ req, res }))
         .then(data => res.send(data))
         .catch(error => handleApiError(error, res));

@@ -1,10 +1,10 @@
 import React from 'react';
 
+import { TypeGalleryItem } from 'models';
 import { Router } from 'components/Router';
 import { Modals } from 'components/Modals';
 import { Lightbox } from 'components/Lightbox';
 import { Notifications } from 'components/Notifications';
-import { GalleryItemType } from 'stores/StoreGallery';
 
 export class App extends React.Component {
   render() {
@@ -13,7 +13,7 @@ export class App extends React.Component {
         <Notifications />
         <Router />
         <Modals />
-        <Lightbox srcGetter={(elem: GalleryItemType): string => elem.sources.big.src} />
+        <Lightbox srcGetter={(elem: TypeGalleryItem): string => elem.sources.big.src} />
       </>
     );
   }

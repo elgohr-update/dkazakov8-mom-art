@@ -7,8 +7,8 @@ import webpack from 'webpack';
 import { env } from '../../env';
 import { getTerserConfig } from '../utils/getTerserConfig';
 
-export const configOptimization: webpack.Options.Optimization = {
-  minimize: env.getParamAsBoolean('MINIMIZE_CLIENT'),
+export const configOptimization: webpack.Configuration['optimization'] = {
+  minimize: env.MINIMIZE_CLIENT,
   splitChunks: {
     cacheGroups: {
       polyfills: {

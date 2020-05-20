@@ -1,25 +1,25 @@
 import React from 'react';
 
-import { connectComponent } from 'utils';
-import { ConnectedProps } from 'commonUnsafe';
-import { GalleryItemType } from 'stores/StoreGallery';
+import { TypeGalleryItem } from 'models';
+import { StoreContext } from 'stores/StoreRoot';
 
 import styles from './Gallery.scss';
 
 interface GalleryItemProps {
-  style: object;
-  onClick: (event?: Event) => void;
-  imgData: GalleryItemType;
+  style: Record<string, any>;
+  onClick: (event?: React.MouseEvent) => void;
+  imgData: TypeGalleryItem;
 }
 
-@connectComponent
-export class GalleryItem extends React.Component<ConnectedProps & GalleryItemProps> {
+export class GalleryItem extends React.Component<GalleryItemProps> {
+  declare context: React.ContextType<typeof StoreContext>;
+
   render() {
     const {
       store: {
         ui: { currentLanguage },
       },
-    } = this.props;
+    } = this.context;
     const { imgData, style, onClick } = this.props;
     const title = imgData.title[currentLanguage];
 

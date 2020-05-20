@@ -5,8 +5,10 @@
 
 import path from 'path';
 
-import { paths } from '../utils/paths';
+import webpack from 'webpack';
 
-export const configEntryServer = {
+import { paths } from '../../paths';
+
+export const configEntryServer: webpack.Configuration['entry'] = {
   server: path.resolve(paths.serverPath, 'server.ts'),
 };

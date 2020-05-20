@@ -1,7 +1,8 @@
 import _ from 'lodash';
 
 import { routes } from 'routes';
-import { RouteType, RoutesType, Express } from 'common';
+import { Express } from 'common';
+import { RouteType, RoutesType } from 'models';
 
 function isDynamic(param: string) {
   return param.indexOf(':') === 0;
@@ -81,7 +82,7 @@ function findRouteByPathname({ pathname }: { pathname: string }) {
   return foundRoute;
 }
 
-function setResponseStatus(params: { res: Express.Response; route: RouteType }) {
+function setResponseStatus(params: { res: Express['Response']; route: RouteType }) {
   const { res, route } = params;
 
   if (res && route.name === routes.error404.name) {

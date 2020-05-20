@@ -1,6 +1,5 @@
 module.exports = {
   presets: [
-    ['@babel/preset-typescript', { isTSX: true, allExtensions: true }],
     [
       '@babel/preset-env',
       {
@@ -9,5 +8,13 @@ module.exports = {
         },
       },
     ],
+  ],
+  plugins: [
+    [
+      '@babel/plugin-transform-typescript',
+      { isTSX: true, allExtensions: true, allowDeclareFields: true },
+    ],
+    ['@babel/plugin-proposal-decorators', { legacy: true }],
+    ['@babel/plugin-proposal-class-properties', { loose: true }],
   ],
 };

@@ -2,13 +2,14 @@ import _ from 'lodash';
 import React from 'react';
 import cn from 'classnames';
 import { runInAction } from 'mobx';
+import { observer } from 'mobx-react';
 
 import { system } from 'const';
-import { generateInputId, connectComponent } from 'utils';
+import { generateInputId } from 'utils';
 import { Label } from 'components/Form/elements/Label';
 import { Errors } from 'components/Form/elements/Errors';
 import { FieldValidatorType, MessageObjectType } from 'common';
-import { ConnectedProps } from 'commonUnsafe';
+import { StoreContext } from 'stores/StoreRoot';
 
 import styles from '../Form.scss';
 
@@ -27,11 +28,14 @@ export interface TextProps {
   validators?: FieldValidatorType[];
 }
 
-@connectComponent
-export class Text extends React.Component<ConnectedProps & TextProps> {
+@observer
+export class Text extends React.Component<TextProps> {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
   get params() {
+    const { store } = this.context;
     const {
-      store,
       type = 'text',
       label,
       tabIndex,

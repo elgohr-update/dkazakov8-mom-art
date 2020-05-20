@@ -1,23 +1,20 @@
-import { validators } from 'utils/validateObject';
+import { ApiRoute } from '../models/ApiRoute';
 
-const { isString, isNumber } = validators;
+type TypeRequestParams = {
+  email: string;
+  password: string;
+};
 
-export const auth = {
+type TypeResponseParams = {
+  email: string;
+  sessionExpires: number;
+};
+
+type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
+
+export const auth: TypeApiRoute = {
   name: `auth`,
   url: `/auth`,
   method: 'POST',
-  params: {
-    email: isString,
-    password: isString,
-  },
-  response: {
-    email: isString,
-    sessionExpires: isNumber,
-  },
-  mock: {
-    name: 'Test user',
-    email: 'user@domain.com',
-    sessionExpires: Date.now(),
-  },
   isMocked: false,
 };

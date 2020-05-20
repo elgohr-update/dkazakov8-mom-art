@@ -1,20 +1,22 @@
-import { validators } from 'utils/validateObject';
+import { ApiRoute } from '../models/ApiRoute';
+import { TypeGalleryItems } from '../models/GalleryItems';
 
-const { isString, isNumber, isArray } = validators;
+type TypeRequestParams = {
+  id: string;
+  order: string;
+  title_ru: string;
+  title_en: string;
+};
 
-export const updateGalleryItem = {
+type TypeResponseParams = {
+  images: TypeGalleryItems;
+};
+
+type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
+
+export const updateGalleryItem: TypeApiRoute = {
   name: `updateGalleryItem`,
   url: `/update_gallery_item`,
   method: 'POST',
-  params: {
-    id: isString,
-    order: isNumber,
-    title_ru: isString,
-    title_en: isString,
-  },
-  response: {
-    images: isArray,
-  },
-  mock: {},
   isMocked: false,
 };

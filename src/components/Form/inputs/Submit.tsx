@@ -1,10 +1,10 @@
 import cn from 'classnames';
 import _ from 'lodash';
 import React from 'react';
+import { observer } from 'mobx-react';
 
-import { connectComponent } from 'utils';
 import { MessageObjectType } from 'common';
-import { ConnectedProps } from 'commonUnsafe';
+import { StoreContext } from 'stores/StoreRoot';
 
 import styles from '../Form.scss';
 
@@ -17,10 +17,14 @@ export interface SubmitProps {
   className?: string;
 }
 
-@connectComponent
-export class Submit extends React.Component<ConnectedProps & SubmitProps> {
+@observer
+export class Submit extends React.Component<SubmitProps> {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
   get params() {
-    const { store, label, tabIndex, disabled, className, loadingByPath } = this.props;
+    const { store } = this.context;
+    const { label, tabIndex, disabled, className, loadingByPath } = this.props;
 
     return {
       label,

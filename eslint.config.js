@@ -42,6 +42,11 @@ module.exports = {
     Component: true,
     IS_CLIENT: true,
     SENTRY_URL: true,
-    GOOGLE_CLIENT_ID: true,
+  },
+  settings: {
+    react: {
+      pragma: 'React',
+      version: 'detect',
+    },
   },
 };

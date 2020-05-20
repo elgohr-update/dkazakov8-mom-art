@@ -1,9 +1,10 @@
 import cn from 'classnames';
 import React from 'react';
+import { observer } from 'mobx-react';
 
-import { generateArray, connectComponent } from 'utils';
+import { generateArray } from 'utils';
 import { Icon } from 'components/Icon';
-import { ConnectedProps } from 'commonUnsafe';
+import { StoreContext } from 'stores/StoreRoot';
 
 import styles from './Notifications.scss';
 
@@ -38,12 +39,16 @@ interface NotificationProps {
  *
  */
 
-@connectComponent
-class Notification extends React.Component<ConnectedProps & NotificationProps> {
+@observer
+class Notification extends React.Component<NotificationProps> {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
   ref = null;
 
   componentDidMount() {
-    const { store, id } = this.props;
+    const { store } = this.context;
+    const { id } = this.props;
     const { notifications } = store.ui;
 
     const notificationObservable = notifications.find(n => id === n.id);
@@ -58,7 +63,8 @@ class Notification extends React.Component<ConnectedProps & NotificationProps> {
   }
 
   render() {
-    const { store, id, status, type, height, message, prevElementsHeight } = this.props;
+    const { store } = this.context;
+    const { id, status, type, height, message, prevElementsHeight } = this.props;
 
     const className = cn({
       [styles.notification]: true,
@@ -87,14 +93,17 @@ class Notification extends React.Component<ConnectedProps & NotificationProps> {
   }
 }
 
-@connectComponent
-export class Notifications extends React.Component<ConnectedProps> {
+@observer
+export class Notifications extends React.Component {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
   render() {
     const {
       store: {
         ui: { notifications },
       },
-    } = this.props;
+    } = this.context;
 
     return (
       <div className={styles.notifications}>

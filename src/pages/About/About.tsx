@@ -1,25 +1,29 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
-import { StoreRoot } from 'stores/StoreRoot';
 import { Icon } from 'components/Icon';
 import { Header } from 'components/Header';
 import { images } from 'assets/images';
-import { connectComponent } from 'utils';
-import { ConnectedProps } from 'commonUnsafe';
+import { StoreContext } from 'stores/StoreRoot';
 
 import styles from './About.scss';
 import { messages } from './messages';
 
-@connectComponent
-export class About extends React.Component<ConnectedProps> {
-  static meta = (store: StoreRoot) => ({
-    title: store.getLn(messages.metaTitle),
-    description: store.getLn(messages.metaDescription),
-  });
+export class About extends React.Component {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
+  UNSAFE_componentWillMount() {
+    const { store } = this.context;
+
+    store.router.metaData = {
+      title: store.getLn(messages.metaTitle),
+      description: store.getLn(messages.metaDescription),
+    };
+  }
 
   render() {
-    const { store } = this.props;
+    const { store } = this.context;
 
     return (
       <>

@@ -1,6 +1,6 @@
 import { generateId } from 'utils';
 import { NotificationType } from 'common';
-import { ActionFirstParams } from 'commonUnsafe';
+import { ActionFirstParams } from 'models';
 
 export function raiseNotification({ store }: ActionFirstParams, params: NotificationType) {
   const { type, message, delay = 0 } = params;

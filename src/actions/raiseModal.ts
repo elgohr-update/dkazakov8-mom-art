@@ -1,8 +1,11 @@
 import { generateId } from 'utils';
 import { ModalType } from 'common';
-import { ActionFirstParams } from 'commonUnsafe';
+import { ActionFirstParams } from 'models';
 
-export function raiseModal({ store }: ActionFirstParams, params: { name: string; data?: object }) {
+export function raiseModal(
+  { store }: ActionFirstParams,
+  params: { name: string; data?: Record<string, any> }
+) {
   const { name, data } = params;
   const { modals } = store.ui;
 

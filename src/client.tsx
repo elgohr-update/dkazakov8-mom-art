@@ -1,13 +1,12 @@
 import './styles/global.scss';
 
-import { hydrate } from 'react-dom';
-import { Provider } from 'mobx-react';
 import React from 'react';
+import { hydrate } from 'react-dom';
 
-import { measureClient, isomorphPolyfills } from 'utils';
 import { App } from 'components/App';
-import { StoreRoot } from 'stores/StoreRoot';
+import { StoreRoot, StoreContext } from 'stores/StoreRoot';
 import { initAutorun } from 'autorun';
+import { measureClient, isomorphPolyfills } from 'utils';
 
 if (performance) {
   performance.mark('headParsed-appScriptEvalStart');
@@ -16,7 +15,7 @@ if (performance) {
 
 isomorphPolyfills();
 
-let store: StoreRoot = null;
+let store: StoreRoot;
 
 Promise.resolve()
   .then(measureClient('createStore'))
@@ -29,11 +28,11 @@ Promise.resolve()
 
   .then(() => initAutorun(store))
 
-  .then(() =>
-    hydrate(
-      <Provider store={store}>
+  .then(() => {
+    return hydrate(
+      <StoreContext.Provider value={{ store }}>
         <App />
-      </Provider>,
+      </StoreContext.Provider>,
       document.getElementById('app')
-    )
-  );
+    );
+  });

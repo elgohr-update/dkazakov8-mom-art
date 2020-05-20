@@ -1,5 +1,5 @@
 import { setThemeToHTML } from 'utils';
-import { ActionFirstParams } from 'commonUnsafe';
+import { ActionFirstParams } from 'models';
 import themes from 'styles/themes.scss';
 
 export function setTheme({ store }: ActionFirstParams, params: { theme: string }) {

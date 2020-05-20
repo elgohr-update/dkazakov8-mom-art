@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import React from 'react';
 import { observable, action } from 'mobx';
 
 import { getLn } from 'utils';
@@ -13,7 +14,7 @@ import { StoreAdmin } from './StoreAdmin';
 import { StoreRouter } from './StoreRouter';
 import { StoreGallery } from './StoreGallery';
 
-export type StoreConstructorParams = { req?: Express.Request; res?: Express.Response };
+export type StoreConstructorParams = { req?: Express['Request']; res?: Express['Response'] };
 
 type Actions = {
   api: {
@@ -35,10 +36,6 @@ type Executions = {
   };
 };
 
-/**
- * @name StoreRoot
- * @param actions {actions}
- */
 export class StoreRoot {
   actions: Actions;
   executions: Executions;
@@ -50,7 +47,7 @@ export class StoreRoot {
   gallery: StoreGallery;
 
   getLn: SkipFirstArgType<typeof getLn>;
-  getters: {};
+  getters: Record<string, any>;
 
   constructor(params: StoreConstructorParams) {
     const store = this;
@@ -60,31 +57,28 @@ export class StoreRoot {
       api: observable(_.mapValues(api, _.stubFalse)),
     };
 
-    const boundActions = _.mapValues(actions, fn => action(fn));
+    const mobxActions = _.mapValues(actions, fn => action(fn));
 
     store.actions = {
-      common: _.mapValues(boundActions, (fn, fnName) =>
-        action((...args: any[]) =>
-          Promise.resolve()
-            .then(() => (store.executions.common[fnName] = true))
-            // @ts-ignore
-            .then(() => fn({ store, ...params }, ...args))
-            .then(data => {
-              store.executions.common[fnName] = false;
-              return data;
-            })
-        )
+      // @ts-ignore
+      common: _.mapValues(mobxActions, (fn, fnName) => (...args: any[]) =>
+        Promise.resolve()
+          .then(() => (store.executions.common[fnName] = true))
+          // @ts-ignore
+          .then(() => fn({ store, ...params }, ...args))
+          .then((data: ReturnType<typeof fn>) => {
+            store.executions.common[fnName] = false;
+            return data;
+          })
       ),
-      api: _.mapValues(api, (apiConfig, apiName) =>
-        action((...args: any[]) =>
-          Promise.resolve()
-            .then(() => (store.executions.api[apiName] = true))
-            .then(() => store.actions.common.request(apiConfig, ...args))
-            .then(data => {
-              store.executions.api[apiName] = false;
-              return data;
-            })
-        )
+      api: _.mapValues(api, (apiConfig, apiName) => (requestParams: any) =>
+        Promise.resolve()
+          .then(() => (store.executions.api[apiName] = true))
+          .then(() => store.actions.common.request(apiConfig, requestParams))
+          .then(data => {
+            store.executions.api[apiName] = false;
+            return data;
+          })
       ),
     };
 
@@ -109,3 +103,6 @@ export class StoreRoot {
     });
   }
 }
+
+export const StoreContext = React.createContext<{ store: StoreRoot }>(undefined);
+StoreContext.displayName = 'StoreContext';

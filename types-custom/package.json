@@ -5,15 +5,24 @@
   "author": "Dmitry Kazakov",
   "license": "MIT",
   "dependencies": {
-    "@types/ws": "7.2.4",
-    "@types/webpack-bundle-analyzer": "2.13.3",
-    "@types/webpack": "4.41.12",
-    "@types/node": "13.13.4",
+    "@types/ws": "7.2.5",
+    "@types/webpack-bundle-analyzer": "3.8.0",
+    "@types/webpack": "4.41.17",
+    "@types/node": "14.0.13",
     "@types/express": "4.17.6",
-    "@types/react": "16.9.34",
-    "@types/react-dom": "16.9.7",
-    "@types/gapi.auth2": "0.0.51",
+    "@types/eslint": "7.2.0",
+    "@types/react": "16.9.36",
+    "@types/react-dom": "16.9.8",
     "@types/classnames": "2.2.10",
-    "@types/lodash": "4.14.150"
+    "@types/terser-webpack-plugin": "3.0.0",
+    "@types/circular-dependency-plugin": "5.0.1",
+    "@types/mini-css-extract-plugin": "0.9.1",
+    "@types/lodash-webpack-plugin": "0.11.4",
+    "@types/redis": "2.8.22",
+    "@types/connect-redis": "0.0.14",
+    "@types/helmet": "0.0.47",
+    "@types/multer": "1.4.3",
+    "@types/sharp": "0.25.0",
+    "@types/lodash": "4.14.155"
   }
 }

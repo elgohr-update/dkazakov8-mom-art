@@ -1,19 +1,17 @@
-import { validators } from 'utils/validateObject';
+import { ApiRoute } from '../models/ApiRoute';
+import { TypeGalleryItems } from '../models/GalleryItems';
 
-const { isString, isArrayShape, isPlainObject } = validators;
+type TypeRequestParams = undefined;
 
-export const getImages = {
+type TypeResponseParams = {
+  images: TypeGalleryItems;
+};
+
+type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
+
+export const getImages: TypeApiRoute = {
   name: `getImages`,
   url: `/get_images`,
   method: 'POST',
-  params: {},
-  response: {
-    images: isArrayShape({
-      id: isString,
-      title: isPlainObject,
-      sources: isPlainObject,
-    }),
-  },
-  mock: {},
   isMocked: false,
 };

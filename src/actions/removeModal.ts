@@ -1,5 +1,5 @@
 import { system } from 'const';
-import { ActionFirstParams } from 'commonUnsafe';
+import { ActionFirstParams } from 'models';
 
 export function removeModal({ store }: ActionFirstParams, params: { id: string }) {
   const { id } = params;

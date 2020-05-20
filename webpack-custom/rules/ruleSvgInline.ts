@@ -3,7 +3,11 @@
  *
  */
 
-export const ruleSvgInline = {
+import webpack from 'webpack';
+
+import { loaderSvgInline } from '../loaders/loaderSvgInline';
+
+export const ruleSvgInline: webpack.Rule = {
   test: /\.svg$/,
-  use: 'svg-inline-loader',
+  use: [loaderSvgInline],
 };

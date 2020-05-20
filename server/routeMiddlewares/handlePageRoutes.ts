@@ -7,6 +7,7 @@ import {
   injectMetaTags,
   injectMeasures,
   injectAppMarkup,
+  injectCompressed,
   injectCSPProtection,
   injectBrowserReload,
   injectThemeProperties,
@@ -42,12 +43,11 @@ export function handlePageRoutes(app) {
 
       .then(measure.wrap('injectOtherData'))
       .then(modTemplate => injectMetaTags(modTemplate, store))
+      .then(modTemplate => injectCompressed(req, modTemplate))
       .then(modTemplate => injectCSPProtection(modTemplate, res))
       .then(modTemplate => injectThemeProperties(modTemplate, store))
       .then(modTemplate => injectInitialStoreData(modTemplate, store))
-      .then(modTemplate =>
-        env.getParamAsBoolean('HOT_RELOAD') ? injectBrowserReload(modTemplate) : modTemplate
-      )
+      .then(modTemplate => (env.HOT_RELOAD ? injectBrowserReload(modTemplate) : modTemplate))
       .then(measure.wrap('injectOtherData'))
 
       .then(modTemplate => injectMeasures(modTemplate, { server: measure.getMeasures() }))

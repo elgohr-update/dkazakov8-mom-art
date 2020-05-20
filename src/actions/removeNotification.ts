@@ -1,7 +1,7 @@
 import { system } from 'const';
-import { ActionFirstParams } from 'commonUnsafe';
+import { ActionFirstParams } from 'models';
 
-export function removeNotification({ store }: ActionFirstParams, params: { id: string }) {
+export function removeNotification({ store }: ActionFirstParams, params) {
   const { id } = params;
 
   const { notifications } = store.ui;

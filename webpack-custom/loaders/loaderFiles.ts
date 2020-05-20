@@ -3,7 +3,9 @@
  *
  */
 
-export const loaderFiles = {
+import webpack from 'webpack';
+
+export const loaderFiles: webpack.RuleSetLoader = {
   loader: 'file-loader',
   options: {
     name: '[contenthash].[ext]',

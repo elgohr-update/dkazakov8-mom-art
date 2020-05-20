@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import React from 'react';
+import { observer } from 'mobx-react';
 
-import { connectComponent, scrollToFirstElement } from 'utils';
-import { ConnectedProps } from 'commonUnsafe';
+import { scrollToFirstElement, getNotValidFieldsIds } from 'utils';
+import { StoreContext } from 'stores/StoreRoot';
 
 import { Text } from './inputs/Text';
 import { Submit } from './inputs/Submit';
@@ -11,13 +12,7 @@ import { Textarea } from './inputs/Textarea';
 interface FormProps {
   storePath: string;
   className?: string;
-  onSubmit?: (formData: object, event: Event) => void;
-}
-
-function getNotValidFieldsIds({ formConfig }) {
-  return _.values(formConfig)
-    .filter(fieldData => !fieldData.isValidFn())
-    .map(fieldData => fieldData.id);
+  onSubmit?: (formData: Record<string, any>, event: Event) => void;
 }
 
 const inputsCollection = {
@@ -26,8 +21,11 @@ const inputsCollection = {
   Textarea,
 };
 
-@connectComponent
-export class Form extends React.Component<ConnectedProps & FormProps> {
+@observer
+export class Form extends React.Component<FormProps> {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
   static Input = inputsCollection;
   static getNotValidFieldsIds = getNotValidFieldsIds;
 
@@ -57,7 +55,8 @@ export class Form extends React.Component<ConnectedProps & FormProps> {
   handleFormSubmit = event => {
     event.preventDefault();
 
-    const { store, storePath, onSubmit } = this.props;
+    const { store } = this.context;
+    const { storePath, onSubmit } = this.props;
 
     const formConfig = _.get(store, storePath);
     const notValidFieldsIds = getNotValidFieldsIds({ formConfig });

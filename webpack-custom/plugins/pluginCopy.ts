@@ -5,13 +5,16 @@
 
 import path from 'path';
 
+import webpack from 'webpack';
 import CopyPlugin from 'copy-webpack-plugin';
 
-import { paths } from '../utils/paths';
+import { paths } from '../../paths';
 
-export const pluginCopy = new CopyPlugin([
-  {
-    from: path.resolve(paths.templatesPath, 'loaderio-c4b9047acdff0b82b9417f989b45a857.txt'),
-    to: path.resolve(paths.buildPath, 'loaderio-c4b9047acdff0b82b9417f989b45a857.txt'),
-  },
-]);
+export const pluginCopy: webpack.Plugin = new CopyPlugin({
+  patterns: [
+    {
+      from: path.resolve(paths.templatesPath, 'loaderio-c4b9047acdff0b82b9417f989b45a857.txt'),
+      to: path.resolve(paths.buildPath, 'loaderio-c4b9047acdff0b82b9417f989b45a857.txt'),
+    },
+  ],
+});

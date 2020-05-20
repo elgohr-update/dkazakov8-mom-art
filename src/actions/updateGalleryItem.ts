@@ -1,4 +1,4 @@
-import { ActionFirstParams } from 'commonUnsafe';
+import { ActionFirstParams } from 'models';
 import { notificationTypes } from 'const';
 
 import { messages } from './messages';

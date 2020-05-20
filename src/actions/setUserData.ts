@@ -1,4 +1,4 @@
-import { ActionFirstParams } from 'commonUnsafe';
+import { ActionFirstParams } from 'models';
 
 export function setUserData({ store }: ActionFirstParams, { email, sessionExpires }) {
   store.user.email = email;

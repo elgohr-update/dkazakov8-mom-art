@@ -1,15 +1,16 @@
-import { validators } from 'utils/validateObject';
+import { ApiRoute } from '../models/ApiRoute';
 
-const { isPlainObject } = validators;
+type TypeRequestParams = undefined;
 
-export const getAllLocalization = {
+type TypeResponseParams = {
+  translations: any;
+};
+
+type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
+
+export const getAllLocalization: TypeApiRoute = {
   name: `getAllLocalization`,
   url: `/get_all_localization`,
   method: 'POST',
-  params: undefined,
-  response: {
-    translations: isPlainObject,
-  },
-  mock: {},
   isMocked: false,
 };

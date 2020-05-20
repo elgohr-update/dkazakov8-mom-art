@@ -1,12 +1,11 @@
 import React from 'react';
 import { observable } from 'mobx';
 
-import { connectComponent, generateArray } from 'utils';
+import { generateArray } from 'utils';
 import { Header } from 'components/Header';
 import { ModalsCollection } from 'components/ModalsCollection';
-import { ConnectedProps } from 'commonUnsafe';
-import { GalleryItemType } from 'stores/StoreGallery';
-import { StoreRoot } from 'stores/StoreRoot';
+import { TypeGalleryItem } from 'models';
+import { StoreContext } from 'stores/StoreRoot';
 
 import { GalleryItem } from './GalleryItem';
 import styles from './Gallery.scss';
@@ -16,12 +15,18 @@ const ITEMS_SPACER = 10;
 const GALLERY_PADDING = 20;
 const GALLERY_MAX_WIDTH = 900;
 
-@connectComponent
-export class Gallery extends React.Component<ConnectedProps> {
-  static meta = (store: StoreRoot) => ({
-    title: store.getLn(messages.metaTitle),
-    description: store.getLn(messages.metaDescription),
-  });
+export class Gallery extends React.Component {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
+  UNSAFE_componentWillMount() {
+    const { store } = this.context;
+
+    store.router.metaData = {
+      title: store.getLn(messages.metaTitle),
+      description: store.getLn(messages.metaDescription),
+    };
+  }
 
   innerState = observable({ mounted: false });
 
@@ -52,7 +57,7 @@ export class Gallery extends React.Component<ConnectedProps> {
     return style;
   };
 
-  getItemHeight = (itemData: GalleryItemType) => {
+  getItemHeight = (itemData: TypeGalleryItem) => {
     const { itemWidth } = this;
     const { width, height } = itemData.sources.small;
 
@@ -65,7 +70,7 @@ export class Gallery extends React.Component<ConnectedProps> {
       store: {
         gallery: { items },
       },
-    } = this.props;
+    } = this.context;
 
     const aboveImgIndex = index - itemsInRow;
     const aboveImgData = items[aboveImgIndex];
@@ -96,7 +101,7 @@ export class Gallery extends React.Component<ConnectedProps> {
       store: {
         gallery: { items },
       },
-    } = this.props;
+    } = this.context;
 
     return generateArray(itemsInRow).map(index => {
       const itemIndex = items.length - 1 - index;
@@ -123,7 +128,7 @@ export class Gallery extends React.Component<ConnectedProps> {
       store: {
         ui: { screen },
       },
-    } = this.props;
+    } = this.context;
 
     let galleryWidth = screen.width - GALLERY_PADDING * 2;
     galleryWidth = Math.min(GALLERY_MAX_WIDTH, galleryWidth);
@@ -145,14 +150,14 @@ export class Gallery extends React.Component<ConnectedProps> {
     return Math.max(...columnsHeight);
   }
 
-  handleItemClick = (index: number) => (event: Event) => {
+  handleItemClick = (index: number) => (event: React.MouseEvent) => {
     const {
       store,
       store: {
         gallery: { items },
         user: { isLoggedIn },
       },
-    } = this.props;
+    } = this.context;
 
     event.preventDefault();
 
@@ -173,7 +178,7 @@ export class Gallery extends React.Component<ConnectedProps> {
         gallery: { items },
         user: { isLoggedIn },
       },
-    } = this.props;
+    } = this.context;
 
     return (
       <>

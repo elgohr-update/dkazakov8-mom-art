@@ -1,7 +1,3 @@
-/**
- * @returns {StoreRoot}
- *
- */
 export function proxy() {
   const handler: ProxyHandler<any> = {
     get(target, paramName) {

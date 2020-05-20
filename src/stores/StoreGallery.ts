@@ -1,28 +1,9 @@
 import { makeObservable } from 'utils';
-
-export interface GalleryItemType {
-  id: string;
-  title: {
-    ru: string;
-    en: string;
-  };
-  sources: {
-    big: {
-      src: string;
-      width: number;
-      height: number;
-    };
-    small: {
-      src: string;
-      width: number;
-      height: number;
-    };
-  };
-}
+import { TypeGalleryItems } from 'models';
 
 @makeObservable
 export class StoreGallery {
-  items: GalleryItemType[] = [];
+  items: TypeGalleryItems = [];
   editItemForm = {};
   uploadItemForm = {};
 }

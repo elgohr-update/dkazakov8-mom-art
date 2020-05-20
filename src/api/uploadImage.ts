@@ -1,8 +1,15 @@
-import { validators } from 'utils/validateObject';
+import { ApiRoute } from '../models/ApiRoute';
+import { TypeGalleryItems } from '../models/GalleryItems';
 
-const { isArray } = validators;
+type TypeRequestParams = undefined;
 
-export const uploadImage = {
+type TypeResponseParams = {
+  images: TypeGalleryItems;
+};
+
+type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
+
+export const uploadImage: TypeApiRoute = {
   name: `uploadImage`,
   url: `/upload_image`,
   method: 'POST',
@@ -10,10 +17,5 @@ export const uploadImage = {
   headers: {
     'Content-Type': `multipart/form-data`,
   },
-  params: {},
-  response: {
-    images: isArray,
-  },
-  mock: {},
   isMocked: false,
 };

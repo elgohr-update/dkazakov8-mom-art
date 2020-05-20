@@ -1,4 +1,4 @@
-import { RouteType } from 'common';
+import { RouteType } from 'models';
 
 function parseDuration(duration: number) {
   return Number(duration.toFixed(3));

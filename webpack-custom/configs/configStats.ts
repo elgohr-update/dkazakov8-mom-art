@@ -3,7 +3,9 @@
  *
  */
 
-export const configStats = {
+import webpack from 'webpack';
+
+export const configStats: webpack.Configuration['stats'] = {
   colors: true,
 
   env: false,
@@ -19,12 +21,10 @@ export const configStats = {
   timings: false,
   children: false,
   warnings: false,
-  outputPath: false,
   publicPath: false,
   chunkGroups: false,
   entrypoints: false,
   performance: false,
-  loggingTrace: false,
   cachedAssets: false,
   chunkOrigins: false,
 };

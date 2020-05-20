@@ -2,11 +2,6 @@ import _ from 'lodash';
 
 import { db } from 'db';
 
-/**
- * @docs: https://github.com/expressjs/compression
- *
- */
-
 function getDefaultTranslationsFromFiles(): { [key: string]: { defaultValue: string } } {
   // @ts-ignore
   const context = require.context('../../src', true, /messages\.ts$/);
@@ -39,12 +34,10 @@ export function updateTranslations() {
 
       // Remove obsolete translations
       Object.keys(translationsFromDb).forEach(key => {
-        if (!defaultTranslations[key]) {
-          delete translationsFromDb[key];
-        }
+        if (!defaultTranslations[key]) delete translationsFromDb[key];
       });
 
-      // Order by key (forEach is cleaner than reduce)
+      // Order by key
       const orderedTranslations = {};
       Object.keys(translationsFromDb)
         .sort()

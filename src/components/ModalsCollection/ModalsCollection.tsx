@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import cn from 'classnames';
 import React from 'react';
+import { observer } from 'mobx-react';
 
-import { connectComponent, fieldValidators } from 'utils';
+import { fieldValidators } from 'utils';
 import { notificationTypes } from 'const';
 import { FormFileType } from 'common';
-import { ConnectedProps } from 'commonUnsafe';
-
-import { Form } from '../Form';
+import { Form } from 'components/Form';
+import { StoreContext } from 'stores/StoreRoot';
 
 import { messages } from './messages';
 import styles from './ModalsCollection.scss';
@@ -25,10 +25,14 @@ interface ModalUploadImageProps {
   removeModal: () => void;
 }
 
-@connectComponent
-class ModalUploadImage extends React.Component<ConnectedProps & ModalUploadImageProps> {
+@observer
+class ModalUploadImage extends React.Component<ModalUploadImageProps> {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
   handleFormSubmit = (formData, event) => {
-    const { data, store, removeModal } = this.props;
+    const { store } = this.context;
+    const { data, removeModal } = this.props;
     const isEditMode = Boolean(data.id);
 
     if (isEditMode) {
@@ -69,7 +73,8 @@ class ModalUploadImage extends React.Component<ConnectedProps & ModalUploadImage
   };
 
   handleRemove = () => {
-    const { store, data, removeModal } = this.props;
+    const { store } = this.context;
+    const { data, removeModal } = this.props;
 
     // eslint-disable-next-line no-alert
     const isConfirmed = confirm(store.getLn(messages.uploadImage_removeConfirm));
@@ -80,7 +85,8 @@ class ModalUploadImage extends React.Component<ConnectedProps & ModalUploadImage
   };
 
   render() {
-    const { store, data } = this.props;
+    const { store } = this.context;
+    const { data } = this.props;
     const isEditMode = Boolean(data.id);
 
     if (isEditMode) {
@@ -161,10 +167,14 @@ class ModalUploadImage extends React.Component<ConnectedProps & ModalUploadImage
   }
 }
 
-@connectComponent
-class ModalAuth extends React.Component<ConnectedProps & { removeModal: () => void }> {
+@observer
+class ModalAuth extends React.Component<{ removeModal: () => void }> {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
   handleFormSubmit = formData => {
-    const { store, removeModal } = this.props;
+    const { store } = this.context;
+    const { removeModal } = this.props;
 
     const storePath = `user.authForm`;
 
@@ -175,7 +185,7 @@ class ModalAuth extends React.Component<ConnectedProps & { removeModal: () => vo
   };
 
   render() {
-    const { store } = this.props;
+    const { store } = this.context;
 
     const storePath = `user.authForm`;
 

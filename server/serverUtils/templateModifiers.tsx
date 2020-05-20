@@ -1,15 +1,15 @@
 import { toJS } from 'mobx';
 import React from 'react';
-import { Provider } from 'mobx-react';
 
 import { App } from 'components/App';
 import { escapeAllStrings } from 'utils';
+import { StoreContext } from 'stores/StoreRoot';
 
 import { env } from '../../env';
 
 import { hotReloadUrl } from './hotReloadUrl';
 
-const isReactMode = env.getParam('REACT_LIBRARY') === 'react';
+const isReactMode = env.REACT_LIBRARY === 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { renderToString } = require(isReactMode ? 'react-dom/server' : 'serverLib/infernoServer');
@@ -28,6 +28,38 @@ function filterStore(store) {
     );
 }
 
+export function injectCompressed(req, str) {
+  const compressions = [
+    {
+      encoding: 'br',
+      extension: 'br',
+    },
+    {
+      encoding: 'gzip',
+      extension: 'gz',
+    },
+  ];
+
+  const acceptedEncodings = req.acceptsEncodings();
+
+  const acceptedCompression = env.GENERATE_COMPRESSED
+    ? compressions.find(({ encoding }) => acceptedEncodings.indexOf(encoding) !== -1)
+    : null;
+
+  if (!acceptedCompression) return str;
+
+  let scriptsStr = str.slice(str.indexOf('<body>'));
+  scriptsStr = scriptsStr.slice(scriptsStr.indexOf('<script'));
+  scriptsStr = scriptsStr.substr(0, scriptsStr.indexOf('</body>'));
+
+  let stylesStr = str.slice(str.indexOf('<link'));
+  stylesStr = stylesStr.substr(0, stylesStr.indexOf('>'));
+
+  return str
+    .replace(scriptsStr, scriptsStr.replace(/\.js/g, `.js.${acceptedCompression.extension}`))
+    .replace(stylesStr, stylesStr.replace(/\.css/g, `.css.${acceptedCompression.extension}`));
+}
+
 export function injectMetaTags(str, store) {
   const { description } = store.router.metaData;
   const { pageTitle } = store.getters;
@@ -44,9 +76,9 @@ export function injectMetaTags(str, store) {
 
 export function injectAppMarkup(str, store) {
   const appMarkup = renderToString(
-    <Provider store={store}>
+    <StoreContext.Provider value={{ store }}>
       <App />
-    </Provider>
+    </StoreContext.Provider>
   );
 
   return str.replace(`<div id="app"></div>`, `<div id="app">${appMarkup || ''}</div>`);

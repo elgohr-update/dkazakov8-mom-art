@@ -1,10 +1,10 @@
 import cn from 'classnames';
 import React from 'react';
+import { observer } from 'mobx-react';
 
-import { connectComponent } from 'utils';
 import { routes } from 'routes';
 import { Link } from 'components/Link';
-import { ConnectedProps } from 'commonUnsafe';
+import { StoreContext } from 'stores/StoreRoot';
 
 import styles from './Header.scss';
 import { messages } from './messages';
@@ -28,8 +28,11 @@ const menuArray = [
   },
 ];
 
-@connectComponent
-export class Menu extends React.Component<ConnectedProps> {
+@observer
+export class Menu extends React.Component {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
   render() {
     const {
       store,
@@ -37,7 +40,7 @@ export class Menu extends React.Component<ConnectedProps> {
         router: { currentRoute },
         user,
       },
-    } = this.props;
+    } = this.context;
 
     return (
       <div className={styles.menu}>

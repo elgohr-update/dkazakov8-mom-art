@@ -3,16 +3,15 @@ import _ from 'lodash';
 
 import { routing } from 'utils';
 import { routes } from 'routes';
-import { routeComponents } from 'routeComponents';
-import { RouteType, Express } from 'common';
-import { ActionFirstParams } from 'commonUnsafe';
+import { Express } from 'common';
+import { RouteType, ActionFirstParams } from 'models';
 
 export function redirectTo(
   { store }: ActionFirstParams,
   params: {
     route?: RouteType;
-    req?: Express.Request;
-    res?: Express.Response;
+    req?: Express['Request'];
+    res?: Express['Response'];
   }
 ): Promise<any> {
   const { route, req, res } = params;
@@ -46,9 +45,6 @@ export function redirectTo(
          *
          */
         store.router.currentRoute = route;
-
-        const metaDataFn = _.get(routeComponents, `[${route.name}].Component.type.meta`);
-        store.router.metaData = metaDataFn ? metaDataFn(store) : {};
 
         if (IS_CLIENT && route.name !== routes.error500.name) {
           window.history.pushState(null, null, `/${store.ui.currentLanguage}${route.path}`);

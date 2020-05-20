@@ -1,5 +1,3 @@
-import webpack from 'webpack';
-
 import { configMode } from './configs/configMode';
 import { configNode } from './configs/configNode';
 import { configStats } from './configs/configStats';
@@ -15,21 +13,19 @@ import { configExternalsServer } from './configs/configExternalsServer';
 import { configOptimizationServer } from './configs/configOptimizationServer';
 import { pluginSpeedMeasureServer } from './plugins/pluginSpeedMeasureServer';
 
-export default (pluginSpeedMeasureServer as { wrap: (config: webpack.Configuration) => void }).wrap(
-  {
-    node: configNode,
-    mode: configMode,
-    entry: configEntryServer,
-    stats: configStats,
-    module: configModuleServer,
-    output: configOutputServer,
-    target: 'node',
-    devtool: configDevToolServer,
-    plugins: configPluginsServer,
-    resolve: configResolve,
-    externals: configExternalsServer,
-    performance: configPerformance,
-    optimization: configOptimizationServer,
-    watchOptions: configWatchOptions,
-  }
-);
+export default pluginSpeedMeasureServer.wrap({
+  node: configNode,
+  mode: configMode,
+  entry: configEntryServer,
+  stats: configStats,
+  module: configModuleServer,
+  output: configOutputServer,
+  target: 'node',
+  devtool: configDevToolServer,
+  plugins: configPluginsServer,
+  resolve: configResolve,
+  externals: configExternalsServer,
+  performance: configPerformance,
+  optimization: configOptimizationServer,
+  watchOptions: configWatchOptions,
+});

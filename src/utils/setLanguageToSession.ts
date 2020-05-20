@@ -4,7 +4,7 @@ import { StoreRoot } from 'stores/StoreRoot';
 
 import { createError } from './createError';
 
-export function setLanguageToSession(params: { req: Express.Request; store: StoreRoot }) {
+export function setLanguageToSession(params: { req: Express['Request']; store: StoreRoot }) {
   const { req, store } = params;
 
   /**

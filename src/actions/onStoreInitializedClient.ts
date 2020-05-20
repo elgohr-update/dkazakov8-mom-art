@@ -1,6 +1,6 @@
 import { toJS } from 'mobx';
 
-import { ActionFirstParams } from 'commonUnsafe';
+import { ActionFirstParams } from 'models';
 import { unescapeAllStrings, printMeasures, mergeObservableDeep } from 'utils';
 
 export function onStoreInitializedClient({ store }: ActionFirstParams) {

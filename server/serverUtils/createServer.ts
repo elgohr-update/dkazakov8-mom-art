@@ -6,16 +6,22 @@ import https from 'https';
 import express from 'express';
 
 import { env } from '../../env';
-import { paths } from '../../webpack-custom/utils/paths';
+import { paths } from '../../paths';
 
 type ServerType = {
   app?: express.Application;
-  useMiddlewares?: (middlewares: Function[]) => ServerType;
+  useMiddlewares?: (middlewares: Array<(app: express.Application) => any>) => ServerType;
   start?: () => void;
+};
+
+const sslOptions = {
+  key: fs.readFileSync(path.resolve(paths.rootPath, 'ssl-local/cert.key')),
+  cert: fs.readFileSync(path.resolve(paths.rootPath, 'ssl-local/cert.pem')),
 };
 
 export function createServer() {
   const server: ServerType = {};
+  const port = env.HTTPS_BY_NODE ? 443 : env.EXPRESS_PORT;
 
   server.app = express();
   server.useMiddlewares = middlewares => {
@@ -25,20 +31,17 @@ export function createServer() {
   };
 
   server.start = function startServer() {
-    const port = env.getParam('EXPRESS_PORT');
+    return new Promise(resolve => {
+      const nodeServer = env.HTTPS_BY_NODE
+        ? https.createServer(sslOptions, server.app)
+        : http.createServer(server.app);
 
-    if (env.getParamAsBoolean('HTTPS_BY_NODE')) {
-      const sslOptions = {
-        key: fs.readFileSync(path.resolve(paths.rootPath, 'ssl-local/cert.key')),
-        cert: fs.readFileSync(path.resolve(paths.rootPath, 'ssl-local/cert.pem')),
-      };
+      nodeServer.listen(port, () => {
+        console.log(`[server] Server started ${env.HOT_RELOAD ? 'with' : 'without'} hot reload.`);
 
-      https.createServer(sslOptions, server.app).listen(443);
-    } else {
-      http.createServer(server.app).listen(port);
-    }
-
-    return server;
+        resolve(server);
+      });
+    });
   };
 
   return server;

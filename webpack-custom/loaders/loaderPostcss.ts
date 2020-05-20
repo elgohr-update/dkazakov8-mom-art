@@ -3,6 +3,7 @@
  *
  */
 
+import webpack from 'webpack';
 import postcssImport from 'postcss-import';
 import postcssNested from 'postcss-nested';
 import postcssAutomath from 'postcss-automath';
@@ -11,15 +12,11 @@ import postcssCustomProperties from 'postcss-custom-properties';
 import postcssAdvancedVariables from 'postcss-advanced-variables';
 import postcssSassColorFunctions from 'postcss-sass-color-functions';
 import postcssStripInlineComments from 'postcss-strip-inline-comments';
-/**
- * @docs: https://github.com/postcss/postcss-loader
- *
- */
 
-import { paths } from '../utils/paths';
+import { paths } from '../../paths';
 import { env } from '../../env';
 
-export const loaderPostcss = {
+export const loaderPostcss: webpack.RuleSetLoader = {
   loader: 'postcss-loader',
   options: {
     parser: 'postcss-scss',
@@ -47,7 +44,7 @@ export const loaderPostcss = {
         postcssAutomath(),
 
         // https://github.com/postcss/autoprefixer
-        env.getParamAsBoolean('POLYFILLING') ? postcssAutoprefixer() : null,
+        env.POLYFILLING ? postcssAutoprefixer() : null,
       ].filter(Boolean),
   },
 };

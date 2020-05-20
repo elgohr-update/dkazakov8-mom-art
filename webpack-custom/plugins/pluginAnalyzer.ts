@@ -3,13 +3,14 @@
  *
  */
 
+import webpack from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 import { env } from '../../env';
 
-export const pluginAnalyzer = new BundleAnalyzerPlugin({
+export const pluginAnalyzer: webpack.Plugin = new BundleAnalyzerPlugin({
   logLevel: 'silent',
-  analyzerPort: env.getParamAsNumber('BUNDLE_ANALYZER_PORT'),
+  analyzerPort: env.BUNDLE_ANALYZER_PORT,
   statsOptions: null,
   openAnalyzer: false,
   analyzerMode: 'server',

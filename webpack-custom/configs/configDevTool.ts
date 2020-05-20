@@ -6,6 +6,4 @@ import webpack from 'webpack';
 
 import { env } from '../../env';
 
-export const configDevTool: webpack.Options.Devtool = (env.getParam(
-  'DEV_TOOL'
-) as unknown) as false;
+export const configDevTool: webpack.Configuration['devtool'] = env.DEV_TOOL || false;

@@ -1,6 +1,6 @@
-import { ActionFirstParams } from 'commonUnsafe';
 import { notificationTypes } from 'const';
 import { messages } from 'actions/messages';
+import { ActionFirstParams } from 'models';
 
 export function deleteImage({ store }: ActionFirstParams, { id }) {
   return store.actions.api

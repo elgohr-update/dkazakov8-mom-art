@@ -4,5 +4,6 @@
 .env
 node_modules
 build
-uploads
 yarn-error.log
+uploads/*
+uploads/!.dummy

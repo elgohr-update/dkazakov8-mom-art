@@ -10,7 +10,7 @@ const RedisStore = redisConnect(session);
 export function handleSession(app) {
   app.use(
     session({
-      secret: env.getParam('SESSION_SECRET'),
+      secret: env.SESSION_SECRET,
       store: new RedisStore({
         client: dbClient,
       }),
@@ -21,8 +21,9 @@ export function handleSession(app) {
       cookie: {
         path: '/', // Root path of domain
         httpOnly: true, // JS won't see session in document.cookie
-        maxAge: env.getParamAsNumber('SESSION_DURATION'), // ms
-        secure: false, // Is https enabled?
+        maxAge: env.SESSION_DURATION, // ms
+        secure: true, // Is https enabled?
+        sameSite: 'strict',
       },
     })
   );

@@ -1,17 +1,16 @@
-import { validators } from 'utils/validateObject';
+import { ApiRoute } from '../models/ApiRoute';
 
-const { isString } = validators;
+type TypeRequestParams = {
+  theme: string;
+};
 
-export const setTheme = {
+type TypeResponseParams = undefined;
+
+type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
+
+export const setTheme: TypeApiRoute = {
   name: `setTheme`,
   url: `/themes`,
   method: 'POST',
-  params: {
-    theme: isString,
-  },
-  response: {},
-  mock: {
-    theme: 'light',
-  },
   isMocked: false,
 };

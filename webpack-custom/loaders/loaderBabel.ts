@@ -3,28 +3,27 @@
  *
  */
 
-import { env } from '../../env';
+import webpack from 'webpack';
 
-const presetEnvOptions = env.getParamAsBoolean('POLYFILLING')
+import { env } from '../../env';
+import babelConfigServer from '../../babel.config';
+
+const presetEnvOptions = env.POLYFILLING
   ? {
       corejs: 3,
       useBuiltIns: 'usage',
     }
   : undefined;
 
-export const loaderBabel = {
+export const loaderBabel: webpack.RuleSetLoader = {
   loader: 'babel-loader',
   options: {
-    presets: [
-      ['@babel/preset-typescript', { isTSX: true, allExtensions: true }],
-      ['@babel/preset-env', presetEnvOptions],
-    ],
+    presets: [['@babel/preset-env', presetEnvOptions]],
     plugins: [
-      env.getParam('REACT_LIBRARY') === 'react'
+      ...babelConfigServer.plugins,
+      env.REACT_LIBRARY === 'react'
         ? '@babel/plugin-transform-react-jsx'
         : ['babel-plugin-inferno', { imports: true }],
-      ['@babel/plugin-proposal-decorators', { legacy: true }],
-      ['@babel/plugin-proposal-class-properties', { loose: true }],
       'lodash',
     ],
   },

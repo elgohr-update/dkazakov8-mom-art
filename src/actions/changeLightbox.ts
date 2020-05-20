@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { runInAction } from 'mobx';
 
 import { system } from 'const';
-import { ActionFirstParams } from 'commonUnsafe';
+import { ActionFirstParams } from 'models';
 
 export function changeLightbox(
   { store }: ActionFirstParams,

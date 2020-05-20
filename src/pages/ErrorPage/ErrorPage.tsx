@@ -1,10 +1,8 @@
 import cn from 'classnames';
 import React from 'react';
 
-import { ConnectedProps } from 'commonUnsafe';
-import { StoreRoot } from 'stores/StoreRoot';
-import { connectComponent } from 'utils';
 import { Header } from 'components/Header';
+import { StoreContext } from 'stores/StoreRoot';
 
 import styles from './ErrorPage.scss';
 import { messages } from './messages';
@@ -13,14 +11,21 @@ interface ErrorPageProps {
   errorNumber: number;
 }
 
-@connectComponent
-export class ErrorPage extends React.Component<ConnectedProps & ErrorPageProps> {
-  static meta = (store: StoreRoot) => ({
-    title: store.getLn(messages.metaTitle),
-  });
+export class ErrorPage extends React.Component<ErrorPageProps> {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
+  UNSAFE_componentWillMount() {
+    const { store } = this.context;
+
+    store.router.metaData = {
+      title: store.getLn(messages.metaTitle),
+    };
+  }
 
   render() {
-    const { store, errorNumber } = this.props;
+    const { store } = this.context;
+    const { errorNumber } = this.props;
 
     return (
       <>

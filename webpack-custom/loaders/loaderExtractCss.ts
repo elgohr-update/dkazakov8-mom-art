@@ -3,8 +3,9 @@
  *
  */
 
+import webpack from 'webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
-export const loaderExtractCss = {
+export const loaderExtractCss: webpack.RuleSetLoader = {
   loader: MiniCssExtractPlugin.loader,
 };

@@ -1,5 +1,3 @@
-import { StoreRoot } from 'stores/StoreRoot';
-
 export type Writeable<Type extends { [x: string]: any }, Key extends string> = {
   [P in Key]: Type[P];
 };
@@ -15,7 +13,7 @@ export type SkipFirstArgType<FunctionType> = FunctionType extends (
   ? (...args: OtherArguments) => ResultType
   : unknown;
 
-export type EmptyClassType = { new (...args: any[]): {} };
+export type EmptyClassType = { new (...args: any[]): Record<string, any> };
 
 export type LooseFunctionType = (...args: any[]) => any;
 
@@ -26,25 +24,12 @@ export type FieldValidatorType = {
   message: MessageObjectType;
 };
 
-export type RouteType = {
-  path: string;
-
-  name?: string;
-  rights?: string;
-  validators?: object[];
-  beforeEnter?: (store: StoreRoot, route?: RouteType) => Promise<any>;
-};
-
-export interface RoutesType {
-  [key: string]: RouteType;
-}
-
 export type ModalType = {
   id: string;
   name: string;
   status: string;
 
-  data?: object;
+  data?: Record<string, any>;
 };
 
 export type NotificationType = {
@@ -57,16 +42,16 @@ export type NotificationType = {
   height?: number;
 };
 
-export namespace Express {
-  export interface Request {
+export interface Express {
+  Request: {
     originalUrl: string;
     session: { language: string };
     acceptsLanguages: LooseFunctionType;
-  }
-  export interface Response {
-    body: object;
+  };
+  Response: {
+    body: Record<string, any>;
     status: LooseFunctionType;
-  }
+  };
 }
 
 export interface FormFileType {

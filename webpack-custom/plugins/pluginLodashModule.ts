@@ -3,9 +3,10 @@
  *
  */
 
+import webpack from 'webpack';
 import LodashModulePlugin from 'lodash-webpack-plugin';
 
-export const pluginLodashModule = new LodashModulePlugin({
+export const pluginLodashModule: webpack.Plugin = new LodashModulePlugin({
   paths: true,
   guards: false,
   cloning: false,

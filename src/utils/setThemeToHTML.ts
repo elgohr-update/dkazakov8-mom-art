@@ -1,4 +1,4 @@
-export function setThemeToHTML(themeParams: object) {
+export function setThemeToHTML(themeParams: Record<string, any>) {
   const root = document.documentElement;
 
   Object.entries(themeParams).forEach(([key, value]) => {

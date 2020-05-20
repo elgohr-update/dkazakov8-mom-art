@@ -1,10 +1,9 @@
 import _ from 'lodash';
 
-import { ActionFirstParams } from 'commonUnsafe';
-import { Form } from 'components/Form';
+import { ActionFirstParams } from 'models';
 import { notificationTypes } from 'const';
 import { messages } from 'utils/messages';
-import { scrollToFirstElement } from 'utils';
+import { scrollToFirstElement, getNotValidFieldsIds } from 'utils';
 
 export function handleFormError({ store }: ActionFirstParams, { error, storePath }) {
   return Promise.resolve()
@@ -22,7 +21,7 @@ export function handleFormError({ store }: ActionFirstParams, { error, storePath
         }
       });
 
-      const notValidFieldsIds = Form.getNotValidFieldsIds({ formConfig: store.admin.form });
+      const notValidFieldsIds = getNotValidFieldsIds({ formConfig: store.admin.form });
 
       if (notValidFieldsIds.length > 0) {
         return scrollToFirstElement(notValidFieldsIds);

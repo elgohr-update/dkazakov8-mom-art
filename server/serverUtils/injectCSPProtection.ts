@@ -12,7 +12,7 @@ export function injectCSPProtection(str, res) {
     'default-src': `'self'`,
     'style-src': `'self' 'unsafe-inline' https://storage.yandexcloud.net https://fonts.googleapis.com`,
     'script-src': `'self' 'unsafe-inline' https://storage.yandexcloud.net https://apis.google.com https://mc.yandex.ru ${
-      env.getParamAsBoolean('HOT_RELOAD') ? hotReloadUrl : ''
+      env.HOT_RELOAD ? hotReloadUrl : ''
     }`,
     'font-src': `'self' https://fonts.gstatic.com`,
     'connect-src': `'self' ws: https://sentry.io https://mc.yandex.ru`,

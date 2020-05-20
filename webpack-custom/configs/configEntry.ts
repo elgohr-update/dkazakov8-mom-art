@@ -5,8 +5,10 @@
 
 import path from 'path';
 
-import { paths } from '../utils/paths';
+import webpack from 'webpack';
 
-export const configEntry = {
+import { paths } from '../../paths';
+
+export const configEntry: webpack.Configuration['entry'] = {
   client: path.resolve(paths.sourcePath, 'client.tsx'),
 };

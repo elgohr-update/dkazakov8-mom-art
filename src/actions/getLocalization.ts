@@ -1,4 +1,4 @@
-import { ActionFirstParams } from 'commonUnsafe';
+import { ActionFirstParams } from 'models';
 
 export function getLocalization({ store }: ActionFirstParams, { language }) {
   return store.actions.api

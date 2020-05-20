@@ -1,6 +1,7 @@
 import { isomorphPolyfills } from 'utils';
-import { createServer, updateTranslations } from 'serverUtils';
+import { createServer, updateTranslations, copyAssetsToProdBucket } from 'serverUtils';
 import { handleSession } from 'serverMiddlewares/handleSession';
+import { handlePrometheus } from 'serverMiddlewares/handlePrometheus';
 import { handleJsonRequests } from 'serverMiddlewares/handleJsonRequests';
 import { handleProtectionHeaders } from 'serverMiddlewares/handleProtectionHeaders';
 import { handleUrlencodedRequests } from 'serverMiddlewares/handleUrlencodedRequests';
@@ -13,6 +14,7 @@ isomorphPolyfills();
 
 Promise.resolve()
   .then(updateTranslations)
+  .then(copyAssetsToProdBucket)
   .then(() => createServer())
   .then(server =>
     server.useMiddlewares([
@@ -31,6 +33,7 @@ Promise.resolve()
        */
       handleFileRoutes,
 
+      handlePrometheus,
       handleProtectionHeaders,
       handleSession,
       handleJsonRequests,

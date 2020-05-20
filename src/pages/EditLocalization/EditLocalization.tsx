@@ -1,10 +1,9 @@
 import React from 'react';
 
-import { connectComponent, fieldValidators } from 'utils';
+import { fieldValidators } from 'utils';
 import { Header } from 'components/Header';
 import { Form } from 'components/Form';
-import { ConnectedProps } from 'commonUnsafe';
-import { StoreRoot } from 'stores/StoreRoot';
+import { StoreContext } from 'stores/StoreRoot';
 
 import styles from './EditLocalization.scss';
 import { messages } from './messages';
@@ -16,18 +15,17 @@ interface TranslationItemProps {
   translationName: string;
 }
 
-@connectComponent
-class TranslationItem extends React.Component<ConnectedProps & TranslationItemProps> {
+class TranslationItem extends React.Component<TranslationItemProps> {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
   render() {
     const {
-      lang,
-      storePath,
-      defaultValue,
-      translationName,
       store: {
         admin: { translations },
       },
-    } = this.props;
+    } = this.context;
+    const { lang, storePath, defaultValue, translationName } = this.props;
 
     const isTextarea = defaultValue.indexOf('textarea') === 0;
     const translationNameFormatted = translationName.replace('src/', '').replace('__', '.');
@@ -44,14 +42,20 @@ class TranslationItem extends React.Component<ConnectedProps & TranslationItemPr
   }
 }
 
-@connectComponent
-export class EditLocalization extends React.Component<ConnectedProps> {
-  static meta = (store: StoreRoot) => ({
-    title: store.getLn(messages.metaTitle),
-  });
+export class EditLocalization extends React.Component {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
+  UNSAFE_componentWillMount() {
+    const { store } = this.context;
+
+    store.router.metaData = {
+      title: store.getLn(messages.metaTitle),
+    };
+  }
 
   handleFormSubmit = formData => {
-    const { store } = this.props;
+    const { store } = this.context;
 
     const storePath = `admin.form`;
 
@@ -64,7 +68,7 @@ export class EditLocalization extends React.Component<ConnectedProps> {
         ui: { languagesList },
         admin: { translations },
       },
-    } = this.props;
+    } = this.context;
 
     const storePath = `admin.form`;
 

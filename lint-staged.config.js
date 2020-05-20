@@ -1,4 +1,4 @@
 module.exports = {
-  '(*.js|*.ts)': ['yarn format:js'],
+  '(*.js|*.ts|*.tsx)': ['yarn format:js'],
   '*.scss': ['yarn format:style'],
 };

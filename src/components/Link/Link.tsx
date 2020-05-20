@@ -1,36 +1,39 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 
-import { connectComponent } from 'utils';
-import { RouteType } from 'common';
-import { ConnectedProps } from 'commonUnsafe';
+import { RouteType } from 'models';
+import { StoreContext } from 'stores/StoreRoot';
 
 interface LinkProps {
   route: RouteType;
-  onClick?: (event?: Event) => void;
+  onClick?: (event?: React.MouseEvent) => void;
+  className?: string;
 }
 
-@connectComponent
-export class Link extends React.Component<ConnectedProps & LinkProps> {
+@observer
+export class Link extends React.Component<LinkProps> {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
   render() {
-    const { store, route, onClick, children, ...otherProps } = this.props;
+    const { store } = this.context;
+    const { route, onClick, className, children } = this.props;
 
     return (
       <a
         href={`/${store.ui.currentLanguage}${route.path}`}
+        className={className}
         onClick={event => {
           /**
            * Replace default onClick handler if one is passed in props
            *
            */
-          if (onClick) {
-            return onClick(event);
-          }
+          if (onClick) return onClick(event);
 
           event.preventDefault();
 
           store.actions.common.redirectTo({ route });
         }}
-        {...otherProps}
       >
         {children}
       </a>

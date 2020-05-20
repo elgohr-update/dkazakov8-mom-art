@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { ActionFirstParams } from 'commonUnsafe';
+import { ActionFirstParams } from 'models';
 
 export function auth({ store }: ActionFirstParams, formData) {
   return store.actions.api

@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import React from 'react';
+import { observer } from 'mobx-react';
 
-import { connectComponent } from 'utils';
 import { FieldValidatorType } from 'common';
-import { ConnectedProps } from 'commonUnsafe';
+import { StoreContext } from 'stores/StoreRoot';
 
 import styles from '../Form.scss';
 
@@ -11,14 +11,16 @@ interface ErrorsProps {
   errors: FieldValidatorType[];
 }
 
-@connectComponent
-export class Errors extends React.Component<ConnectedProps & ErrorsProps> {
-  render() {
-    const { store, errors } = this.props;
+@observer
+export class Errors extends React.Component<ErrorsProps> {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
 
-    if (errors.length === 0) {
-      return null;
-    }
+  render() {
+    const { store } = this.context;
+    const { errors } = this.props;
+
+    if (errors.length === 0) return null;
 
     return (
       <div className={styles.errors}>

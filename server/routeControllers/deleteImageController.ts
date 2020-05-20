@@ -1,7 +1,7 @@
-import path from 'path';
-
 import { db } from 'db';
-import { removeFile, isLoggedIn } from 'serverUtils';
+import { isLoggedIn, removeFromBucket } from 'serverUtils';
+
+import { env } from '../../env';
 
 export function deleteImageController({ req }) {
   return Promise.resolve()
@@ -10,13 +10,29 @@ export function deleteImageController({ req }) {
     .then(imagesArray => {
       const modifiedDataArray = imagesArray.filter(({ id }) => id !== req.body.id);
       const removedImageData = imagesArray.find(({ id }) => id === req.body.id);
-      const removedPaths = Object.keys(removedImageData.sources).map(sourceName =>
-        path.resolve(__dirname, `../../uploads${removedImageData.sources[sourceName].src}`)
+
+      let removedFiles = Object.keys(removedImageData.sources).map(
+        suffix => removedImageData.sources[suffix].src
+      );
+      removedFiles = removedFiles.map(src =>
+        src.replace(
+          `${env.YANDEX_STORAGE_ENDPOINT}/${env.YANDEX_STORAGE_BUCKET_PREFIX}${env.YANDEX_STORAGE_BUCKET}/`,
+          ''
+        )
       );
 
-      return db
-        .setImages(modifiedDataArray)
-        .then(() => Promise.all(removedPaths.map(filePath => removeFile(filePath))))
+      return Promise.resolve()
+        .then(() =>
+          Promise.all(
+            removedFiles.map(fileName =>
+              removeFromBucket({
+                Bucket: `${env.YANDEX_STORAGE_BUCKET_PREFIX}${env.YANDEX_STORAGE_BUCKET}`,
+                fileName,
+              })
+            )
+          )
+        )
+        .then(() => db.setImages(modifiedDataArray))
         .then(() => ({ images: modifiedDataArray }));
     });
 }

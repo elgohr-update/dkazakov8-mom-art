@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { errorsNames, notificationTypes } from 'const';
 import { createError } from 'utils';
 import { messages } from 'utils/messages';
-import { ActionFirstParams } from 'commonUnsafe';
+import { ActionFirstParams } from 'models';
 
 export function handleApiError({ store }: ActionFirstParams, error) {
   if (error.name === errorsNames.SILENT) {

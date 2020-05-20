@@ -3,11 +3,14 @@
  *
  */
 
+import webpack from 'webpack';
 import SpeedMeasurePlugin from 'speed-measure-webpack-plugin';
 
 import { env } from '../../env';
 
-export const pluginSpeedMeasureServer = new SpeedMeasurePlugin({
-  disable: !env.getParamAsBoolean('SPEED_ANALYZER_SERVER'),
+export const pluginSpeedMeasureServer: {
+  wrap: (config: webpack.Configuration) => void;
+} = new SpeedMeasurePlugin({
+  disable: !env.SPEED_ANALYZER_SERVER,
   outputFormat: 'human',
 });

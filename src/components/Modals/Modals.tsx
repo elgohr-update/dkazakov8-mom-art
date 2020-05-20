@@ -1,23 +1,26 @@
 import cn from 'classnames';
 import React from 'react';
+import { observer } from 'mobx-react';
 
-import { connectComponent } from 'utils';
 import { Icon } from 'components/Icon';
 import { ModalsCollection } from 'components/ModalsCollection';
-import { ConnectedProps } from 'commonUnsafe';
+import { StoreContext } from 'stores/StoreRoot';
 
 import styles from './Modals.scss';
 
-@connectComponent
-export class Modals extends React.Component<ConnectedProps> {
+@observer
+export class Modals extends React.Component {
+  declare context: React.ContextType<typeof StoreContext>;
+  static contextType = StoreContext;
+
   handleRemoveModal = modal => () => {
-    const { store } = this.props;
+    const { store } = this.context;
 
     return store.actions.common.removeModal(modal);
   };
 
   render() {
-    const { store } = this.props;
+    const { store } = this.context;
 
     return (
       <div className={styles.modals}>

@@ -1,10 +1,6 @@
 import serveStatic from 'serve-static';
 
 import { env } from '../../env';
-import { cdnBucketName } from '../../webpack-custom/utils/cdnBucketName';
-
-const CDNEnabled = env.getParamAsBoolean('YANDEX_STORAGE_ENABLED');
-const compressedEnabled = env.getParamAsBoolean('GENERATE_COMPRESSED');
 
 const compressions = [
   {
@@ -18,43 +14,45 @@ const compressions = [
 ];
 
 function redirectToCdn(req, res) {
-  return res.redirect(`https://storage.yandexcloud.net/${cdnBucketName}${req.url}`);
+  return res.redirect(
+    `${env.YANDEX_STORAGE_ENDPOINT}/${env.YANDEX_STORAGE_BUCKET_PREFIX}${env.YANDEX_STORAGE_BUCKET}${req.url}`
+  );
 }
 
-function serveCompressed(contentType) {
+function setContentType(contentType) {
   return (req, res, next) => {
-    const acceptedEncodings = req.acceptsEncodings();
+    res.set('Content-Type', contentType);
 
-    const acceptedCompression = compressedEnabled
-      ? compressions.find(({ encoding }) => acceptedEncodings.indexOf(encoding) !== -1)
-      : null;
+    return next();
+  };
+}
 
-    if (acceptedCompression) {
-      req.url = `${req.url}.${acceptedCompression.extension}`;
-      res.set('Content-Encoding', acceptedCompression.encoding);
-      res.set('Content-Type', contentType);
-    }
+function setEncoding(encoding) {
+  return (req, res, next) => {
+    res.set('Content-Encoding', encoding);
 
     return next();
   };
 }
 
 export function handleFileRoutes(app) {
-  app.get('*.js', serveCompressed('text/javascript'));
-  app.get('*.css', serveCompressed('text/css'));
-
-  app.use(serveStatic('uploads'));
-
-  if (!CDNEnabled) {
-    app.use(serveStatic('build'));
-
-    // Send 404 for all not found files
-    app.get('*', (req, res, next) =>
-      req.originalUrl.indexOf('.') !== -1 ? res.sendStatus(404) : next()
-    );
-  } else {
-    app.get('*', (req, res, next) =>
+  if (env.YANDEX_STORAGE_ENABLED) {
+    return app.get('*', (req, res, next) =>
       req.originalUrl.indexOf('.') !== -1 ? redirectToCdn(req, res) : next()
     );
   }
+
+  compressions.forEach(({ encoding, extension }) => {
+    app.get(`*.js.${extension}`, setContentType('text/javascript'));
+    app.get(`*.js.${extension}`, setEncoding(encoding));
+    app.get(`*.css.${extension}`, setContentType('text/css'));
+    app.get(`*.css.${extension}`, setEncoding(encoding));
+  });
+
+  app.use(serveStatic('build'));
+
+  // Send 404 for all not found files
+  app.get('*', (req, res, next) =>
+    req.originalUrl.indexOf('.') !== -1 ? res.sendStatus(404) : next()
+  );
 }

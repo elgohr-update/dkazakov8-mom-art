@@ -7,4 +7,6 @@ import webpack from 'webpack';
 
 import { getDefineParams } from '../utils/getDefineParams';
 
-export const pluginDefineServer = new webpack.DefinePlugin(getDefineParams({ isClient: false }));
+export const pluginDefineServer: webpack.Plugin = new webpack.DefinePlugin(
+  getDefineParams({ isClient: false })
+);

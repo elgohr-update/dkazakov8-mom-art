@@ -1,17 +1,18 @@
-import { validators } from 'utils/validateObject';
+import { ApiRoute } from '../models/ApiRoute';
 
-const { isString, isPlainObject } = validators;
+type TypeRequestParams = {
+  language: string;
+};
 
-export const getLocalization = {
+type TypeResponseParams = {
+  translations: any;
+};
+
+type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
+
+export const getLocalization: TypeApiRoute = {
   name: `getLocalization`,
   url: `/get_current_localization`,
   method: 'POST',
-  params: {
-    language: isString,
-  },
-  response: {
-    translations: isPlainObject,
-  },
-  mock: {},
   isMocked: false,
 };

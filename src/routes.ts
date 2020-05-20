@@ -1,5 +1,5 @@
 import { addNames } from 'utils/addNames';
-import { RoutesType } from 'common';
+import { RoutesType } from 'models';
 
 const routesObject: RoutesType = {
   gallery: {

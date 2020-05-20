@@ -1,4 +1,4 @@
-import { ActionFirstParams } from 'commonUnsafe';
+import { ActionFirstParams } from 'models';
 import { setLanguageToSession } from 'utils';
 
 export function onStoreInitializedServer({ store }: ActionFirstParams, { req, res }) {
