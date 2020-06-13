@@ -37,7 +37,7 @@ export function createServer() {
         : http.createServer(server.app);
 
       nodeServer.listen(port, () => {
-        console.log(`[server] Server started ${env.HOT_RELOAD ? 'with' : 'without'} hot reload.`);
+        console.log(`Server started ${env.HOT_RELOAD ? 'with' : 'without'} hot reload.`);
 
         resolve(server);
       });

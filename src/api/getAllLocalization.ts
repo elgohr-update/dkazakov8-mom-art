@@ -1,14 +1,15 @@
-import { ApiRoute } from '../models/ApiRoute';
+import { ApiRoute } from 'models/ApiRoute';
 
 type TypeRequestParams = undefined;
 
-type TypeResponseParams = {
+type TypeResponse = {
   translations: any;
 };
 
-type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
-
-export const getAllLocalization: TypeApiRoute = {
+export const getAllLocalization: ApiRoute & {
+  params?: TypeRequestParams;
+  response?: TypeResponse;
+} = {
   name: `getAllLocalization`,
   url: `/get_all_localization`,
   method: 'POST',

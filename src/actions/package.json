@@ -1,4 +1,4 @@
 {
-  "main": "_actions.ts",
-  "types": "_actions.ts"
+  "main": "actions.ts",
+  "types": "actions.ts"
 }

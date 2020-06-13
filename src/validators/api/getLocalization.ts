@@ -14,22 +14,13 @@ export const TypeRequestParams = t.iface([], {
   language: 'string',
 });
 
-export const TypeResponseParams = t.iface([], {
+export const TypeResponse = t.iface([], {
   translations: 'any',
 });
-
-export const TypeApiRoute = t.intersection(
-  'ApiRoute',
-  t.iface([], {
-    params: t.opt('TypeRequestParams'),
-    response: t.opt('TypeResponseParams'),
-  })
-);
 
 const exportedTypeSuite: t.ITypeSuite = {
   ApiRoute,
   TypeRequestParams,
-  TypeResponseParams,
-  TypeApiRoute,
+  TypeResponse,
 };
 export default exportedTypeSuite;

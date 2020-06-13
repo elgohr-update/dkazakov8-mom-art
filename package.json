@@ -5,7 +5,7 @@
   "author": "Dmitry Kazakov",
   "license": "MIT",
   "scripts": {
-    "update": "yarn install && yarn add --dev file:./eslint-custom && yarn add --dev file:./types-custom && yarn add --dev file:./webpack-custom && yarn add file:./server",
+    "update": "yarn install && yarn add --dev file:./_eslint && yarn add --dev file:./_types && yarn add --dev file:./_webpack && yarn add file:./server",
     "dev": "better-npm-run -s dev",
     "dev:ts": "better-npm-run -s dev:ts",
     "build": "better-npm-run build",
@@ -32,7 +32,7 @@
       }
     },
     "build": {
-      "command": "babel-node --extensions .js,.jsx,.ts,.tsx ./webpack-custom/webpackBuider.ts"
+      "command": "babel-node --extensions .js,.jsx,.ts,.tsx ./_webpack/webpackBuider.ts"
     },
     "reload-browser": {
       "command": "babel-node --extensions .js,.jsx,.ts,.tsx ./server/watchServer.ts"
@@ -58,37 +58,39 @@
     }
   },
   "dependencies": {
-    "@sentry/browser": "5.17.0",
-    "axios": "0.19.2",
+    "@sentry/browser": "5.27.4",
+    "axios": "0.21.0",
     "better-npm-run": "0.1.1",
     "classnames": "2.2.6",
-    "core-js": "3.6.5",
-    "inferno": "7.4.2",
-    "inferno-compat": "7.4.2",
-    "inferno-create-element": "7.4.2",
-    "inferno-hydrate": "7.4.2",
-    "inferno-mobx": "7.4.2",
-    "inferno-server": "7.4.2",
-    "lodash": "4.17.15",
-    "mobx": "5.15.4",
-    "mobx-react": "6.2.2",
-    "nodemon": "2.0.4",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "react-markdown": "4.3.1",
+    "core-js": "3.7.0",
+    "inferno": "7.4.6",
+    "inferno-compat": "7.4.6",
+    "inferno-create-element": "7.4.6",
+    "inferno-hydrate": "7.4.6",
+    "inferno-mobx": "7.4.6",
+    "inferno-server": "7.4.6",
+    "lodash": "4.17.20",
+    "mobx": "6.0.4",
+    "mobx-react": "7.0.5",
+    "nodemon": "2.0.6",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-markdown": "5.0.3",
+    "react-scrollbars-custom": "4.0.25",
     "server": "file:./server",
-    "ts-interface-checker": "0.1.11"
+    "ts-interface-checker": "0.1.13"
   },
   "devDependencies": {
-    "@babel/cli": "7.10.1",
-    "@babel/core": "7.10.2",
-    "@babel/node": "7.10.1",
-    "eslint-custom": "file:./eslint-custom",
-    "husky": "4.2.5",
-    "lint-staged": "10.2.10",
+    "@babel/cli": "7.12.7",
+    "@babel/core": "7.12.7",
+    "@babel/node": "7.12.6",
+    "_eslint": "file:./_eslint",
+    "_types": "file:./_types",
+    "_webpack": "file:./_webpack",
+    "husky": "4.3.0",
+    "lint-staged": "10.5.1",
+    "process": "0.11.10",
     "ts-interface-builder": "0.2.2",
-    "types-custom": "file:./types-custom",
-    "typescript": "3.9.5",
-    "webpack-custom": "file:./webpack-custom"
+    "typescript": "3.9.7"
   }
 }

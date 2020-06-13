@@ -1,10 +1,14 @@
-import { makeObservable } from 'utils';
+import { makeAutoObservable } from 'mobx';
+
 import { RouteType } from 'models';
 
 type MetaDataType = { title?: string; description?: string };
 
-@makeObservable
 export class StoreRouter {
+  constructor() {
+    makeAutoObservable(this);
+  }
+
   currentRoute: RouteType = null;
   metaData: MetaDataType = {};
 }

@@ -1,9 +1,64 @@
 @import "mixins.scss";
 
+.leftImage {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 100px;
+  user-select: none;
+  height: 100%;
+  max-height: calc(100% - 110px);
+}
+
 .wrapper {
+  position: relative;
   width: 100%;
-  max-width: 780px;
-  margin: 0 auto;
-  padding: 0 20px 50px 20px;
-  text-align: justify;
+  padding: 70px 10% 50px 0;
+  transition: opacity 0.2s;
+
+  &.invisible {
+    opacity: 0;
+  }
+}
+
+.title {
+  font-family: Liana;
+  font-size: 50px;
+  line-height: 50px;
+  color: var(--link-active);
+  padding-bottom: 40px;
+}
+
+.text {
+  font-size: 16px;
+  line-height: 25px;
+  padding-right: 100px;
+
+  strong {
+    display: block;
+    padding-top: 20px;
+    font-size: 18px;
+  }
+
+  p:first-child {
+    strong {
+      padding-top: 0;
+    }
+  }
+}
+
+.footer {
+  padding-top: 20px;
+}
+
+.wrapper.isMobile {
+  padding: 60px 18px 20px 18px !important;
+
+  .title {
+    text-align: center;
+  }
+
+  .text {
+    padding-right: 0;
+  }
 }

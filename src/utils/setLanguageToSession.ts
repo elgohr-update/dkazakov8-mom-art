@@ -36,7 +36,7 @@ export function setLanguageToSession(params: { req: Express['Request']; store: S
     return Promise.reject(createError(errorsNames.REDIRECT, pathnameWithBrowserLang));
   }
 
-  req.session.language = URLLang;
+  req.session.language = URLLang as 'ru' | 'en';
 
   return Promise.resolve();
 }

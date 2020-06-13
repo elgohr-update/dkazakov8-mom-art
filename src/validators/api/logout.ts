@@ -12,20 +12,11 @@ export const ApiRoute = t.iface([], {
 
 export const TypeRequestParams = t.name('undefined');
 
-export const TypeResponseParams = t.name('undefined');
-
-export const TypeApiRoute = t.intersection(
-  'ApiRoute',
-  t.iface([], {
-    params: t.opt('TypeRequestParams'),
-    response: t.opt('TypeResponseParams'),
-  })
-);
+export const TypeResponse = t.name('undefined');
 
 const exportedTypeSuite: t.ITypeSuite = {
   ApiRoute,
   TypeRequestParams,
-  TypeResponseParams,
-  TypeApiRoute,
+  TypeResponse,
 };
 export default exportedTypeSuite;

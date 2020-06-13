@@ -2,10 +2,10 @@ import _ from 'lodash';
 
 import { MessageObjectType } from 'common';
 
-export function wrapMessages(
+export function wrapMessages<T extends Record<string, string>>(
   dirname: string,
-  obj: { [key: string]: string }
-): { [key: string]: MessageObjectType } {
+  obj: T
+): Record<keyof T, MessageObjectType> {
   return _.mapValues(obj, (value, key) => ({
     name: `${dirname.toLowerCase().replace(/\\/g, '/')}__${key}`,
     defaultValue: obj[key],

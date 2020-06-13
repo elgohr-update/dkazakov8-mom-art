@@ -1,19 +1,48 @@
 @import "reset.scss";
 @import "mixins.scss";
-@import url("https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap&subset=cyrillic,cyrillic-ext");
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("../assets/fonts/SFProDisplay-Regular.eot");
+  src: local("SF Pro Display Regular"), local("SFProDisplay-Regular"),
+    url("../assets/fonts/SFProDisplay-Regular.eot?#iefix") format("embedded-opentype"),
+    url("../assets/fonts/SFProDisplay-Regular.woff2") format("woff2"),
+    url("../assets/fonts/SFProDisplay-Regular.woff") format("woff"),
+    url("../assets/fonts/SFProDisplay-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Liana";
+  src: url("../assets/fonts/Liana.eot");
+  src: local("Liana"), url("../assets/fonts/Liana.eot?#iefix") format("embedded-opentype"),
+    url("../assets/fonts/Liana.woff2") format("woff"),
+    url("../assets/fonts/Liana.woff") format("woff"),
+    url("../assets/fonts/Liana.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 
 body {
-  font-family: "Roboto", Tahoma, sans-serif;
+  font-family: "SF Pro Display", Tahoma, sans-serif;
   font-size: 18px;
   line-height: $line_height;
-  background: $W2;
   position: relative;
-  color: $W8;
+  color: var(--text);
   height: 100%;
   overflow-x: hidden;
+}
 
-  @media (max-width: 800px) {
-    font-size: 16px;
+:global {
+  #app {
+    min-height: 100%;
+    background: url("../assets/images/body_bg.jpg") no-repeat;
+    background-size: cover;
+  }
+
+  .modalOpened {
+    overflow: hidden;
   }
 }
 
@@ -39,6 +68,28 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px $W2 inset !important;
-  -webkit-text-fill-color: $W8 !important;
+  -webkit-box-shadow: 0 0 0 30px var(--base-bg) inset !important;
+  -webkit-text-fill-color: var(--link-active) !important;
+}
+
+:global {
+  .ScrollbarsCustom-TrackY {
+    overflow: visible !important;
+    width: 2px !important;
+    background: var(--scroll-track-bg) !important;
+    transition: background-color 0.2s;
+  }
+
+  .ScrollbarsCustom-ThumbY {
+    background: var(--link-inactive) !important;
+    width: 14px !important;
+    padding: 5px;
+    margin-left: -6px;
+    border-radius: 100% !important;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: var(--link-active) !important;
+    }
+  }
 }

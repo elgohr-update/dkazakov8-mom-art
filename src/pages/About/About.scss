@@ -1,43 +1,91 @@
 @import "mixins.scss";
 
-.wrapper {
-  width: 100%;
-  max-width: 780px;
-  margin: 0 auto;
-  padding: 0 20px 50px 20px;
-  text-align: justify;
+.leftImage {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  height: 100%;
+  user-select: none;
+}
 
-  .socialLineWrapper {
+.wrapper {
+  position: relative;
+  width: 100%;
+  padding: 70px 10% 50px 0;
+  transition: opacity 0.2s;
+
+  &.invisible {
+    opacity: 0;
+  }
+}
+
+.title {
+  font-family: Liana;
+  font-size: 50px;
+  line-height: 50px;
+  color: var(--link-active);
+  padding-bottom: 40px;
+}
+
+.text {
+  font-size: 18px;
+  line-height: 30px;
+  padding-right: 100px;
+}
+
+.signLine {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+
+  .sign {
+    color: var(--link-active);
+    padding-top: 10px;
+
+    svg {
+      width: 207px / 1.1;
+      height: 123px / 1.1;
+    }
+  }
+}
+
+.socialLine {
+  padding-bottom: 35px;
+
+  .socialLink {
+    display: inline-block;
+    vertical-align: top;
+    font-size: 24px;
+    color: var(--text-50);
+    transition: color 0.2s;
+    margin-right: 25px;
+
+    &:hover {
+      color: var(--link-active);
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.wrapper.isMobile {
+  padding: 60px 18px 20px 18px !important;
+
+  .title {
     text-align: center;
   }
 
-  .socialLine {
-    @include inline-top;
-
-    margin-bottom: 30px;
-
-    .socialLineIcon {
-      color: $W6;
-      font-size: 16px;
-      width: 30px;
-      padding-top: 4px;
-    }
-
-    .socialLineText {
-      @include inline-top;
-
-      font-size: 14px;
-      margin-right: 10px;
-    }
-  }
-
   .text {
-    @include clearfix;
+    padding-right: 0;
   }
 
-  .photo {
-    width: 200px;
-    float: left;
-    margin: 0 20px 10px 0;
+  .socialLine {
+    padding-bottom: 0;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
   }
 }

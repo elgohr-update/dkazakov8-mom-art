@@ -1,21 +1,15 @@
-import { ApiRoute } from '../models/ApiRoute';
-import { TypeGalleryItems } from '../models/GalleryItems';
+import { ApiRoute } from 'models/ApiRoute';
+import { TypeGalleryItems } from 'models/TypeGalleryItems';
 
-type TypeRequestParams = undefined;
+type TypeRequestParams = any;
 
-type TypeResponseParams = {
+type TypeResponse = {
   images: TypeGalleryItems;
 };
 
-type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
-
-export const uploadImage: TypeApiRoute = {
+export const uploadImage: ApiRoute & { params?: TypeRequestParams; response?: TypeResponse } = {
   name: `uploadImage`,
   url: `/upload_image`,
   method: 'POST',
-  isFile: true,
-  headers: {
-    'Content-Type': `multipart/form-data`,
-  },
   isMocked: false,
 };

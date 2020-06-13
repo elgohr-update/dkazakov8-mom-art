@@ -1,5 +1,5 @@
 import { isomorphPolyfills } from 'utils';
-import { createServer, updateTranslations, copyAssetsToProdBucket } from 'serverUtils';
+import { createServer, updateTranslations, copyAssetsToCDN } from 'serverUtils';
 import { handleSession } from 'serverMiddlewares/handleSession';
 import { handlePrometheus } from 'serverMiddlewares/handlePrometheus';
 import { handleJsonRequests } from 'serverMiddlewares/handleJsonRequests';
@@ -14,7 +14,7 @@ isomorphPolyfills();
 
 Promise.resolve()
   .then(updateTranslations)
-  .then(copyAssetsToProdBucket)
+  .then(copyAssetsToCDN)
   .then(() => createServer())
   .then(server =>
     server.useMiddlewares([

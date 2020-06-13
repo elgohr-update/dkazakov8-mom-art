@@ -1,7 +1,13 @@
+/**
+ * @docs: https://github.com/websockets/ws
+ * @docs: https://github.com/yuanchuan/node-watch
+ *
+ */
+
+import fs from 'fs';
 import path from 'path';
 import http from 'http';
 import https from 'https';
-import fs from 'fs';
 
 import ws from 'ws';
 import watch from 'node-watch';
@@ -9,7 +15,7 @@ import express from 'express';
 
 import { env } from '../env';
 import { paths } from '../paths';
-import { configEntryServer } from '../webpack-custom/configs/configEntryServer';
+import { configEntryServer } from '../_webpack/configs/configEntryServer';
 
 function startReloadServer() {
   const sslOptions = {
@@ -19,7 +25,7 @@ function startReloadServer() {
 
   const app = express();
 
-  app.get(env.HOT_RELOAD_CLIENT_URL, (req, res) => {
+  app.get('/reload/reload.js', (req, res) => {
     res.type('text/javascript');
     res.send(`
 (function refresh() {
@@ -53,43 +59,41 @@ function startReloadServer() {
 
   const server = env.HTTPS_BY_NODE ? https.createServer(sslOptions, app) : http.createServer(app);
 
-  // https://github.com/websockets/ws
   return new ws.Server({ server: server.listen(env.HOT_RELOAD_PORT) });
 }
 
-function startFileWatcher(wss) {
-  // https://github.com/yuanchuan/node-watch
-  const serverChunks = Object.keys(configEntryServer);
-  const excludedFilenames = [...serverChunks];
-  let watchDebounceTimeout = null;
+function startFileWatcher({ onFilesChanged }: { onFilesChanged: () => void }) {
+  const excludedFilenames = Object.keys(configEntryServer);
   let changedFiles = [];
+  let watchDebounceTimeout = null;
 
-  watch(
-    paths.buildPath,
-    {
-      // watch only files in root folder
-      recursive: false,
-      filter: filePath => !excludedFilenames.some(fileName => filePath.indexOf(fileName) !== -1),
-    },
-    function onFilesChanged(event, filePath) {
-      const fileName = filePath.replace(paths.buildPath, '').replace(/[\\/]/g, '');
+  const watchOptions = {
+    recursive: false,
+    filter: filePath => !excludedFilenames.some(fileName => filePath.indexOf(fileName) !== -1),
+  };
 
-      changedFiles.push(fileName);
+  watch(paths.buildPath, watchOptions, function fileChanged(event, filePath) {
+    const { base: fileName } = path.parse(filePath);
 
-      clearTimeout(watchDebounceTimeout);
+    changedFiles.push(fileName);
 
-      watchDebounceTimeout = setTimeout(() => {
-        // console.log(`reload triggered by\n`, changedFiles);
+    clearTimeout(watchDebounceTimeout);
+    watchDebounceTimeout = setTimeout(() => {
+      // console.log(`triggered by`, changedFiles);
 
-        changedFiles = [];
+      changedFiles = [];
 
-        wss.clients.forEach(client => {
-          if (client.readyState === ws.OPEN) client.send('reload');
-        });
-      }, 50);
-    }
-  );
+      onFilesChanged();
+    }, 50);
+  });
 }
 
 const wss = startReloadServer();
-startFileWatcher(wss);
+
+startFileWatcher({
+  onFilesChanged() {
+    wss.clients.forEach(client => {
+      if (client.readyState === ws.OPEN) client.send('reload');
+    });
+  },
+});

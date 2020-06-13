@@ -1,10 +1,9 @@
 import cn from 'classnames';
 import React from 'react';
-import { observer } from 'mobx-react';
 
 import { routes } from 'routes';
 import { Link } from 'components/Link';
-import { StoreContext } from 'stores/StoreRoot';
+import { ConnectedComponent } from 'components/ConnectedComponent';
 
 import styles from './Header.scss';
 import { messages } from './messages';
@@ -28,11 +27,8 @@ const menuArray = [
   },
 ];
 
-@observer
-export class Menu extends React.Component {
-  declare context: React.ContextType<typeof StoreContext>;
-  static contextType = StoreContext;
-
+@ConnectedComponent.observer
+export class Menu extends ConnectedComponent {
   render() {
     const {
       store,
@@ -40,6 +36,7 @@ export class Menu extends React.Component {
         router: { currentRoute },
         user,
       },
+      actions,
     } = this.context;
 
     return (
@@ -54,6 +51,11 @@ export class Menu extends React.Component {
                 key={route.name}
                 className={cn(styles.menuItem, isActive && styles.active)}
                 route={route}
+                onClick={
+                  store.ui.isMobile
+                    ? () => actions.general.headerToggleMobileMenu({ isOpen: false })
+                    : undefined
+                }
               >
                 {store.getLn(title)}
               </Link>

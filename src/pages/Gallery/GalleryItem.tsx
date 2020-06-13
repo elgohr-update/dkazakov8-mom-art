@@ -1,37 +1,37 @@
 import React from 'react';
 
 import { TypeGalleryItem } from 'models';
-import { StoreContext } from 'stores/StoreRoot';
+import { ConnectedComponent } from 'components/ConnectedComponent';
 
 import styles from './Gallery.scss';
 
 interface GalleryItemProps {
-  style: Record<string, any>;
   onClick: (event?: React.MouseEvent) => void;
   imgData: TypeGalleryItem;
 }
 
-export class GalleryItem extends React.Component<GalleryItemProps> {
-  declare context: React.ContextType<typeof StoreContext>;
-
+@ConnectedComponent.observer
+export class GalleryItem extends ConnectedComponent<GalleryItemProps> {
   render() {
     const {
       store: {
         ui: { currentLanguage },
       },
     } = this.context;
-    const { imgData, style, onClick } = this.props;
+    const { imgData, onClick } = this.props;
     const title = imgData.title[currentLanguage];
 
     return (
       <a
         className={styles.item}
         href={imgData.sources.big.src}
-        style={style}
         title={title}
         onClick={onClick}
+        style={{ backgroundImage: `url('${imgData.sources.small.src}')` }}
       >
-        <img src={imgData.sources.small.src} alt={title} title={title} />
+        <span className={styles.caption}>
+          <span className={styles.captionTitle}>{title}</span>
+        </span>
       </a>
     );
   }

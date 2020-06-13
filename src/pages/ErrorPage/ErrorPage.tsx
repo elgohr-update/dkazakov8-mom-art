@@ -2,7 +2,7 @@ import cn from 'classnames';
 import React from 'react';
 
 import { Header } from 'components/Header';
-import { StoreContext } from 'stores/StoreRoot';
+import { ConnectedComponent } from 'components/ConnectedComponent';
 
 import styles from './ErrorPage.scss';
 import { messages } from './messages';
@@ -11,16 +11,15 @@ interface ErrorPageProps {
   errorNumber: number;
 }
 
-export class ErrorPage extends React.Component<ErrorPageProps> {
-  declare context: React.ContextType<typeof StoreContext>;
-  static contextType = StoreContext;
-
+@ConnectedComponent.observer
+export class ErrorPage extends ConnectedComponent<ErrorPageProps> {
   UNSAFE_componentWillMount() {
-    const { store } = this.context;
+    const { actions } = this.context;
 
-    store.router.metaData = {
-      title: store.getLn(messages.metaTitle),
-    };
+    actions.general.setMetaData({
+      title: messages.metaTitle,
+      description: messages.metaTitle,
+    });
   }
 
   render() {

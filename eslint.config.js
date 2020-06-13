@@ -6,12 +6,7 @@ module.exports = {
     node: true,
     browser: true,
   },
-  extends: [
-    './eslint-custom/rules.js',
-    'prettier',
-    'prettier/react',
-    'prettier/@typescript-eslint',
-  ],
+  extends: ['./_eslint/rules.js', 'prettier', 'prettier/react', 'prettier/@typescript-eslint'],
   plugins: ['react', 'prettier', 'import', '@typescript-eslint'],
   rules: {
     'prettier/prettier': [

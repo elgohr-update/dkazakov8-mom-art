@@ -3,14 +3,11 @@ import { createError } from 'utils';
 
 import { env } from '../../env';
 
-const validUsers = env
-  .getParam('ALLOWED_EMAILS')
-  .split(',')
-  .map(item => {
-    const [email, password] = item.split(':');
+const validUsers = env.ALLOWED_EMAILS.split(',').map(item => {
+  const [email, password] = item.split(':');
 
-    return { email, password };
-  });
+  return { email, password };
+});
 
 export function authController({ req }) {
   return Promise.resolve().then(() => {

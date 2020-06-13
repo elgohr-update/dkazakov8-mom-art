@@ -1,5 +1,8 @@
 // tslint:disable:no-console
 
+import fs from 'fs';
+import path from 'path';
+
 import * as ts from 'typescript';
 
 const ignoreNode = '';
@@ -9,6 +12,10 @@ export interface ICompilerOptions {
   ignoreIndexSignature?: boolean;
   inlineImports?: boolean;
 }
+
+const { compilerOptions } = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, '../../tsconfig.json'), 'utf-8')
+);
 
 // The main public interface is `Compiler.compile`.
 export class Compiler {
@@ -20,7 +27,10 @@ export class Compiler {
       inlineImports: false,
     }
   ) {
-    const createProgramOptions = { target: ts.ScriptTarget.Latest, module: ts.ModuleKind.CommonJS };
+    const createProgramOptions: ts.CompilerOptions = Object.assign(compilerOptions, {
+      /* target: ts.ScriptTarget.Latest, module: ts.ModuleKind.CommonJS*/
+      moduleResolution: ts.ModuleResolutionKind.NodeJs,
+    });
     const program = ts.createProgram(filePaths, createProgramOptions);
     const checker = program.getTypeChecker();
 

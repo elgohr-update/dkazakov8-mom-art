@@ -1,37 +1,35 @@
+import _ from 'lodash';
+
 type Devtool =
   | 'eval'
-  | 'source-map'
+  | 'eval-cheap-source-map'
+  | 'eval-cheap-module-source-map'
   | 'eval-source-map'
+  | 'eval-nosources-source-map'
+  | 'eval-nosources-cheap-source-map'
+  | 'eval-nosources-cheap-module-source-map'
   | 'cheap-source-map'
-  | 'inline-source-map'
-  | 'hidden-source-map'
-  | 'nosources-source-map'
-  | 'cheap-eval-source-map'
   | 'cheap-module-source-map'
   | 'inline-cheap-source-map'
-  | 'cheap-module-eval-source-map'
   | 'inline-cheap-module-source-map'
-  | boolean;
+  | 'inline-source-map'
+  | 'inline-nosources-source-map'
+  | 'inline-nosources-cheap-source-map'
+  | 'inline-nosources-cheap-module-source-map'
+  | 'source-map'
+  | 'hidden-source-map'
+  | 'hidden-nosources-source-map'
+  | 'hidden-nosources-cheap-source-map'
+  | 'hidden-nosources-cheap-module-source-map'
+  | 'hidden-cheap-source-map'
+  | 'hidden-cheap-module-source-map'
+  | 'nosources-source-map'
+  | 'nosources-cheap-source-map'
+  | 'nosources-cheap-module-source-map';
 
 class Env {
-  envParams: Record<string, any>;
-
-  getParam(param) {
-    return (this.envParams[param] || '').replace(/"/g, '');
-  }
-
-  getParamAsNumber(param) {
-    return Number(this.getParam(param) || 0);
-  }
-
-  getParamAsBoolean(param) {
-    return this.getParam(param) === 'true';
-  }
-
-  constructor(params) {
-    this.envParams = params;
-
-    Object.entries(this.envParams).forEach(([envKey, envValue]) => {
+  constructor(params: Record<string, any>) {
+    Object.entries(params).forEach(([envKey, envValue]) => {
       const paramType = typeof this[envKey];
 
       if (paramType === 'boolean') this[envKey] = envValue === true || envValue === 'true';
@@ -42,7 +40,6 @@ class Env {
 
   SENTRY_URL = '';
   GIT_COMMIT = '';
-  NODE_ENV: `development` | `production` = `development`;
   REACT_LIBRARY: `react` | `inferno` = `react`;
   HOT_RELOAD = false;
   HOT_RELOAD_PORT = 0;
@@ -61,29 +58,40 @@ class Env {
   BUNDLE_ANALYZER_PORT = 0;
   SPEED_ANALYZER_SERVER = false;
   START_SERVER_AFTER_BUILD = false;
-  DEV_TOOL: Devtool = 'cheap-module-eval-source-map';
-  DEV_TOOL_SERVER: Devtool = 'cheap-module-eval-source-map';
-  NODE_PATH = '';
-  HTTPS_BY_NODE = false;
-  EXPRESS_PORT = 0;
+  DEV_TOOL: Devtool = 'eval-cheap-module-source-map';
+  DEV_TOOL_SERVER: Devtool = 'eval-cheap-module-source-map';
   SESSION_DURATION = 0;
   ALLOWED_EMAILS = '';
   SESSION_SECRET = '';
-  YANDEX_STORAGE_ENABLED = false;
-  LOGS_YANDEX_STORAGE = false;
-  YANDEX_STORAGE_BUCKET = '';
-  YANDEX_STORAGE_ENDPOINT = '';
-  YANDEX_STORAGE_COPY_TO_PROD = false;
-  YANDEX_STORAGE_BUCKET_PREFIX = '';
-  YANDEX_STORAGE_ACCESS_KEY_ID = '';
-  YANDEX_STORAGE_SECRET_ACCESS_KEY = '';
+
+  LOGS_WATCHED_FILES = false;
+
+  CDN_ENABLED = false;
+  CDN_BUCKET = '';
+  CDN_ENDPOINT = '';
+  CDN_BUCKET_PREFIX = '';
+  CDN_ACCESS_KEY_ID = '';
+  CDN_SECRET_ACCESS_KEY = '';
+
+  NODE_ENV: `development` | `production` = `development`;
+  NODE_PATH = '';
+  EXPRESS_PORT = 0;
+  HTTPS_BY_NODE = false;
 
   LOGS_GENERATE_FILES = false;
-  LOGS_WATCHED_FILES = false;
+  LOGS_CDN = false;
 
   REDIS_PORT_6379_TCP_ADDR = '';
   REDIS_PORT_6379_TCP_PORT = 0;
 }
 
+export const allowedClientKeys: Array<keyof Env> = ['HTTPS_BY_NODE', 'SENTRY_URL'];
+
 // eslint-disable-next-line no-process-env
-export const env = new Env(process.env);
+const envInstance = new Env(process.env);
+
+export const env =
+  typeof IS_CLIENT !== 'undefined' && IS_CLIENT
+    ? // eslint-disable-next-line no-process-env
+      _.pick(envInstance, allowedClientKeys)
+    : envInstance;

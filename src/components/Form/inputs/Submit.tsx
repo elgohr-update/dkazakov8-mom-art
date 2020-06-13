@@ -1,70 +1,39 @@
 import cn from 'classnames';
-import _ from 'lodash';
 import React from 'react';
-import { observer } from 'mobx-react';
 
-import { MessageObjectType } from 'common';
-import { StoreContext } from 'stores/StoreRoot';
+import { ConnectedComponent } from 'components/ConnectedComponent';
+import { TypeFormConfig, TypeInputSubmitConfig } from 'models';
 
 import styles from '../Form.scss';
 
-export interface SubmitProps {
-  label: MessageObjectType;
-  loadingByPath?: string;
-
-  tabIndex?: number;
-  disabled?: boolean;
-  className?: string;
+export interface SubmitProps<T> {
+  formConfig: T;
+  inputConfig: TypeInputSubmitConfig;
 }
 
-@observer
-export class Submit extends React.Component<SubmitProps> {
-  declare context: React.ContextType<typeof StoreContext>;
-  static contextType = StoreContext;
-
-  get params() {
-    const { store } = this.context;
-    const { label, tabIndex, disabled, className, loadingByPath } = this.props;
-
-    return {
-      label,
-      store,
-      tabIndex,
-      disabled,
-      className,
-      isLoading: _.get(store, loadingByPath) || false,
-    };
-  }
-
+@ConnectedComponent.observer
+export class Submit<T extends TypeFormConfig<T>> extends ConnectedComponent<SubmitProps<T>> {
   get wrapperClassName() {
-    const { params } = this;
+    const { formConfig, inputConfig } = this.props;
 
     return cn({
       [styles.submitWrapper]: true,
-      [styles.loading]: params.isLoading,
-      [params.className]: Boolean(params.className),
+      [styles.loading]: formConfig.SYSTEM.isSubmitting,
+      [inputConfig.className]: Boolean(inputConfig.className),
     });
   }
 
-  handleClick = event => {
-    const { params } = this;
-
-    if (params.disabled || params.isLoading) {
-      event.preventDefault();
-    }
-  };
-
   render() {
-    const { params, wrapperClassName } = this;
+    const { store } = this.context;
+    const { inputConfig } = this.props;
 
     return (
-      <div className={wrapperClassName}>
+      <div className={this.wrapperClassName}>
         <input
           type="submit"
-          value={params.store.getLn(params.label)}
-          onClick={this.handleClick}
-          disabled={params.disabled}
-          tabIndex={params.tabIndex}
+          value={store.getLn(inputConfig.label, inputConfig.labelData)}
+          tabIndex={inputConfig.tabIndex}
+          disabled={inputConfig.disabled}
         />
       </div>
     );

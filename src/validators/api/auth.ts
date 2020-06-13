@@ -15,23 +15,14 @@ export const TypeRequestParams = t.iface([], {
   password: 'string',
 });
 
-export const TypeResponseParams = t.iface([], {
+export const TypeResponse = t.iface([], {
   email: 'string',
   sessionExpires: 'number',
 });
 
-export const TypeApiRoute = t.intersection(
-  'ApiRoute',
-  t.iface([], {
-    params: t.opt('TypeRequestParams'),
-    response: t.opt('TypeResponseParams'),
-  })
-);
-
 const exportedTypeSuite: t.ITypeSuite = {
   ApiRoute,
   TypeRequestParams,
-  TypeResponseParams,
-  TypeApiRoute,
+  TypeResponse,
 };
 export default exportedTypeSuite;

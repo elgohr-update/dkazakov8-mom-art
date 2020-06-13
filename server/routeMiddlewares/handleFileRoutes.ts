@@ -1,22 +1,13 @@
 import serveStatic from 'serve-static';
 
+import { compressions } from 'const';
+
 import { env } from '../../env';
 
-const compressions = [
-  {
-    encoding: 'br',
-    extension: 'br',
-  },
-  {
-    encoding: 'gzip',
-    extension: 'gz',
-  },
-];
-
-function redirectToCdn(req, res) {
-  return res.redirect(
-    `${env.YANDEX_STORAGE_ENDPOINT}/${env.YANDEX_STORAGE_BUCKET_PREFIX}${env.YANDEX_STORAGE_BUCKET}${req.url}`
-  );
+function redirectToCdn(req, res, next) {
+  return req.originalUrl.includes('.')
+    ? res.redirect(`${env.CDN_ENDPOINT}/${env.CDN_BUCKET_PREFIX}${env.CDN_BUCKET}${req.url}`)
+    : next();
 }
 
 function setContentType(contentType) {
@@ -36,15 +27,12 @@ function setEncoding(encoding) {
 }
 
 export function handleFileRoutes(app) {
-  if (env.YANDEX_STORAGE_ENABLED) {
-    return app.get('*', (req, res, next) =>
-      req.originalUrl.indexOf('.') !== -1 ? redirectToCdn(req, res) : next()
-    );
-  }
+  if (env.CDN_ENABLED) return app.get('*', redirectToCdn);
 
   compressions.forEach(({ encoding, extension }) => {
-    app.get(`*.js.${extension}`, setContentType('text/javascript'));
+    app.get(`*.js.${extension}`, setContentType('application/javascript'));
     app.get(`*.js.${extension}`, setEncoding(encoding));
+
     app.get(`*.css.${extension}`, setContentType('text/css'));
     app.get(`*.css.${extension}`, setEncoding(encoding));
   });
@@ -52,7 +40,5 @@ export function handleFileRoutes(app) {
   app.use(serveStatic('build'));
 
   // Send 404 for all not found files
-  app.get('*', (req, res, next) =>
-    req.originalUrl.indexOf('.') !== -1 ? res.sendStatus(404) : next()
-  );
+  app.get('*', (req, res, next) => (req.originalUrl.includes('.') ? res.sendStatus(404) : next()));
 }

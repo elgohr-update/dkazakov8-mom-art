@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { fieldValidators } from 'utils';
-import { Header } from 'components/Header';
 import { Form } from 'components/Form';
-import { StoreContext } from 'stores/StoreRoot';
+import { Header } from 'components/Header';
+import { ConnectedComponent } from 'components/ConnectedComponent';
 
 import styles from './EditLocalization.scss';
 import { messages } from './messages';
@@ -15,10 +15,8 @@ interface TranslationItemProps {
   translationName: string;
 }
 
-class TranslationItem extends React.Component<TranslationItemProps> {
-  declare context: React.ContextType<typeof StoreContext>;
-  static contextType = StoreContext;
-
+@ConnectedComponent.observer
+class TranslationItem extends ConnectedComponent<TranslationItemProps> {
   render() {
     const {
       store: {
@@ -42,24 +40,23 @@ class TranslationItem extends React.Component<TranslationItemProps> {
   }
 }
 
-export class EditLocalization extends React.Component {
-  declare context: React.ContextType<typeof StoreContext>;
-  static contextType = StoreContext;
-
+@ConnectedComponent.observer
+export class EditLocalization extends ConnectedComponent {
   UNSAFE_componentWillMount() {
-    const { store } = this.context;
+    const { actions } = this.context;
 
-    store.router.metaData = {
-      title: store.getLn(messages.metaTitle),
-    };
+    actions.general.setMetaData({
+      title: messages.metaTitle,
+      description: messages.metaTitle,
+    });
   }
 
   handleFormSubmit = formData => {
-    const { store } = this.context;
+    const { actions } = this.context;
 
     const storePath = `admin.form`;
 
-    return store.actions.common.saveAllLocalization({ formData, storePath });
+    return actions.general.saveAllLocalization({ formData, storePath });
   };
 
   render() {

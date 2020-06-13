@@ -1,40 +1,35 @@
 import _ from 'lodash';
 import React from 'react';
-import { observer } from 'mobx-react';
 
+import { TypeFormConfig, TypeFormSubmit } from 'models';
 import { scrollToFirstElement, getNotValidFieldsIds } from 'utils';
-import { StoreContext } from 'stores/StoreRoot';
+import { ConnectedComponent } from 'components/ConnectedComponent';
 
 import { Text } from './inputs/Text';
 import { Submit } from './inputs/Submit';
-import { Textarea } from './inputs/Textarea';
+import { FileInput } from './inputs/File';
 
-interface FormProps {
-  storePath: string;
+interface FormProps<T extends TypeFormConfig<T>> {
+  onSubmit: TypeFormSubmit<T>;
+  formConfig: T;
   className?: string;
-  onSubmit?: (formData: Record<string, any>, event: Event) => void;
+  initialData?: { [Key in keyof T]?: Partial<T[Key]> };
+  buttonsLineClassName?: string;
+  beforeSubmitElements?: Array<React.ReactNode>;
 }
 
-const inputsCollection = {
-  Text,
-  Submit,
-  Textarea,
-};
-
-@observer
-export class Form extends React.Component<FormProps> {
-  declare context: React.ContextType<typeof StoreContext>;
-  static contextType = StoreContext;
-
-  static Input = inputsCollection;
-  static getNotValidFieldsIds = getNotValidFieldsIds;
-
+@ConnectedComponent.observer
+export class Form<T extends TypeFormConfig<T>> extends ConnectedComponent<FormProps<T>> {
+  static Input = {
+    File: FileInput,
+    Text,
+    Submit,
+  };
   formElement: HTMLElement = null;
 
   componentDidMount() {
     window.addEventListener('keydown', this.onKeyDown);
   }
-
   componentWillUnmount() {
     window.removeEventListener('keydown', this.onKeyDown);
   }
@@ -52,28 +47,51 @@ export class Form extends React.Component<FormProps> {
     }
   };
 
-  handleFormSubmit = event => {
+  handleFormSubmit = (event: React.FormEvent) => {
+    const { store } = this.context;
+    const { formConfig, onSubmit } = this.props;
+
     event.preventDefault();
 
-    const { store } = this.context;
-    const { storePath, onSubmit } = this.props;
+    if (formConfig.SYSTEM.isSubmitting) return Promise.resolve();
 
-    const formConfig = _.get(store, storePath);
-    const notValidFieldsIds = getNotValidFieldsIds({ formConfig });
+    formConfig.SYSTEM.isSubmitting = true;
 
-    if (notValidFieldsIds.length > 0) {
-      return scrollToFirstElement(notValidFieldsIds);
+    const formConfigWithoutSystem = _.omit(formConfig, ['SYSTEM', 'submit']);
+    const formData = _.mapValues(formConfigWithoutSystem, ({ value }) => value);
+    const notValidFieldsIds = getNotValidFieldsIds({ formConfig: formConfigWithoutSystem });
+
+    if (notValidFieldsIds.length) {
+      formConfig.SYSTEM.isSubmitting = false;
+
+      return store.ui.modalIsOpen
+        ? Promise.resolve()
+        : Promise.resolve(scrollToFirstElement(notValidFieldsIds));
     }
 
-    if (onSubmit) {
-      const formData = _.mapValues(formConfig, fieldData => fieldData.value);
-
-      return onSubmit(formData, event);
-    }
+    return onSubmit(formData, event)
+      .then(() => {
+        formConfig.SYSTEM.isSubmitting = false;
+      })
+      .catch(() => {
+        formConfig.SYSTEM.isSubmitting = false;
+      });
   };
 
   render() {
-    const { children, className } = this.props;
+    const {
+      className,
+      formConfig,
+      initialData,
+      buttonsLineClassName,
+      beforeSubmitElements,
+    } = this.props;
+
+    const formConfigWithoutSystem = _.omit(formConfig, ['SYSTEM', 'submit']);
+    const componentsMapper = {
+      text: Form.Input.Text,
+      file: Form.Input.File,
+    };
 
     return (
       <form
@@ -81,7 +99,27 @@ export class Form extends React.Component<FormProps> {
         onSubmit={this.handleFormSubmit}
         ref={node => (this.formElement = node)}
       >
-        {children}
+        {Object.entries(formConfigWithoutSystem).map(
+          ([name, inputConfig]: [Extract<keyof T, string>, T[keyof T]]) => {
+            const Component = componentsMapper[inputConfig.type];
+
+            return (
+              <Component<T>
+                key={name}
+                name={name}
+                formConfig={formConfig}
+                inputConfig={inputConfig}
+                initialData={initialData != null ? initialData[name] : undefined}
+              />
+            );
+          }
+        )}
+        <div className={buttonsLineClassName}>
+          {beforeSubmitElements}
+          {formConfig.submit && (
+            <Form.Input.Submit<T> formConfig={formConfig} inputConfig={formConfig.submit} />
+          )}
+        </div>
       </form>
     );
   }

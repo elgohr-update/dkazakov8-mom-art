@@ -1,25 +1,26 @@
 import _ from 'lodash';
 
-import * as apiRoutes from 'api';
+import * as apiRaw from 'api';
 import { handleApiError } from 'serverUtils';
 import * as routeControllers from 'routeControllers';
-import { validateRequestParams } from 'actions/request';
+import { validateRequestParams } from 'actions/general/request';
 
 export function handleApiRoutes(app) {
   // Automatically create route handlers for all controllers exported by routeControllers
-  _.values({ ...apiRoutes }).forEach(routeConfig => {
-    const controllerFn = routeControllers[`${routeConfig.name}Controller`];
-    const method = routeConfig.method.toLowerCase();
+  _.mapValues(apiRaw, (route, apiName) => {
+    const controllerFn = routeControllers[`${apiName}Controller`];
+    const method = route.method.toLowerCase();
 
     if (!controllerFn) {
-      console.error(`handleApiRoutes: no controller for route ${routeConfig.name}`);
+      console.error(`handleApiRoutes: no controller for route ${apiName}`);
     }
 
-    app[method](routeConfig.url, (req, res) => {
+    app[method](route.url, (req, res) => {
       const params = JSON.stringify(req.body) === '{}' ? undefined : req.body;
+      const requestParams = Object.assign({ apiName }, params);
 
       return Promise.resolve()
-        .then(() => validateRequestParams({ route: routeConfig, params }))
+        .then(() => validateRequestParams({ requestParams }))
         .then(() => controllerFn({ req, res }))
         .then(data => res.send(data))
         .catch(error => handleApiError(error, res));

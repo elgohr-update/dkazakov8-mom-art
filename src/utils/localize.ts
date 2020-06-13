@@ -60,7 +60,8 @@ function replacePlurals(values: { [key: string]: string | number }, formattedMes
 
 export function getLn(
   { store }: { store: StoreRoot },
-  messageObject: MessageObjectType,
+  // type string is for IDE jumping, the real is MessageObjectType
+  messageObject: string | MessageObjectType,
   values?: { [key: string]: string | number }
 ) {
   const {

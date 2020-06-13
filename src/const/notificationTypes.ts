@@ -1,5 +1,5 @@
 export const notificationTypes = {
-  ERROR: 'error',
   INFO: 'info',
+  ERROR: 'error',
   SUCCESS: 'success',
 };

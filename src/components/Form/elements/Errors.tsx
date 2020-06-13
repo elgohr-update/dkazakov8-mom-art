@@ -1,21 +1,17 @@
 import _ from 'lodash';
 import React from 'react';
-import { observer } from 'mobx-react';
 
-import { FieldValidatorType } from 'common';
-import { StoreContext } from 'stores/StoreRoot';
+import { TypeInputErrors } from 'models';
+import { ConnectedComponent } from 'components/ConnectedComponent';
 
 import styles from '../Form.scss';
 
 interface ErrorsProps {
-  errors: FieldValidatorType[];
+  errors: TypeInputErrors;
 }
 
-@observer
-export class Errors extends React.Component<ErrorsProps> {
-  declare context: React.ContextType<typeof StoreContext>;
-  static contextType = StoreContext;
-
+@ConnectedComponent.observer
+export class Errors extends ConnectedComponent<ErrorsProps> {
   render() {
     const { store } = this.context;
     const { errors } = this.props;
@@ -24,7 +20,7 @@ export class Errors extends React.Component<ErrorsProps> {
 
     return (
       <div className={styles.errors}>
-        {errors.map(({ message }) => (
+        {errors.map(message => (
           <div className={styles.errorItem} key={message.name}>
             {_.isPlainObject(message) ? store.getLn(message) : message}
           </div>

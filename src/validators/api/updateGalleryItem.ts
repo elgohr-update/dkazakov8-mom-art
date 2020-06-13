@@ -34,29 +34,20 @@ export const TypeGalleryItems = t.array('TypeGalleryItem');
 
 export const TypeRequestParams = t.iface([], {
   id: 'string',
-  order: 'string',
+  order: 'number',
   title_ru: 'string',
   title_en: 'string',
 });
 
-export const TypeResponseParams = t.iface([], {
+export const TypeResponse = t.iface([], {
   images: 'TypeGalleryItems',
 });
-
-export const TypeApiRoute = t.intersection(
-  'ApiRoute',
-  t.iface([], {
-    params: t.opt('TypeRequestParams'),
-    response: t.opt('TypeResponseParams'),
-  })
-);
 
 const exportedTypeSuite: t.ITypeSuite = {
   ApiRoute,
   TypeGalleryItem,
   TypeGalleryItems,
   TypeRequestParams,
-  TypeResponseParams,
-  TypeApiRoute,
+  TypeResponse,
 };
 export default exportedTypeSuite;

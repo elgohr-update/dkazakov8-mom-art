@@ -1,12 +1,10 @@
-import { ApiRoute } from '../models/ApiRoute';
+import { ApiRoute } from 'models/ApiRoute';
 
 type TypeRequestParams = undefined;
 
-type TypeResponseParams = undefined;
+type TypeResponse = undefined;
 
-type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
-
-export const logout: TypeApiRoute = {
+export const logout: ApiRoute & { params?: TypeRequestParams; response?: TypeResponse } = {
   name: 'logout',
   url: `/logout`,
   method: 'POST',

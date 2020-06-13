@@ -1,15 +1,13 @@
-import { ApiRoute } from '../models/ApiRoute';
-import { TypeGalleryItems } from '../models/GalleryItems';
+import { ApiRoute } from 'models/ApiRoute';
+import { TypeGalleryItems } from 'models/TypeGalleryItems';
 
 type TypeRequestParams = undefined;
 
-type TypeResponseParams = {
+type TypeResponse = {
   images: TypeGalleryItems;
 };
 
-type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
-
-export const getImages: TypeApiRoute = {
+export const getImages: ApiRoute & { params?: TypeRequestParams; response?: TypeResponse } = {
   name: `getImages`,
   url: `/get_images`,
   method: 'POST',

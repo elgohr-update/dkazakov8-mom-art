@@ -1,18 +1,16 @@
-import { ApiRoute } from '../models/ApiRoute';
+import { ApiRoute } from 'models/ApiRoute';
 
 type TypeRequestParams = {
   email: string;
   password: string;
 };
 
-type TypeResponseParams = {
+type TypeResponse = {
   email: string;
   sessionExpires: number;
 };
 
-type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
-
-export const auth: TypeApiRoute = {
+export const auth: ApiRoute & { params?: TypeRequestParams; response?: TypeResponse } = {
   name: `auth`,
   url: `/auth`,
   method: 'POST',

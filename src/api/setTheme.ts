@@ -1,14 +1,12 @@
-import { ApiRoute } from '../models/ApiRoute';
+import { ApiRoute } from 'models/ApiRoute';
 
 type TypeRequestParams = {
   theme: string;
 };
 
-type TypeResponseParams = undefined;
+type TypeResponse = undefined;
 
-type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
-
-export const setTheme: TypeApiRoute = {
+export const setTheme: ApiRoute & { params?: TypeRequestParams; response?: TypeResponse } = {
   name: `setTheme`,
   url: `/themes`,
   method: 'POST',

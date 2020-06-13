@@ -4,8 +4,11 @@ import React from 'react';
 import { hydrate } from 'react-dom';
 
 import { App } from 'components/App';
-import { StoreRoot, StoreContext } from 'stores/StoreRoot';
+import { StoreRoot } from 'stores/StoreRoot';
+import { StoreGetters } from 'stores/StoreGetters';
+import { StoreContext } from 'components/StoreContext';
 import { initAutorun } from 'autorun';
+import { actionsCreator } from 'actionsCreator';
 import { measureClient, isomorphPolyfills } from 'utils';
 
 if (performance) {
@@ -15,22 +18,20 @@ if (performance) {
 
 isomorphPolyfills();
 
-let store: StoreRoot;
+const store = new StoreRoot();
+const { api, actions } = actionsCreator(store);
+const getters = new StoreGetters(store);
 
 Promise.resolve()
-  .then(measureClient('createStore'))
-  .then(() => (store = new StoreRoot({})))
-  .then(measureClient('createStore'))
-
   .then(measureClient('onStoreInitializedClient'))
-  .then(() => store.actions.common.onStoreInitializedClient())
+  .then(() => actions.general.onStoreInitializedClient())
   .then(measureClient('onStoreInitializedClient'))
 
-  .then(() => initAutorun(store))
+  .then(() => initAutorun({ store, actions, api, getters }))
 
   .then(() => {
     return hydrate(
-      <StoreContext.Provider value={{ store }}>
+      <StoreContext.Provider value={{ store, actions, api, getters }}>
         <App />
       </StoreContext.Provider>,
       document.getElementById('app')

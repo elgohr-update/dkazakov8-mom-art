@@ -1,16 +1,14 @@
-import { ApiRoute } from '../models/ApiRoute';
+import { ApiRoute } from 'models/ApiRoute';
 
 type TypeRequestParams = {
   language: string;
 };
 
-type TypeResponseParams = {
+type TypeResponse = {
   translations: any;
 };
 
-type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
-
-export const getLocalization: TypeApiRoute = {
+export const getLocalization: ApiRoute & { params?: TypeRequestParams; response?: TypeResponse } = {
   name: `getLocalization`,
   url: `/get_current_localization`,
   method: 'POST',

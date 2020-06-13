@@ -6,14 +6,16 @@ import { createMeasure } from 'utils';
 import {
   injectMetaTags,
   injectMeasures,
+  injectAnalytics,
   injectAppMarkup,
   injectCompressed,
-  injectCSPProtection,
   injectBrowserReload,
   injectThemeProperties,
   injectInitialStoreData,
 } from 'serverUtils';
 import { StoreRoot } from 'stores/StoreRoot';
+import { StoreGetters } from 'stores/StoreGetters';
+import { actionsCreator } from 'actionsCreator';
 
 import { env } from '../../env';
 
@@ -25,26 +27,24 @@ export function handlePageRoutes(app) {
      * Create clear store for each request
      *
      */
-    let store = null;
+    const store = new StoreRoot();
     const measure = createMeasure();
+    const { api, actions } = actionsCreator(store, req, res);
+    const getters = new StoreGetters(store);
 
     Promise.resolve()
-      .then(measure.wrap('createStore'))
-      .then(() => (store = new StoreRoot({ req, res })))
-      .then(measure.wrap('createStore'))
-
       .then(measure.wrap('onStoreInitializedServer'))
-      .then(() => store.actions.common.onStoreInitializedServer({ req, res }))
+      .then(() => actions.general.onStoreInitializedServer({ req, res }))
       .then(measure.wrap('onStoreInitializedServer'))
 
       .then(measure.wrap('injectAppMarkup'))
-      .then(() => injectAppMarkup(template, store))
+      .then(() => injectAppMarkup(template, store, api, actions, getters))
       .then(measure.wrap('injectAppMarkup'))
 
       .then(measure.wrap('injectOtherData'))
-      .then(modTemplate => injectMetaTags(modTemplate, store))
+      .then(modTemplate => injectMetaTags(modTemplate, store, getters))
+      .then(modTemplate => injectAnalytics(modTemplate))
       .then(modTemplate => injectCompressed(req, modTemplate))
-      .then(modTemplate => injectCSPProtection(modTemplate, res))
       .then(modTemplate => injectThemeProperties(modTemplate, store))
       .then(modTemplate => injectInitialStoreData(modTemplate, store))
       .then(modTemplate => (env.HOT_RELOAD ? injectBrowserReload(modTemplate) : modTemplate))

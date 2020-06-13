@@ -1,4 +1,4 @@
 module.exports = {
-  extends: ['./eslint-custom/stylelint-rules.js', 'stylelint-prettier/recommended'],
+  extends: ['stylelint-prettier/recommended', './_eslint/stylelint-rules.js'],
   plugins: ['stylelint-scss'],
 };

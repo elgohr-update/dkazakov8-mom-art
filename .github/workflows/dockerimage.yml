@@ -12,8 +12,8 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@2.14
         env:
           GIT_COMMIT: ${{ github.sha }}
-          YANDEX_STORAGE_ACCESS_KEY_ID: ${{ secrets.YANDEX_STORAGE_ACCESS_KEY_ID }}
-          YANDEX_STORAGE_SECRET_ACCESS_KEY: ${{ secrets.YANDEX_STORAGE_SECRET_ACCESS_KEY }}
+          CDN_ACCESS_KEY_ID: ${{ secrets.CDN_ACCESS_KEY_ID }}
+          CDN_SECRET_ACCESS_KEY: ${{ secrets.CDN_SECRET_ACCESS_KEY }}
           ALLOWED_EMAILS: ${{ secrets.ALLOWED_EMAILS }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
         with:
@@ -21,5 +21,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          buildargs: GIT_COMMIT,YANDEX_STORAGE_ACCESS_KEY_ID,YANDEX_STORAGE_SECRET_ACCESS_KEY,ALLOWED_EMAILS,SESSION_SECRET
+          buildargs: GIT_COMMIT,CDN_ACCESS_KEY_ID,CDN_SECRET_ACCESS_KEY,ALLOWED_EMAILS,SESSION_SECRET
           tags: "latest,${{ env.RELEASE_VERSION }}"

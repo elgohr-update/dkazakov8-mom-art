@@ -1,50 +1,82 @@
 import cn from 'classnames';
 import React from 'react';
-import { observer } from 'mobx-react';
 
+import { system } from 'const';
 import { Icon } from 'components/Icon';
 import { ModalsCollection } from 'components/ModalsCollection';
-import { StoreContext } from 'stores/StoreRoot';
+import { ConnectedComponent } from 'components/ConnectedComponent';
+import { TypeModal } from 'models';
 
 import styles from './Modals.scss';
 
-@observer
-export class Modals extends React.Component {
-  declare context: React.ContextType<typeof StoreContext>;
-  static contextType = StoreContext;
+const transitionDuration = `${system.MODALS_LEAVING_TIMEOUT}ms`;
 
-  handleRemoveModal = modal => () => {
-    const { store } = this.context;
+interface ModalProps {
+  modal: TypeModal;
+  modalIndex: number;
+}
 
-    return store.actions.common.removeModal(modal);
+@ConnectedComponent.observer
+export class Modal extends ConnectedComponent<ModalProps> {
+  handleModalRemove = modal => () => {
+    const { actions } = this.context;
+
+    return actions.general.modalRemove(modal);
   };
 
   render() {
     const { store } = this.context;
+    const { modal, modalIndex } = this.props;
+
+    const { isLeaving, data = {} } = modal;
+    const { title, ContentComponent } = ModalsCollection[modal.name];
+
+    const modalStyle = {
+      zIndex: system.MODALS_BASE_Z_INDEX + modalIndex,
+      transitionDuration,
+    };
 
     return (
-      <div className={styles.modals}>
-        {store.ui.modals.map((modal, modalIndex) => {
-          const { status, data = {} } = modal;
-          const { title, ContentComponent } = ModalsCollection[modal.name];
+      <div className={cn(styles.modal, isLeaving && styles.isLeaving)} style={modalStyle}>
+        <Icon
+          glyph={Icon.glyphs.close}
+          className={styles.close}
+          onClick={this.handleModalRemove(modal)}
+        />
+        {Boolean(title) && (
+          <div className={cn(styles.title, store.ui.currentTheme === 'dark' && styles.linkStyle)}>
+            {store.getLn(title)}
+          </div>
+        )}
+        <ContentComponent data={data as any} modalRemove={this.handleModalRemove(modal)} />
+      </div>
+    );
+  }
+}
 
-          const backdropStyle = { zIndex: 12 + modalIndex };
-          const backdropClassname = cn({
-            [styles.backdrop]: true,
-            [styles[status]]: Boolean(styles[status]),
-          });
-          const removeModal = this.handleRemoveModal(modal);
+@ConnectedComponent.observer
+export class Modals extends ConnectedComponent {
+  render() {
+    const { store } = this.context;
 
-          return (
-            <div key={modal.id} className={backdropClassname} style={backdropStyle}>
-              <div className={styles.modal}>
-                <Icon glyph={Icon.glyphs.close} className={styles.close} onClick={removeModal} />
-                {Boolean(title) && <div className={styles.modalTitle}>{store.getLn(title)}</div>}
-                <ContentComponent data={data} removeModal={removeModal} />
-              </div>
-            </div>
-          );
-        })}
+    if (!store.ui.modalIsOpen) return null;
+
+    const backdropStyle = {
+      zIndex: system.MODALS_BASE_Z_INDEX,
+      transitionDuration,
+      animationDuration: transitionDuration,
+    };
+
+    return (
+      <div
+        className={cn(styles.backdrop, store.ui.lastModalIsLeaving && styles.isLeaving)}
+        style={backdropStyle}
+      >
+        <div className={styles.backdropInner}>
+          {store.ui.modals.map((modal, modalIndex) => (
+            <Modal key={modal.id} modal={modal} modalIndex={modalIndex} />
+          ))}
+        </div>
       </div>
     );
   }

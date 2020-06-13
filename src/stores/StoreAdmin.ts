@@ -1,8 +1,12 @@
-import { makeObservable } from 'utils';
+import { makeAutoObservable } from 'mobx';
+
 import { MessageObjectType } from 'common';
 
-@makeObservable
 export class StoreAdmin {
+  constructor() {
+    makeAutoObservable(this);
+  }
+
   translations: { [key: string]: MessageObjectType } = {};
   form = {};
 }

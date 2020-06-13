@@ -1,5 +1,7 @@
-import { makeObservable } from 'utils';
-import { ModalType, NotificationType, ValuesOfArrayType } from 'common';
+import { makeAutoObservable } from 'mobx';
+
+import { NotificationType, ValuesOfArrayType } from 'common';
+import { TypeModals } from 'models/TypeModals';
 import themes from 'styles/themes.scss';
 
 type LightboxType = {
@@ -10,8 +12,13 @@ type LightboxType = {
 
 const languagesList: ('ru' | 'en')[] = ['ru', 'en'];
 
-@makeObservable
 export class StoreUi {
+  constructor() {
+    makeAutoObservable(this);
+  }
+
+  firstRendered = false;
+
   lnData: { [key: string]: string } = {};
   currentLanguage: ValuesOfArrayType<typeof languagesList> = 'ru';
   languagesList = languagesList;
@@ -23,10 +30,27 @@ export class StoreUi {
     currentIndex: -1,
     isRemoving: false,
   };
+
+  headerMenuOpened = false;
+
   screen = {
     width: 0,
     height: 0,
   };
-  modals: ModalType[] = [];
+  heights = {
+    header: 0,
+  };
+  get isMobile() {
+    return this.firstRendered && this.screen.width <= 1000;
+  }
+
   notifications: NotificationType[] = [];
+
+  modals: TypeModals = [];
+  get modalIsOpen() {
+    return this.modals.length > 0;
+  }
+  get lastModalIsLeaving() {
+    return this.modalIsOpen && this.modals[0].isLeaving;
+  }
 }

@@ -46,11 +46,13 @@
       background: $B_700;
     }
   }
+
   &.success {
     .notificationInner {
       background: $G_500;
     }
   }
+
   &.error {
     .notificationInner {
       background: $R_500;

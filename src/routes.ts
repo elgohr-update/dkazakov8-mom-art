@@ -4,8 +4,8 @@ import { RoutesType } from 'models';
 const routesObject: RoutesType = {
   gallery: {
     path: '/',
-    beforeEnter(store) {
-      return store.actions.common.getImages();
+    beforeEnter({ actions }) {
+      return actions.general.getImages();
     },
   },
   about: {
@@ -17,8 +17,8 @@ const routesObject: RoutesType = {
   editLocalization: {
     path: '/edit-localization',
     rights: 'admin',
-    beforeEnter(store) {
-      return store.actions.common.getAllLocalization();
+    beforeEnter({ actions }) {
+      return actions.general.getAllLocalization();
     },
   },
   error404: {

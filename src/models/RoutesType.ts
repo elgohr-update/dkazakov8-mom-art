@@ -1,4 +1,4 @@
-import { StoreRoot } from 'stores/StoreRoot';
+import { TypeGlobals } from './TypeGlobals';
 
 export type RouteType = {
   path: string;
@@ -6,7 +6,7 @@ export type RouteType = {
   name?: string;
   rights?: string;
   validators?: Record<string, any>[];
-  beforeEnter?: (store: StoreRoot, route?: RouteType) => Promise<any>;
+  beforeEnter?: (params: TypeGlobals & { route?: RouteType }) => Promise<any>;
 };
 
 export interface RoutesType {

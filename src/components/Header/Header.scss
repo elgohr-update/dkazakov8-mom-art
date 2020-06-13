@@ -1,114 +1,179 @@
 @import "mixins.scss";
 
-$separator_size: 4px;
+$header_height: 80px;
 
 .header {
-  .title {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  background: var(--header-bg);
+  padding: 0 60px;
+  height: $header_height;
+  position: relative;
+  z-index: 3;
+  transition: background-color 0.2s;
+
+  .menuWrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    flex-grow: 1;
+  }
+
+  .logo {
+    flex-grow: 0;
+    font-family: Liana;
     font-size: 30px;
-    line-height: 35px;
-    text-align: center;
-    padding: 50px 0;
-    font-weight: 300;
+    line-height: 30px;
+    user-select: none;
+
+    &.linkStyle {
+      color: var(--link-active);
+    }
   }
 
   .menu {
-    font-size: 16px;
-    line-height: 16px;
+    flex-grow: 1;
+    display: flex;
+    flex-flow: row nowrap;
+    font-size: 18px;
+    line-height: 80px;
+    justify-content: center;
+
+    .menuItem {
+      text-transform: lowercase;
+      padding: 0 25px;
+
+      &.active {
+        cursor: default;
+        color: var(--link-active);
+      }
+    }
+  }
+
+  .menuItem,
+  .languageToggler,
+  .themeIcon,
+  .logoutIcon {
+    color: var(--link-inactive);
+    user-select: none;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--link-active);
+    }
+  }
+
+  .themeChanger {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+
+    .themeSwitcher {
+      @include switcher(30px, 14px);
+    }
+  }
+
+  .languageToggler,
+  .themeIcon,
+  .logoutIcon {
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 18px;
+    margin-left: 15px;
+
+    &.languageToggler {
+      margin-left: 0;
+      margin-right: 40px;
+    }
+
+    &.logoutIcon {
+      margin-left: 40px;
+    }
+
+    &.themeIcon {
+      // Let left space being interactive
+      padding-left: 15px;
+      margin-left: 0;
+    }
+  }
+}
+
+.header.isMobile {
+  padding: 0;
+  height: 60px;
+  background: var(--main);
+
+  .burgerIcon {
+    color: var(--link-inactive);
+    transition: color 0.2s;
+    cursor: pointer;
+    padding: 20px;
+    font-size: 20px;
+
+    &:hover {
+      color: var(--link-active);
+    }
+  }
+
+  .logoutIcon {
+    padding: 20px;
+    margin: 0 !important;
+    font-size: 20px !important;
+  }
+
+  .logo {
+    flex-grow: 1;
     text-align: center;
+    font-size: 25px;
+    line-height: 25px;
+  }
+
+  .menuWrapper {
+    position: fixed;
+    z-index: 3;
+    left: 0;
+    top: 60px;
+    right: 0;
+    bottom: 0;
+    background: var(--main);
+    flex-flow: column nowrap;
+    align-items: stretch;
+    padding: 20px;
+    justify-content: space-around;
+    transition: background 0.2s;
+
+    &.closed {
+      display: none;
+    }
+  }
+
+  .menu {
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    flex-grow: 0;
+    border-bottom: 1px solid #e9e6e2;
     padding-bottom: 30px;
 
     .menuItem {
-      position: relative;
-      display: inline-block;
-      vertical-align: top;
-      color: $W6;
-      transition: color 0.2s;
-      margin-left: 30px + $separator_size;
-      text-transform: uppercase;
-      user-select: none;
-      padding: 5px;
-
-      &:first-child {
-        margin-left: 0;
-
-        &:before {
-          display: none;
-        }
-      }
-
-      &.active,
-      &:hover {
-        color: $B_700;
-
-        &.active {
-          cursor: default;
-        }
-      }
-
-      &:before {
-        content: "";
-        display: block;
-        position: absolute;
-        z-index: 0;
-        top: 10px;
-        left: -15px - $separator_size;
-        width: $separator_size;
-        height: $separator_size;
-        border-radius: 50%;
-        background: $W6;
-      }
-    }
-  }
-
-  .topRightBlock {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-
-    .buttonsBlock {
-      @include inline-top;
-
-      margin-right: 10px;
-    }
-  }
-
-  .themeToggler,
-  .logout {
-    @include inline-top;
-
-    cursor: pointer;
-    padding: 3px;
-    color: $W6;
-    transition: color 0.2s;
-    font-size: 16px;
-
-    &:hover {
-      color: $W8;
-    }
-
-    &.active {
-      cursor: default;
-      color: $Y_500;
-    }
-  }
-
-  @media (max-width: 600px) {
-    .title {
+      @include button-yellow;
+      background: transparent;
+      border: 0;
       font-size: 24px;
-      line-height: 28px;
-      padding: 50px 0 30px 0;
+      margin-bottom: 14px;
     }
+  }
 
-    .menu {
-      font-size: 14px;
+  .languageToggler {
+    width: 100%;
+    text-align: center;
+    padding: 30px 0;
+    font-size: 24px;
+  }
 
-      .menuItem {
-        margin-left: 14px + $separator_size;
-
-        &:before {
-          left: -6px - $separator_size;
-        }
-      }
-    }
+  .themeChanger {
+    padding: 50px 0 20px 0;
+    justify-content: center;
+    border-top: 1px solid #e9e6e2;
   }
 }

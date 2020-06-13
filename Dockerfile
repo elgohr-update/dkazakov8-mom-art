@@ -5,7 +5,7 @@ RUN apk add --no-cache --virtual .build-deps \
     wget \
     tar && \
     cd /usr/local/bin && \
-    wget https://yarnpkg.com/latest.tar.gz && \
+    wget https://classic.yarnpkg.com/latest.tar.gz && \
     tar zvxf latest.tar.gz && \
     ln -s /usr/local/bin/dist/bin/yarn.js /usr/local/bin/yarn.js && \
     apk del .build-deps
@@ -14,21 +14,21 @@ RUN apk add --no-cache --virtual .build-deps \
 ARG GIT_COMMIT="default"
 ARG SESSION_SECRET="default"
 ARG ALLOWED_EMAILS="default"
-ARG YANDEX_STORAGE_ACCESS_KEY_ID="default"
-ARG YANDEX_STORAGE_SECRET_ACCESS_KEY="default"
+ARG CDN_ACCESS_KEY_ID="default"
+ARG CDN_SECRET_ACCESS_KEY="default"
 
 ENV GIT_COMMIT=${GIT_COMMIT}
 ENV SESSION_SECRET=${SESSION_SECRET}
 ENV ALLOWED_EMAILS=${ALLOWED_EMAILS}
-ENV YANDEX_STORAGE_ACCESS_KEY_ID=${YANDEX_STORAGE_ACCESS_KEY_ID}
-ENV YANDEX_STORAGE_SECRET_ACCESS_KEY=${YANDEX_STORAGE_SECRET_ACCESS_KEY}
+ENV CDN_ACCESS_KEY_ID=${CDN_ACCESS_KEY_ID}
+ENV CDN_SECRET_ACCESS_KEY=${CDN_SECRET_ACCESS_KEY}
 
 WORKDIR /srv/momart
 
 COPY . .
 RUN cp example.prod.env .env
-RUN yarn install --pure-lockfile
+RUN yarn install --pure-lockfile --ignore-optional
 RUN yarn build
-RUN yarn install --pure-lockfile --production
+RUN yarn install --pure-lockfile --ignore-optional --production
 
 ENTRYPOINT yarn start

@@ -1,11 +1,16 @@
-import { makeObservable } from 'utils';
+import { makeAutoObservable } from 'mobx';
 
-@makeObservable
+import { authFormConfig } from 'formConfigs';
+
 export class StoreUser {
+  constructor() {
+    makeAutoObservable(this);
+  }
+
   name = '';
   email = '';
   sessionExpires = 0;
-  authForm = {};
+  authFormConfig = authFormConfig;
 
   get isLoggedIn() {
     return Boolean(this.email);

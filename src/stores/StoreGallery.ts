@@ -1,9 +1,14 @@
-import { makeObservable } from 'utils';
-import { TypeGalleryItems } from 'models';
+import { makeAutoObservable } from 'mobx';
 
-@makeObservable
+import { TypeGalleryItems } from 'models';
+import { uploadImageConfig, editImageConfig } from 'formConfigs';
+
 export class StoreGallery {
+  constructor() {
+    makeAutoObservable(this);
+  }
+
   items: TypeGalleryItems = [];
-  editItemForm = {};
-  uploadItemForm = {};
+  editItemForm = editImageConfig;
+  uploadItemForm = uploadImageConfig;
 }

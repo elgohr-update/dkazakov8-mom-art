@@ -4,9 +4,9 @@ import path from 'path';
 import sharp from 'sharp';
 import multer from 'multer';
 
-import { isLoggedIn, uploadToBucket } from 'serverUtils';
+import { isLoggedIn, uploadToCDNBucket } from 'serverUtils';
 import { db } from 'db';
-import { TypeGalleryItem } from 'models/GalleryItems';
+import { TypeGalleryItem } from 'models';
 
 import { env } from '../../env';
 import { paths } from '../../paths';
@@ -92,15 +92,15 @@ export function uploadImageController({ req, res }) {
             .toFile(filePath)
             .then(info => {
               uploadedFileData.sources[fileSuffix] = {
-                src: `${env.YANDEX_STORAGE_ENDPOINT}/${env.YANDEX_STORAGE_BUCKET_PREFIX}${env.YANDEX_STORAGE_BUCKET}/${uploadsFolderName}/${fileName}`,
+                src: `${env.CDN_ENDPOINT}/${env.CDN_BUCKET_PREFIX}${env.CDN_BUCKET}/${uploadsFolderName}/${fileName}`,
                 width: info.width,
                 height: info.height,
               };
             })
             .then(() => fs.promises.readFile(filePath))
             .then(fileContent =>
-              uploadToBucket({
-                Bucket: `${env.YANDEX_STORAGE_BUCKET_PREFIX}${env.YANDEX_STORAGE_BUCKET}`,
+              uploadToCDNBucket({
+                Bucket: `${env.CDN_BUCKET_PREFIX}${env.CDN_BUCKET}`,
                 fileName: `${uploadsFolderName}/${fileName}`,
                 fileContent,
                 ContentType: mimetype,

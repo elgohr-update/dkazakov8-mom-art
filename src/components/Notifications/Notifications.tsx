@@ -1,10 +1,9 @@
 import cn from 'classnames';
 import React from 'react';
-import { observer } from 'mobx-react';
 
 import { generateArray } from 'utils';
 import { Icon } from 'components/Icon';
-import { StoreContext } from 'stores/StoreRoot';
+import { ConnectedComponent } from 'components/ConnectedComponent';
 
 import styles from './Notifications.scss';
 
@@ -39,11 +38,8 @@ interface NotificationProps {
  *
  */
 
-@observer
-class Notification extends React.Component<NotificationProps> {
-  declare context: React.ContextType<typeof StoreContext>;
-  static contextType = StoreContext;
-
+@ConnectedComponent.observer
+class Notification extends ConnectedComponent<NotificationProps> {
   ref = null;
 
   componentDidMount() {
@@ -63,7 +59,7 @@ class Notification extends React.Component<NotificationProps> {
   }
 
   render() {
-    const { store } = this.context;
+    const { actions } = this.context;
     const { id, status, type, height, message, prevElementsHeight } = this.props;
 
     const className = cn({
@@ -84,7 +80,7 @@ class Notification extends React.Component<NotificationProps> {
           <Icon
             glyph={Icon.glyphs.close}
             className={styles.close}
-            onClick={() => store.actions.common.removeNotification({ id })}
+            onClick={() => actions.general.removeNotification({ id })}
           />
           {message}
         </div>
@@ -93,11 +89,8 @@ class Notification extends React.Component<NotificationProps> {
   }
 }
 
-@observer
-export class Notifications extends React.Component {
-  declare context: React.ContextType<typeof StoreContext>;
-  static contextType = StoreContext;
-
+@ConnectedComponent.observer
+export class Notifications extends ConnectedComponent {
   render() {
     const {
       store: {

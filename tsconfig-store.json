@@ -1,7 +1,7 @@
 {
   "include": [
     "src/stores",
-    "types-custom"
+    "_types"
   ],
   "exclude": [
     "node_modules"
@@ -26,12 +26,13 @@
     "resolveJsonModule": true,
     "emitDeclarationOnly": true,
     "experimentalDecorators": true,
+    "useDefineForClassFields": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
       "*": [
         "*",
         "src/*",
-        "types-custom/*"
+        "_types/*"
       ]
     }
   }

@@ -1,8 +1,14 @@
 @import "mixins.scss";
 
-.modalUploadImage {
-  padding-top: 30px;
+.modalAuth {
+  .buttonsLine {
+    display: flex;
+    flex-flow: row nowrap;
+    padding-top: 30px;
+  }
+}
 
+.modalUploadImage {
   .buttonsLine {
     display: flex;
     flex-flow: row nowrap;
@@ -12,11 +18,9 @@
   .removeButton,
   .saveButton {
     width: 50%;
-    margin-top: 0;
 
     &.removeButton {
       @include button-red;
-
       margin-right: 10px;
     }
 

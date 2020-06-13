@@ -2,17 +2,21 @@ import { FieldValidatorType } from 'common';
 
 import { messages } from './messages';
 
-function isEmptyString({ value }: { value: number | string }) {
+function isEmptyString({ value }: { value: string }) {
   return value === '';
 }
 
-interface FieldValidatorsType {
-  [key: string]: FieldValidatorType;
+function isNull({ value }: { value: any }) {
+  return value == null;
 }
 
-export const fieldValidators: FieldValidatorsType = {
+export const fieldValidators = {
   emptyString: {
     notValidCheck: isEmptyString,
     message: messages.validator_empty,
-  },
+  } as FieldValidatorType,
+  isNull: {
+    notValidCheck: isNull,
+    message: messages.validator_empty,
+  } as FieldValidatorType,
 };

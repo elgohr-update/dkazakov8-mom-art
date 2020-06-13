@@ -1,8 +1,19 @@
 import { reaction } from 'mobx';
 
-import { StoreRoot } from 'stores/StoreRoot';
+import { TypeGlobals } from 'models';
 
-function refreshRoute(store: StoreRoot) {
+function setBodyClassOnModal({ store }: TypeGlobals) {
+  const elBody = document.body;
+
+  reaction(
+    () => store.ui.modalIsOpen,
+    () => {
+      elBody.classList[store.ui.modalIsOpen ? 'add' : 'remove']('modalOpened');
+    }
+  );
+}
+
+function refreshRoute({ store, actions }: TypeGlobals) {
   /**
    * Refresh route on language change for updating page title
    *
@@ -10,22 +21,22 @@ function refreshRoute(store: StoreRoot) {
 
   reaction(
     () => store.ui.currentLanguage,
-    () => store.actions.common.redirectTo({})
+    () => actions.general.redirectTo({})
   );
 }
 
-function setPageTitle(store: StoreRoot) {
+function setPageTitle({ getters }: TypeGlobals) {
   /**
    * On route change we only need to update page title, not all meta-tags
    *
    */
 
   reaction(
-    () => store.getters.pageTitle,
-    () => (document.title = store.getters.pageTitle)
+    () => getters.pageTitle,
+    () => (document.title = getters.pageTitle)
   );
 }
 
-export function initAutorun(store: StoreRoot) {
-  [refreshRoute, setPageTitle].forEach(reactionFn => reactionFn(store));
+export function initAutorun(params: TypeGlobals) {
+  [refreshRoute, setPageTitle, setBodyClassOnModal].forEach(reactionFn => reactionFn(params));
 }

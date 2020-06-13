@@ -1,15 +1,6 @@
 import * as t from 'ts-interface-checker';
 // tslint:disable:object-literal-key-quotes
 
-export const ApiRoute = t.iface([], {
-  name: 'string',
-  url: 'string',
-  method: t.union(t.lit('GET'), t.lit('POST')),
-  isFile: t.opt('boolean'),
-  headers: t.opt('any'),
-  isMocked: 'boolean',
-});
-
 export const TypeGalleryItem = t.iface([], {
   id: 'string',
   title: t.iface([], {
@@ -32,28 +23,28 @@ export const TypeGalleryItem = t.iface([], {
 
 export const TypeGalleryItems = t.array('TypeGalleryItem');
 
+export const ApiRoute = t.iface([], {
+  name: 'string',
+  url: 'string',
+  method: t.union(t.lit('GET'), t.lit('POST')),
+  isFile: t.opt('boolean'),
+  headers: t.opt('any'),
+  isMocked: 'boolean',
+});
+
 export const TypeRequestParams = t.iface([], {
   id: 'string',
 });
 
-export const TypeResponseParams = t.iface([], {
+export const TypeResponse = t.iface([], {
   images: 'TypeGalleryItems',
 });
 
-export const TypeApiRoute = t.intersection(
-  'ApiRoute',
-  t.iface([], {
-    params: t.opt('TypeRequestParams'),
-    response: t.opt('TypeResponseParams'),
-  })
-);
-
 const exportedTypeSuite: t.ITypeSuite = {
-  ApiRoute,
   TypeGalleryItem,
   TypeGalleryItems,
+  ApiRoute,
   TypeRequestParams,
-  TypeResponseParams,
-  TypeApiRoute,
+  TypeResponse,
 };
 export default exportedTypeSuite;

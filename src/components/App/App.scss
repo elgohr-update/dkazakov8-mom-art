@@ -1,0 +1,17 @@
+@import "mixins.scss";
+
+.app {
+  position: relative;
+  background: var(--header-bg);
+  min-height: 100%;
+  transition-property: background-color, filter, opacity;
+  transition-duration: 0.2s;
+
+  &.blurred {
+    filter: blur(2px);
+  }
+
+  &.invisible {
+    opacity: 0;
+  }
+}

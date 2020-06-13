@@ -1,14 +1,15 @@
-import { ApiRoute } from '../models/ApiRoute';
+import { ApiRoute } from 'models/ApiRoute';
 
 type TypeRequestParams = {
   formData: any;
 };
 
-type TypeResponseParams = undefined;
+type TypeResponse = undefined;
 
-type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
-
-export const saveAllLocalization: TypeApiRoute = {
+export const saveAllLocalization: ApiRoute & {
+  params?: TypeRequestParams;
+  response?: TypeResponse;
+} = {
   name: `saveAllLocalization`,
   url: `/save_all_localization`,
   method: 'POST',

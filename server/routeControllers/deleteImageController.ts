@@ -1,5 +1,5 @@
 import { db } from 'db';
-import { isLoggedIn, removeFromBucket } from 'serverUtils';
+import { isLoggedIn, removeFromCDNBucket } from 'serverUtils';
 
 import { env } from '../../env';
 
@@ -15,18 +15,15 @@ export function deleteImageController({ req }) {
         suffix => removedImageData.sources[suffix].src
       );
       removedFiles = removedFiles.map(src =>
-        src.replace(
-          `${env.YANDEX_STORAGE_ENDPOINT}/${env.YANDEX_STORAGE_BUCKET_PREFIX}${env.YANDEX_STORAGE_BUCKET}/`,
-          ''
-        )
+        src.replace(`${env.CDN_ENDPOINT}/${env.CDN_BUCKET_PREFIX}${env.CDN_BUCKET}/`, '')
       );
 
       return Promise.resolve()
         .then(() =>
           Promise.all(
             removedFiles.map(fileName =>
-              removeFromBucket({
-                Bucket: `${env.YANDEX_STORAGE_BUCKET_PREFIX}${env.YANDEX_STORAGE_BUCKET}`,
+              removeFromCDNBucket({
+                Bucket: `${env.CDN_BUCKET_PREFIX}${env.CDN_BUCKET}`,
                 fileName,
               })
             )

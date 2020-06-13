@@ -1,13 +1,13 @@
 import { toJS } from 'mobx';
 import React from 'react';
+import _ from 'lodash';
 
 import { App } from 'components/App';
 import { escapeAllStrings } from 'utils';
-import { StoreContext } from 'stores/StoreRoot';
+import { StoreContext } from 'components/StoreContext';
+import { hotReloadUrl, compressions } from 'const';
 
 import { env } from '../../env';
-
-import { hotReloadUrl } from './hotReloadUrl';
 
 const isReactMode = env.REACT_LIBRARY === 'react';
 
@@ -29,40 +29,43 @@ function filterStore(store) {
 }
 
 export function injectCompressed(req, str) {
-  const compressions = [
-    {
-      encoding: 'br',
-      extension: 'br',
-    },
-    {
-      encoding: 'gzip',
-      extension: 'gz',
-    },
-  ];
-
   const acceptedEncodings = req.acceptsEncodings();
-
   const acceptedCompression = env.GENERATE_COMPRESSED
-    ? compressions.find(({ encoding }) => acceptedEncodings.indexOf(encoding) !== -1)
+    ? compressions.find(({ encoding }) => acceptedEncodings.includes(encoding))
     : null;
 
-  if (!acceptedCompression) return str;
-
-  let scriptsStr = str.slice(str.indexOf('<body>'));
-  scriptsStr = scriptsStr.slice(scriptsStr.indexOf('<script'));
-  scriptsStr = scriptsStr.substr(0, scriptsStr.indexOf('</body>'));
-
-  let stylesStr = str.slice(str.indexOf('<link'));
-  stylesStr = stylesStr.substr(0, stylesStr.indexOf('>'));
-
-  return str
-    .replace(scriptsStr, scriptsStr.replace(/\.js/g, `.js.${acceptedCompression.extension}`))
-    .replace(stylesStr, stylesStr.replace(/\.css/g, `.css.${acceptedCompression.extension}`));
+  return !acceptedCompression
+    ? str
+    : str
+        .replace(/(\.js)/g, `$1.${acceptedCompression.extension}`)
+        .replace(/(\.css)/g, `$1.${acceptedCompression.extension}`);
 }
 
-export function injectMetaTags(str, store) {
+export function injectAnalytics(str) {
+  return str.replace(
+    '</head>',
+    `
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+      (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+      (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+      ym(59188381, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true
+      });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/59188381" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+</head>`
+  );
+}
+
+export function injectMetaTags(str, store, getters) {
   const { description } = store.router.metaData;
-  const { pageTitle } = store.getters;
+  const { pageTitle } = getters;
 
   return Promise.resolve()
     .then(() => str.replace(`<title></title>`, `<title>${pageTitle}</title>`))
@@ -74,9 +77,9 @@ export function injectMetaTags(str, store) {
     );
 }
 
-export function injectAppMarkup(str, store) {
+export function injectAppMarkup(str, store, api, actions, getters) {
   const appMarkup = renderToString(
-    <StoreContext.Provider value={{ store }}>
+    <StoreContext.Provider value={{ store, api, actions, getters }}>
       <App />
     </StoreContext.Provider>
   );
@@ -90,7 +93,7 @@ export function injectBrowserReload(str) {
 
 export function injectInitialStoreData(str, store) {
   const storeObjectFiltered = filterStore(store);
-  const storeObjectJS = toJS(storeObjectFiltered, { recurseEverything: true });
+  const storeObjectJS = _.mapValues(storeObjectFiltered, v => toJS(v));
   const storeObjectEscaped = escapeAllStrings(storeObjectJS);
   const storeObjectString = JSON.stringify(storeObjectEscaped);
 

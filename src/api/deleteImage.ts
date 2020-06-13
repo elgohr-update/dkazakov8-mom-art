@@ -1,17 +1,15 @@
-import { ApiRoute } from '../models/ApiRoute';
-import { TypeGalleryItems } from '../models/GalleryItems';
+import { TypeGalleryItems } from 'models/TypeGalleryItems';
+import { ApiRoute } from 'models/ApiRoute';
 
 type TypeRequestParams = {
   id: string;
 };
 
-type TypeResponseParams = {
+type TypeResponse = {
   images: TypeGalleryItems;
 };
 
-type TypeApiRoute = ApiRoute & { params?: TypeRequestParams; response?: TypeResponseParams };
-
-export const deleteImage: TypeApiRoute = {
+export const deleteImage: ApiRoute & { params?: TypeRequestParams; response?: TypeResponse } = {
   name: `deleteImage`,
   url: `/delete_image`,
   method: 'POST',

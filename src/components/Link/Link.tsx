@@ -1,8 +1,7 @@
 import React from 'react';
-import { observer } from 'mobx-react';
 
 import { RouteType } from 'models';
-import { StoreContext } from 'stores/StoreRoot';
+import { ConnectedComponent } from 'components/ConnectedComponent';
 
 interface LinkProps {
   route: RouteType;
@@ -10,13 +9,10 @@ interface LinkProps {
   className?: string;
 }
 
-@observer
-export class Link extends React.Component<LinkProps> {
-  declare context: React.ContextType<typeof StoreContext>;
-  static contextType = StoreContext;
-
+@ConnectedComponent.observer
+export class Link extends ConnectedComponent<LinkProps> {
   render() {
-    const { store } = this.context;
+    const { store, actions } = this.context;
     const { route, onClick, className, children } = this.props;
 
     return (
@@ -24,15 +20,11 @@ export class Link extends React.Component<LinkProps> {
         href={`/${store.ui.currentLanguage}${route.path}`}
         className={className}
         onClick={event => {
-          /**
-           * Replace default onClick handler if one is passed in props
-           *
-           */
-          if (onClick) return onClick(event);
-
           event.preventDefault();
 
-          store.actions.common.redirectTo({ route });
+          if (onClick) onClick(event);
+
+          actions.general.redirectTo({ route });
         }}
       >
         {children}

@@ -1,46 +1,71 @@
 import React from 'react';
-import { observer } from 'mobx-react';
+import cn from 'classnames';
+import { IReactionDisposer, action, reaction } from 'mobx';
 
+import { ConnectedComponent } from 'components/ConnectedComponent';
 import { Icon } from 'components/Icon';
-import { ModalsCollection } from 'components/ModalsCollection';
-import { StoreContext } from 'stores/StoreRoot';
 
 import { Menu } from './Menu';
+import { Logo } from './Logo';
+import { Logout } from './Logout';
 import { LangChanger } from './LangChanger';
 import { ThemeChanger } from './ThemeChanger';
 import styles from './Header.scss';
-import { messages } from './messages';
 
-@observer
-export class Header extends React.Component {
-  declare context: React.ContextType<typeof StoreContext>;
-  static contextType = StoreContext;
+@ConnectedComponent.observer
+export class Header extends ConnectedComponent {
+  headerElement: HTMLElement;
+  screenResizeDisposer: IReactionDisposer;
+
+  componentDidMount() {
+    const { store } = this.context;
+
+    this.onScreenResize();
+    this.screenResizeDisposer = reaction(
+      () => [store.ui.isMobile],
+      () => setTimeout(this.onScreenResize, 0)
+    );
+  }
+
+  componentWillUnmount() {
+    this.screenResizeDisposer();
+  }
+
+  @action
+  onScreenResize = () => {
+    const { store } = this.context;
+
+    store.ui.heights.header = this.headerElement.offsetHeight;
+  };
+
+  get wrapperClassName() {
+    const { store } = this.context;
+
+    return cn({
+      [styles.header]: true,
+      [styles.isMobile]: store.ui.isMobile,
+    });
+  }
 
   render() {
-    const {
-      store,
-      store: {
-        user: { isLoggedIn },
-      },
-    } = this.context;
+    const { store, actions } = this.context;
 
     return (
-      <div className={styles.header}>
-        <div className={styles.topRightBlock}>
+      <div className={this.wrapperClassName} ref={node => (this.headerElement = node)}>
+        {store.ui.isMobile && (
+          <Icon
+            className={styles.burgerIcon}
+            glyph={store.ui.headerMenuOpened ? Icon.glyphs.close : Icon.glyphs.burger}
+            onClick={() => actions.general.headerToggleMobileMenu({})}
+          />
+        )}
+        <Logo />
+        <div className={cn(styles.menuWrapper, !store.ui.headerMenuOpened && styles.closed)}>
+          <Menu />
           <LangChanger />
           <ThemeChanger />
-          <Icon
-            glyph={isLoggedIn ? Icon.glyphs.logout : Icon.glyphs.auth}
-            onClick={() =>
-              isLoggedIn
-                ? store.actions.common.logout()
-                : store.actions.common.raiseModal({ name: ModalsCollection.ModalAuth.name })
-            }
-            className={styles.logout}
-          />
         </div>
-        <div className={styles.title}>{store.getLn(messages.artistName)}</div>
-        <Menu />
+        <Logout />
       </div>
     );
   }

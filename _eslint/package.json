@@ -1,0 +1,22 @@
+{
+  "name": "_eslint",
+  "version": "1.0.0",
+  "description": "Custom linter rules",
+  "author": "Dmitry Kazakov",
+  "license": "MIT",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "4.8.1",
+    "@typescript-eslint/parser": "4.8.1",
+    "eslint": "7.13.0",
+    "eslint-config-prettier": "6.15.0",
+    "eslint-plugin-import": "2.20.1",
+    "eslint-plugin-prettier": "3.1.4",
+    "eslint-plugin-react": "7.21.5",
+    "prettier": "2.1.2",
+    "prettier-eslint": "11.0.0",
+    "stylelint": "13.8.0",
+    "stylelint-config-prettier": "8.0.2",
+    "stylelint-prettier": "1.1.2",
+    "stylelint-scss": "3.18.0"
+  }
+}

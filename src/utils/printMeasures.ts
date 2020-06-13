@@ -34,5 +34,5 @@ export function printMeasures({ currentRoute }: { currentRoute: RouteType }) {
   initialMeasures.currentRoute = currentRoute;
   initialMeasures.userAgent = navigator.userAgent;
 
-  console.log('initialMeasures', initialMeasures);
+  // console.log('initialMeasures', initialMeasures);
 }
