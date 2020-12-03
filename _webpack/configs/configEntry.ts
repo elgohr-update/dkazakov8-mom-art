@@ -10,5 +10,5 @@ import webpack from 'webpack';
 import { paths } from '../../paths';
 
 export const configEntry: webpack.Configuration['entry'] = {
-  client: path.resolve(paths.sourcePath, 'client.tsx'),
+  client: path.resolve(paths.source, 'client.tsx'),
 };

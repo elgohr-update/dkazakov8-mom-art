@@ -11,7 +11,7 @@ export function actionsCreator(
   store: StoreRoot,
   req?: Express['Request'],
   res?: Express['Response']
-): Omit<TypeGlobals, 'store'> {
+): Omit<TypeGlobals, 'store' | 'getters'> {
   // @ts-ignore
   const connectedActions: TypeGlobals['actions'] & {
     api: TypeGlobals['api'];

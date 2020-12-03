@@ -15,7 +15,7 @@ import { paths } from '../../paths';
 
 export const pluginHtml: webpack.WebpackPluginInstance = new HtmlWebpackPlugin({
   filename: 'template.html',
-  template: path.resolve(paths.templatesPath, 'template.html'),
+  template: path.resolve(paths.templates, 'template.html'),
   inject: 'body',
   minify: false,
   templateParameters: {

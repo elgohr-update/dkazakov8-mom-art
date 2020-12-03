@@ -1,6 +1,6 @@
+import { Express } from 'common';
 import { TypeAction } from 'models';
 import { setLanguageToSession } from 'utils';
-import { Express } from 'common';
 
 type Params = { req?: Express['Request']; res?: Express['Response'] };
 

@@ -19,8 +19,8 @@ import { configEntryServer } from '../_webpack/configs/configEntryServer';
 
 function startReloadServer() {
   const sslOptions = {
-    key: fs.readFileSync(path.resolve(paths.rootPath, 'ssl-local/cert.key')),
-    cert: fs.readFileSync(path.resolve(paths.rootPath, 'ssl-local/cert.pem')),
+    key: fs.readFileSync(path.resolve(paths.root, 'ssl-local/cert.key')),
+    cert: fs.readFileSync(path.resolve(paths.root, 'ssl-local/cert.pem')),
   };
 
   const app = express();
@@ -72,7 +72,7 @@ function startFileWatcher({ onFilesChanged }: { onFilesChanged: () => void }) {
     filter: filePath => !excludedFilenames.some(fileName => filePath.indexOf(fileName) !== -1),
   };
 
-  watch(paths.buildPath, watchOptions, function fileChanged(event, filePath) {
+  watch(paths.build, watchOptions, function fileChanged(event, filePath) {
     const { base: fileName } = path.parse(filePath);
 
     changedFiles.push(fileName);

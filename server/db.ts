@@ -3,8 +3,7 @@ import { promisify } from 'util';
 import redis from 'redis';
 
 import { TypeGalleryItems } from 'models';
-
-import { env } from '../env';
+import { env } from 'env';
 
 const redisHost = env.REDIS_PORT_6379_TCP_ADDR || '127.0.0.1';
 const redisPort = env.REDIS_PORT_6379_TCP_PORT || 6379;

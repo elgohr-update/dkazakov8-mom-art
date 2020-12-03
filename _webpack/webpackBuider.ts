@@ -4,12 +4,12 @@ import { exec } from 'child_process';
 
 import watch from 'node-watch';
 import dotenv from 'dotenv';
+import fsExtra from 'fs-extra';
 // @ts-ignore
 import { run } from 'parallel-webpack';
 
 import { env } from '../env';
 import { paths } from '../paths';
-import { clearFolder } from '../server/serverUtils/clearFolder';
 
 import { generateFiles } from './utils/generateFiles';
 
@@ -20,7 +20,7 @@ function startFileWatcher() {
   let isGenerating = false;
   let watchDebounceTimeout = null;
 
-  watch(paths.sourcePath, { recursive: true }, function fileChanged(event, filePath) {
+  watch(paths.source, { recursive: true }, function fileChanged(event, filePath) {
     if (filePath) changedFiles.push(filePath);
 
     if (isGenerating) return false;
@@ -67,22 +67,13 @@ function afterFirstBuild() {
   reloadServerProcess.stderr.on('data', msg => console.error('[reload-browser]', msg.trim()));
 }
 
-/**
- * Unfortunately parallel-webpack requires absolute path to config as the first argument
- * instead of configurations array. So, have to create additional file like
- * webpackParallel.config.js
- *
- * @docs: https://github.com/trivago/parallel-webpack
- *
- */
-
 function compareEnvFiles() {
   function difference(arr1: string[], arr2: string[]) {
     return arr1.filter(x => !arr2.includes(x)).concat(arr2.filter(x => !arr1.includes(x)));
   }
 
   const envConfigs = ['.env', 'example.dev.env', 'example.prod.env'].map(fileName => {
-    const envPath = path.resolve(paths.rootPath, fileName);
+    const envPath = path.resolve(paths.root, fileName);
 
     return { fileName, keys: Object.keys(dotenv.parse(fs.readFileSync(envPath))) };
   });
@@ -129,9 +120,18 @@ const parallelOptions = {
   maxConcurrentWorkers: 2,
 };
 
+/**
+ * Unfortunately parallel-webpack requires absolute path to config as the first argument
+ * instead of configurations array. So, have to create additional file like
+ * webpackParallel.config.js
+ *
+ * @docs: https://github.com/trivago/parallel-webpack
+ *
+ */
+
 Promise.resolve()
   .then(() => compareEnvFiles())
-  .then(() => clearFolder(paths.buildPath))
+  .then(() => fsExtra.emptyDirSync(paths.build))
   .then(() => generateFiles.process({}))
   .then(() =>
     run(path.resolve(__dirname, 'webpackParallel.config.ts'), parallelOptions, afterFirstBuild)

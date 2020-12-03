@@ -10,9 +10,8 @@ import { configResolve } from './configs/configResolve';
 import { configPerformance } from './configs/configPerformance';
 import { configOptimization } from './configs/configOptimization';
 import { configWatchOptions } from './configs/configWatchOptions';
-import { pluginSpeedMeasure } from './plugins/pluginSpeedMeasure';
 
-export default pluginSpeedMeasure.wrap({
+export default {
   mode: configMode,
   node: configNode,
   entry: configEntry,
@@ -26,4 +25,4 @@ export default pluginSpeedMeasure.wrap({
   performance: configPerformance,
   optimization: configOptimization,
   watchOptions: configWatchOptions,
-});
+};

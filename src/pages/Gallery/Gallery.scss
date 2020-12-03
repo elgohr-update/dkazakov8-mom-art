@@ -9,30 +9,40 @@
   }
 }
 
+.galleryWrapper {
+  position: relative;
+  width: 100%;
+  padding: 50px 100px 100px 50px;
+
+  :global {
+    .ScrollbarsCustom-Content {
+      height: 100%;
+      padding-right: 50px !important;
+    }
+  }
+}
+
 .gallery {
-  padding: 50px 100px;
   user-select: none;
   width: 100%;
+  height: 100%;
   display: flex;
   flex-flow: row wrap;
 
   .item {
-    //opacity: 0;
     cursor: pointer;
-    //animation-name: fadeIn;
-    //animation-timing-function: ease;
-    //animation-fill-mode: forwards;
-    //animation-duration: 0.7s;
     width: 50%;
-    padding: 1px 1px 30% 1px;
+    padding: 1px;
     border-radius: 10px;
     overflow: hidden;
     position: relative;
-    background-size: cover;
-    background-position: center;
+    height: 100%;
 
-    img {
+    .itemInner {
       width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
     }
 
     .caption {
@@ -63,4 +73,40 @@
       }
     }
   }
+}
+
+.controls {
+  position: absolute;
+  z-index: 1;
+  width: 200px;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--header-bg);
+  height: 40px;
+  border-radius: 5px;
+  user-select: none;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  padding: 0 10px;
+
+  .control {
+    color: var(--link-inactive);
+    transition: color 0.2s;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 12px 10px;
+
+    &:hover {
+      color: var(--link-active);
+    }
+  }
+}
+
+.footer {
+  position: absolute;
+  z-index: 1;
+  left: 50px;
+  bottom: 40px;
 }

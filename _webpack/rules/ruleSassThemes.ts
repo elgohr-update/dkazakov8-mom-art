@@ -5,6 +5,6 @@ import { loaderSassTheme } from '../loaders/loaderSassTheme';
 
 export const ruleSassThemes: webpack.RuleSetRule = {
   test: /\.s?css$/,
-  include: [paths.themesPath],
+  include: [paths.themes],
   use: [loaderSassTheme],
 };

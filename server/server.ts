@@ -1,14 +1,14 @@
 import { isomorphPolyfills } from 'utils';
-import { createServer, updateTranslations, copyAssetsToCDN } from 'serverUtils';
-import { handleSession } from 'serverMiddlewares/handleSession';
-import { handlePrometheus } from 'serverMiddlewares/handlePrometheus';
-import { handleJsonRequests } from 'serverMiddlewares/handleJsonRequests';
-import { handleProtectionHeaders } from 'serverMiddlewares/handleProtectionHeaders';
-import { handleUrlencodedRequests } from 'serverMiddlewares/handleUrlencodedRequests';
-import { handleApiRoutes } from 'routeMiddlewares/handleApiRoutes';
-import { handleFileRoutes } from 'routeMiddlewares/handleFileRoutes';
-import { handlePageRoutes } from 'routeMiddlewares/handlePageRoutes';
-import { handleMissingRoutes } from 'routeMiddlewares/handleMissingRoutes';
+import { createServer, updateTranslations, copyAssetsToCDN } from 'Server/utils';
+import { handleSession } from 'Server/middlewares/common/handleSession';
+import { handlePrometheus } from 'Server/middlewares/common/handlePrometheus';
+import { handleJsonRequests } from 'Server/middlewares/common/handleJsonRequests';
+import { handleProtectionHeaders } from 'Server/middlewares/common/handleProtectionHeaders';
+import { handleUrlencodedRequests } from 'Server/middlewares/common/handleUrlencodedRequests';
+import { handleApiRoutes } from 'Server/middlewares/route/handleApiRoutes';
+import { handleFileRoutes } from 'Server/middlewares/route/handleFileRoutes';
+import { handlePageRoutes } from 'Server/middlewares/route/handlePageRoutes';
+import { handleMissingRoutes } from 'Server/middlewares/route/handleMissingRoutes';
 
 isomorphPolyfills();
 

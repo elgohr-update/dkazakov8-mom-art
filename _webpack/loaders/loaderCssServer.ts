@@ -9,9 +9,9 @@ export const loaderCssServer: webpack.RuleSetRule = {
   loader: 'css-loader',
   options: {
     importLoaders: 1,
-    onlyLocals: true,
     modules: {
       localIdentName: '[folder]__[local]',
+      exportOnlyLocals: true,
     },
   },
 };

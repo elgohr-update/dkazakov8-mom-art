@@ -12,11 +12,6 @@ export const loaderBabelServer: webpack.RuleSetRule = {
   loader: 'babel-loader',
   options: {
     presets: babelConfigServer.presets,
-    plugins: [
-      ...babelConfigServer.plugins,
-      env.REACT_LIBRARY === 'react'
-        ? '@babel/plugin-transform-react-jsx'
-        : ['babel-plugin-inferno', { imports: true }],
-    ],
+    plugins: [...babelConfigServer.plugins, '@babel/plugin-transform-react-jsx'],
   },
 };

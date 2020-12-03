@@ -5,9 +5,9 @@ import { hydrate } from 'react-dom';
 
 import { App } from 'components/App';
 import { StoreRoot } from 'stores/StoreRoot';
+import { initAutorun } from 'autorun';
 import { StoreGetters } from 'stores/StoreGetters';
 import { StoreContext } from 'components/StoreContext';
-import { initAutorun } from 'autorun';
 import { actionsCreator } from 'actionsCreator';
 import { measureClient, isomorphPolyfills } from 'utils';
 

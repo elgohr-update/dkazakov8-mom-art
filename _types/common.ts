@@ -7,6 +7,7 @@ export type ValueOf<T> = T[keyof T];
 export type ValuesOfArrayType<T extends any[]> = T[number];
 
 export type SkipFirstArgType<FunctionType> = FunctionType extends (
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   params: infer FirstArgument,
   ...args: infer OtherArguments
 ) => infer ResultType

@@ -7,7 +7,7 @@ import { loaderExtractCss } from '../loaders/loaderExtractCss';
 
 export const ruleSass: webpack.RuleSetRule = {
   test: /\.s?css$/,
-  include: [paths.sourcePath],
-  exclude: [paths.themesPath],
+  include: [paths.source],
+  exclude: [paths.themes],
   use: [loaderExtractCss, loaderCss, loaderPostcss],
 };

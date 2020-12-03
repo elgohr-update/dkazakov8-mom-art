@@ -9,7 +9,7 @@
   "compilerOptions": {
     "jsx": "react",
     "noEmit": false,
-    "target": "esnext",
+    "target": "es6",
     "module": "esnext",
     "baseUrl": ".",
     "allowJs": true,

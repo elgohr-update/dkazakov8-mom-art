@@ -1,3 +1,5 @@
+import { runInAction } from 'mobx';
+
 import { TypeAction } from 'models';
 import { notificationTypes } from 'const';
 
@@ -11,7 +13,11 @@ export const uploadImage: TypeAction<Params> = (
 ) => {
   return api
     .uploadImage(formData)
-    .then(data => (store.gallery.items = data.images))
+    .then(data =>
+      runInAction(() => {
+        store.gallery.items = data.images;
+      })
+    )
     .then(() =>
       actions.general.raiseNotification({
         type: notificationTypes.SUCCESS,

@@ -60,12 +60,12 @@ export class About extends ConnectedComponent {
     this.state.scrollAreaHeight = this.scrollAreaHeight;
 
     if (this.leftImageElement) {
-      this.state.leftImageWidth = this.leftImageElement.offsetWidth;
-
       // Try until image is loaded
-      if (this.state.leftImageWidth === 0) {
-        setTimeout(this.onScreenResize, 5);
+      if (this.leftImageElement.offsetWidth === 0) {
+        return setTimeout(this.onScreenResize, 5);
       }
+
+      this.state.leftImageWidth = this.leftImageElement.offsetWidth;
     }
   };
 

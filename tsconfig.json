@@ -11,7 +11,7 @@
   "compilerOptions": {
     "jsx": "react",
     "outDir": "build",
-    "target": "esnext",
+    "target": "es6",
     "module": "esnext",
     "allowJs": true,
     "baseUrl": ".",

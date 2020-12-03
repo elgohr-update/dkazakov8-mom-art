@@ -8,7 +8,6 @@ import CompressionPlugin from 'compression-webpack-plugin';
 
 export const pluginCompressionBrotli: webpack.WebpackPluginInstance = new CompressionPlugin({
   test: /\.(js|css)$/i,
-  cache: true,
   filename: '[path].br',
   algorithm: 'brotliCompress',
   deleteOriginalAssets: false,

@@ -3,7 +3,7 @@
 .app {
   position: relative;
   background: var(--header-bg);
-  min-height: 100%;
+  min-height: 100vh;
   transition-property: background-color, filter, opacity;
   transition-duration: 0.2s;
 

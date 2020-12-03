@@ -40,7 +40,6 @@ class Env {
 
   SENTRY_URL = '';
   GIT_COMMIT = '';
-  REACT_LIBRARY: `react` | `inferno` = `react`;
   HOT_RELOAD = false;
   HOT_RELOAD_PORT = 0;
   HOT_RELOAD_CLIENT_URL = '';
@@ -49,14 +48,12 @@ class Env {
   DROP_CONSOLE = false;
   FILENAME_HASH = false;
   CIRCULAR_CHECK = false;
-  SPEED_ANALYZER = false;
   BUNDLE_ANALYZER = false;
   MINIMIZE_CLIENT = false;
   MINIMIZE_SERVER = false;
   AGGREGATION_TIMEOUT = 0;
   GENERATE_COMPRESSED = false;
   BUNDLE_ANALYZER_PORT = 0;
-  SPEED_ANALYZER_SERVER = false;
   START_SERVER_AFTER_BUILD = false;
   DEV_TOOL: Devtool = 'eval-cheap-module-source-map';
   DEV_TOOL_SERVER: Devtool = 'eval-cheap-module-source-map';

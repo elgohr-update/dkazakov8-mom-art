@@ -1,5 +1,5 @@
-import { runInAction } from 'mobx';
 import _ from 'lodash';
+import { runInAction } from 'mobx';
 
 import { routing } from 'utils';
 import { routes } from 'routes';
@@ -7,12 +7,14 @@ import { Express } from 'common';
 import { RouteType, TypeAction } from 'models';
 
 type Params = {
-  route?: RouteType;
   req?: Express['Request'];
   res?: Express['Response'];
+  route?: RouteType;
 };
 
-export const redirectTo: TypeAction<Params> = ({ store, actions, api }, { route, req, res }) => {
+export const redirectTo: TypeAction<Params> = (globals, { route, req, res }) => {
+  const { store, actions } = globals;
+
   if (!route) {
     /**
      * IS_SERVER ?
@@ -48,7 +50,7 @@ export const redirectTo: TypeAction<Params> = ({ store, actions, api }, { route,
         }
       })
     )
-    .then(() => (route.beforeEnter || _.stubTrue)({ store, actions, api, route }))
+    .then(() => (route.beforeEnter || _.stubTrue)(globals))
     .catch(error => {
       /**
        * Log error happened in beforeEnter and draw error500 page

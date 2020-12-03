@@ -2,7 +2,7 @@ import { TypeAction } from 'models';
 
 type Params = { language: 'ru' | 'en' };
 
-export const getLocalization: TypeAction<Params> = ({ store, api, actions }, { language }) => {
+export const getLocalization: TypeAction<Params> = ({ api, actions }, { language }) => {
   return api
     .getLocalization({ language })
     .then(({ translations }) => actions.general.getLocalizationSuccess({ language, translations }));

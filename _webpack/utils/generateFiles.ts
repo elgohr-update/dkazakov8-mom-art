@@ -6,25 +6,70 @@ import chalk from 'chalk';
 import { ESLint } from 'eslint';
 
 import { env } from '../../env';
-import { paths } from '../../paths';
+import {
+  paths,
+  TypeReexportConfig,
+  TypeValidatorsConfig,
+  TypeExportObjectConfig,
+} from '../../paths';
 import eslintConfig from '../../eslint.config';
 import { Compiler } from '../../lib/ts-interface-builder';
 
 const eslint = new ESLint({
   fix: true,
   extensions: ['.js', '.ts', '.tsx'],
-  overrideConfigFile: path.resolve(paths.rootPath, 'eslint.config.js'),
+  overrideConfigFile: path.resolve(paths.root, 'eslint.config.js'),
 });
 
 const logsPrefix = chalk.blue(`[WEBPACK]`);
-
-const modelsPath = path.resolve(paths.sourcePath, 'models');
 
 // @ts-ignore
 // eslint-disable-next-line prefer-destructuring
 const { tabWidth } = eslintConfig.rules['prettier/prettier'][1];
 
-type TypeProcessParams = { changedFiles?: string[] };
+type TypeProcessParams<T> = { changedFiles?: string[]; rebuildAll: boolean; configRaw: T };
+
+function getReexportFileName(folderName: string) {
+  return `_${folderName}.ts`;
+}
+
+function filterFileNames(filesNames, folderName: string) {
+  const skipFilesArray = ['package.json', 'messages.ts', getReexportFileName(folderName)];
+
+  return filesNames.filter(fileName => !skipFilesArray.some(fName => fileName.includes(fName)));
+}
+
+function getFilteredChildren(folderPath: string) {
+  const { base: folderName } = path.parse(folderPath);
+
+  const childrenFileNames = fs.readdirSync(folderPath);
+  const filteredChildrenFileNames = filterFileNames(childrenFileNames, folderName);
+
+  return {
+    paths: filteredChildrenFileNames.map(fileName => path.resolve(folderPath, fileName)),
+    names: filteredChildrenFileNames,
+  };
+}
+
+function createPackageFile(folderPath: string) {
+  const packagePath = path.resolve(folderPath, 'package.json');
+
+  if (!fs.existsSync(packagePath)) {
+    const { base: folderName } = path.parse(folderPath);
+    const reexportFileName = getReexportFileName(folderName);
+
+    return fs.promises.writeFile(
+      packagePath,
+      `{
+  "main": "${reexportFileName}",
+  "types": "${reexportFileName}"
+}
+`
+    );
+  }
+
+  return Promise.resolve();
+}
 
 class GenerateFiles {
   _saveFile(params: { content?: string; filePath: string; noEslint?: boolean }) {
@@ -54,14 +99,6 @@ class GenerateFiles {
       .join(',\n')},\n};\n`;
   }
 
-  _excludeFileNames(filesNames, skipFiles?: string[]) {
-    const skipFilesArray = ['package.json', 'messages.ts'].concat(skipFiles || []);
-
-    return filesNames.filter(
-      fileName => !skipFilesArray.some(testStr => fileName.includes(testStr))
-    );
-  }
-
   _formatTextWithEslint(str: string) {
     return eslint.lintText(str).then(data => data[0].output || str);
   }
@@ -84,39 +121,36 @@ class GenerateFiles {
     }, {});
   }
 
-  generateExportFiles({ changedFiles }: TypeProcessParams) {
-    const config =
-      changedFiles == null
-        ? paths.generateExportFilesConfig
-        : paths.generateExportFilesConfig.filter(({ folderPath }) =>
-            changedFiles.some(filePath => filePath.includes(folderPath))
-          );
+  generateExportFiles(params: TypeProcessParams<TypeReexportConfig>): Promise<boolean> {
+    const { configRaw, rebuildAll, changedFiles } = params;
 
-    if (config.length === 0) return false;
+    let configFiltered = configRaw;
+
+    if (!rebuildAll) {
+      configFiltered = configFiltered.filter(({ folderPath }) =>
+        changedFiles.some(filePath => filePath.includes(folderPath))
+      );
+    }
 
     return Promise.all(
-      config.map(({ folderPath, exportDefault }) => {
+      configFiltered.map(({ folderPath, exportDefault }) => {
         const { base: folderName } = path.parse(folderPath);
 
-        const generatedFileName = `_${folderName}.ts`;
-        const generatedFilePath = path.resolve(folderPath, generatedFileName);
+        const childrenNames = getFilteredChildren(folderPath).names;
+        const content = childrenNames.reduce((template, fileName) => {
+          const { name: fileNameNoExt } = path.parse(fileName);
+
+          return exportDefault
+            ? `${template}export { default as ${fileNameNoExt} } from './${fileNameNoExt}';\n`
+            : `${template}export * from './${fileNameNoExt}';\n`;
+        }, '// This file is auto-generated\n\n');
 
         return Promise.resolve()
-          .then(() => fs.promises.readdir(folderPath))
-          .then(filesNames => this._excludeFileNames(filesNames, [generatedFileName]))
-          .then(filesNames =>
-            filesNames.reduce((template, fileName) => {
-              const { name: fileNameNoExt } = path.parse(fileName);
-
-              return exportDefault
-                ? `${template}export { default as ${fileNameNoExt} } from './${fileNameNoExt}';\n`
-                : `${template}export * from './${fileNameNoExt}';\n`;
-            }, '// This file is auto-generated\n\n')
-          )
-          .then(content =>
+          .then(() => createPackageFile(folderPath))
+          .then(() =>
             this._saveFile({
               content,
-              filePath: generatedFilePath,
+              filePath: path.resolve(folderPath, getReexportFileName(folderName)),
               noEslint: true,
             })
           );
@@ -124,101 +158,111 @@ class GenerateFiles {
     ).then(filesSavedMarks => filesSavedMarks.some(Boolean));
   }
 
-  generateValidationFiles({ changedFiles }: TypeProcessParams) {
-    const config =
-      changedFiles == null
-        ? paths.generateValidationsConfig
-        : paths.generateValidationsConfig.filter(({ folderPath }) =>
-            changedFiles.some(
-              filePath => filePath.includes(folderPath) || filePath.includes(modelsPath)
-            )
-          );
+  generateValidationFiles(params: TypeProcessParams<TypeValidatorsConfig>): Promise<boolean> {
+    const { configRaw, rebuildAll, changedFiles } = params;
 
-    if (config.length === 0) return false;
+    let configFiltered = configRaw;
+
+    if (!rebuildAll) {
+      configFiltered = configFiltered.filter(({ folderPath, triggerPath }) =>
+        changedFiles.some(
+          filePath => filePath.includes(folderPath) || triggerPath.includes(triggerPath)
+        )
+      );
+    }
 
     return Promise.all(
-      config.map(({ folderPath }) => {
+      configFiltered.map(({ folderPath, targetFolder }) => {
         const { base: folderName } = path.parse(folderPath);
 
-        const generatedFileName = `_${folderName}.ts`;
-        const generatedFolderPath = path.resolve(paths.validatorsPath, folderName);
+        const generatedFolderPath = path.resolve(targetFolder, folderName);
 
         if (!fs.existsSync(generatedFolderPath)) fs.mkdirSync(generatedFolderPath);
 
-        return Promise.resolve()
-          .then(() => fs.promises.readdir(folderPath))
-          .then(filesNames => this._excludeFileNames(filesNames, [generatedFileName]))
-          .then(filesNames => filesNames.map(fileName => path.resolve(folderPath, fileName)))
-          .then(filesPaths =>
-            Promise.all(
-              Compiler.compile(filesPaths, { inlineImports: true }).map(({ filePath, content }) => {
-                const { base: fileName } = path.parse(filePath);
+        const childrenPaths = getFilteredChildren(folderPath).paths;
+        const compilerResults = Compiler.compile(childrenPaths, {
+          inlineImports: true,
+        });
+        const saveFilePromises = compilerResults.map(result =>
+          this._saveFile({
+            content: result.content,
+            filePath: path.resolve(generatedFolderPath, path.parse(result.filePath).base),
+          })
+        );
 
-                const generatedFilePath = path.resolve(generatedFolderPath, fileName);
-
-                return this._saveFile({ filePath: generatedFilePath, content });
-              })
-            )
-          );
+        return Promise.all(saveFilePromises).then(filesSavedMarks => filesSavedMarks.some(Boolean));
       })
-    ).then(filesSavedMarks => _.flatten(filesSavedMarks).some(Boolean));
+    ).then(filesSavedMarks => filesSavedMarks.some(Boolean));
   }
 
-  generateAssetsExportFiles({ changedFiles }: TypeProcessParams) {
-    const config =
-      changedFiles == null
-        ? paths.generateAssetsExportFilesConfig
-        : paths.generateAssetsExportFilesConfig.filter(({ folderPath }) =>
-            changedFiles.some(filePath => filePath.includes(folderPath))
-          );
+  generateAssetsExportFiles(params: TypeProcessParams<TypeExportObjectConfig>): Promise<boolean> {
+    const { configRaw, rebuildAll, changedFiles } = params;
 
-    if (config.length === 0) return false;
+    let configFiltered = configRaw;
+
+    if (!rebuildAll) {
+      configFiltered = configFiltered.filter(({ folderPath }) =>
+        changedFiles.some(filePath => filePath.includes(folderPath))
+      );
+    }
 
     return Promise.all(
-      config.map(({ folderPath, exportDefault }) => {
+      configFiltered.map(({ folderPath, exportDefault }) => {
         const { base: folderName, dir: parentPath } = path.parse(folderPath);
 
         const generatedFileName = `${folderName}.ts`;
         const generatedFilePath = path.resolve(parentPath, generatedFileName);
+        const childrenNames = getFilteredChildren(folderPath).names;
+        const exportObject = this._createExportObjectFromFilesArray({
+          folderName,
+          filesNames: childrenNames,
+          exportDefault,
+        });
+        const content = `// This file is auto-generated\n\nexport const ${folderName} = ${this._objToString(
+          exportObject
+        )}`;
 
-        return Promise.resolve()
-          .then(() => fs.promises.readdir(folderPath))
-          .then(filesNames => {
-            const exportObject = this._createExportObjectFromFilesArray({
-              folderName,
-              filesNames,
-              exportDefault,
-            });
-
-            return `// This file is auto-generated\n\nexport const ${folderName} = ${this._objToString(
-              exportObject
-            )}`;
-          })
-          .then(content =>
-            this._saveFile({
-              content,
-              filePath: generatedFilePath,
-              noEslint: true,
-            })
-          );
+        return this._saveFile({
+          content,
+          filePath: generatedFilePath,
+          noEslint: true,
+        });
       })
     ).then(filesSavedMarks => filesSavedMarks.some(Boolean));
   }
 
-  process({ changedFiles }: TypeProcessParams) {
+  process({ changedFiles }: { changedFiles?: string[] }) {
     const startTime = Date.now();
     const isFirstGeneration = changedFiles == null;
     let filesChanged = false;
 
     // Order matters
     return Promise.resolve()
-      .then(() => this.generateValidationFiles({ changedFiles }))
+      .then(() =>
+        this.generateValidationFiles({
+          configRaw: paths.generateValidationsConfig,
+          rebuildAll: isFirstGeneration,
+          changedFiles,
+        })
+      )
       .then(changedMark => changedMark && (filesChanged = true))
 
-      .then(() => this.generateExportFiles({ changedFiles }))
+      .then(() =>
+        this.generateExportFiles({
+          configRaw: paths.generateExportFilesConfig,
+          rebuildAll: isFirstGeneration,
+          changedFiles,
+        })
+      )
       .then(changedMark => changedMark && (filesChanged = true))
 
-      .then(() => this.generateAssetsExportFiles({ changedFiles }))
+      .then(() =>
+        this.generateAssetsExportFiles({
+          changedFiles,
+          configRaw: paths.generateAssetsExportFilesConfig,
+          rebuildAll: isFirstGeneration,
+        })
+      )
       .then(changedMark => changedMark && (filesChanged = true))
 
       .then(() => {

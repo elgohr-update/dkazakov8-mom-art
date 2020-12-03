@@ -2,8 +2,7 @@ import _ from 'lodash';
 import { toJS, configure } from 'mobx';
 
 import { errorsNames } from 'const';
-
-import { env } from '../../env';
+import { env } from 'env';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Sentry = require(IS_CLIENT ? '@sentry/browser' : '@sentry/node');

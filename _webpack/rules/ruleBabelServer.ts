@@ -6,7 +6,7 @@ import { loaderTypescript } from '../loaders/loaderTypescript';
 import { loaderBabelServer } from '../loaders/loaderBabelServer';
 
 export const ruleBabelServer: webpack.RuleSetRule = {
-  test: /\.(js|tsx?)$/,
+  test: /\.(jsx?|tsx?)$/,
   use: [loaderBabelServer, env.USE_TS_LOADER && loaderTypescript].filter(Boolean),
-  exclude: [paths.nodeModulesPath],
+  exclude: [paths.nodeModules],
 };

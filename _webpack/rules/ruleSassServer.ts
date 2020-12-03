@@ -6,7 +6,7 @@ import { loaderCssServer } from '../loaders/loaderCssServer';
 
 export const ruleSassServer: webpack.RuleSetRule = {
   test: /\.s?css$/,
-  include: [paths.sourcePath],
-  exclude: [paths.themesPath],
+  include: [paths.source],
+  exclude: [paths.themes],
   use: [loaderCssServer, loaderPostcss],
 };

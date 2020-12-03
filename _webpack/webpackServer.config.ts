@@ -11,9 +11,8 @@ import { configDevToolServer } from './configs/configDevToolServer';
 import { configPluginsServer } from './configs/configPluginsServer';
 import { configExternalsServer } from './configs/configExternalsServer';
 import { configOptimizationServer } from './configs/configOptimizationServer';
-import { pluginSpeedMeasureServer } from './plugins/pluginSpeedMeasureServer';
 
-export default pluginSpeedMeasureServer.wrap({
+export default {
   node: configNode,
   mode: configMode,
   entry: configEntryServer,
@@ -28,4 +27,4 @@ export default pluginSpeedMeasureServer.wrap({
   performance: configPerformance,
   optimization: configOptimizationServer,
   watchOptions: configWatchOptions,
-});
+};

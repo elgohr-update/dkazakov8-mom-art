@@ -10,5 +10,5 @@ import webpack from 'webpack';
 import { paths } from '../../paths';
 
 export const configEntryServer: webpack.Configuration['entry'] = {
-  server: path.resolve(paths.serverPath, 'server.ts'),
+  server: path.resolve(paths.server, 'server.ts'),
 };

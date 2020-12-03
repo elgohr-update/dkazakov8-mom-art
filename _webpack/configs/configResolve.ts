@@ -5,19 +5,18 @@
 
 import webpack from 'webpack';
 
-import { env } from '../../env';
 import { paths } from '../../paths';
 
 export const configResolve: webpack.Configuration['resolve'] = {
   // Allow looking in server & src folders for imports
-  modules: [paths.serverPath, paths.sourcePath, paths.nodeModulesPath, paths.typesPath],
+  modules: [paths.nodeModules, paths.source, paths.types],
   extensions: ['.js', '.ts', '.tsx'],
+  symlinks: false,
+  cacheWithContext: false,
   alias: {
-    inferno: env.NODE_ENV === 'production' ? 'inferno' : 'inferno/dist/index.dev.esm.js',
-    react: env.REACT_LIBRARY === 'react' ? 'react' : 'inferno-compat',
-    'react-dom': env.REACT_LIBRARY === 'react' ? 'react-dom' : 'inferno-compat',
-    'mobx-react': env.REACT_LIBRARY === 'react' ? 'mobx-react' : 'inferno-mobx',
-    'react-dom/server': env.REACT_LIBRARY === 'react' ? 'react-dom/server' : 'inferno-server',
+    env: paths.env,
+    paths: paths.paths,
+    Server: paths.server,
   },
   fallback: {
     path: require.resolve('path-browserify'),

@@ -9,7 +9,7 @@ import * as apiValidatorsTypes from 'validators/api';
 
 const apiValidators = _.mapValues(apiValidatorsTypes, value => createCheckers(value));
 
-const routeControllers = IS_CLIENT ? null : require('routeControllers');
+const controllers = IS_CLIENT ? null : require('Server/controllers');
 
 function sendRequest({ params, requestParams }) {
   const { req, res, route } = params;
@@ -25,7 +25,7 @@ function sendRequest({ params, requestParams }) {
   }
 
   if (!IS_CLIENT) {
-    const controllerFn = routeControllers[`${route.name}Controller`];
+    const controllerFn = controllers[route.name];
 
     if (!controllerFn) {
       return Promise.reject(

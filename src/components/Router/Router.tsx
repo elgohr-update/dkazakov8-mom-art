@@ -1,7 +1,30 @@
 import _ from 'lodash';
+import React from 'react';
 
-import { routeComponents } from 'routeComponents';
+import { routes } from 'routes';
 import { ConnectedComponent } from 'components/ConnectedComponent';
+import { Gallery, ErrorPage, About, Reviews, EditLocalization } from 'pages';
+
+export const routeComponents: Record<keyof typeof routes, { Component: React.ReactElement }> = {
+  gallery: {
+    Component: <Gallery />,
+  },
+  about: {
+    Component: <About />,
+  },
+  reviews: {
+    Component: <Reviews />,
+  },
+  editLocalization: {
+    Component: <EditLocalization />,
+  },
+  error404: {
+    Component: <ErrorPage errorNumber={404} />,
+  },
+  error500: {
+    Component: <ErrorPage errorNumber={500} />,
+  },
+};
 
 @ConnectedComponent.observer
 export class Router extends ConnectedComponent {
@@ -18,7 +41,7 @@ export class Router extends ConnectedComponent {
 
     if (!Component) {
       if (typeof Component === 'undefined') {
-        console.error(`Router: component for ${name} is not defined in routeComponents`);
+        console.error(`Router: component for ${name} is not defined`);
       }
 
       return null;

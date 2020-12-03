@@ -1,92 +1,60 @@
 import path from 'path';
 
-const rootPath = __dirname;
+export type TypeValidatorsConfig = Array<{
+  folderPath: string;
+  triggerPath: string;
+  targetFolder: string;
+}>;
+export type TypeReexportConfig = Array<{ folderPath: string; exportDefault?: boolean }>;
+export type TypeExportObjectConfig = TypeReexportConfig;
 
-const paths: {
-  rootPath: string;
-  buildPath: string;
-  typesPath: string;
-  assetsPath: string;
-  serverPath: string;
-  sourcePath: string;
-  stylesPath: string;
-  themesPath: string;
-  templatesPath: string;
-  validatorsPath: string;
-  nodeModulesPath: string;
-  generateValidationsConfig?: Array<{ folderPath: string }>;
-  generateExportFilesConfig?: Array<{ folderPath: string; exportDefault: boolean }>;
-  generateAssetsExportFilesConfig?: Array<{ folderPath: string; exportDefault: boolean }>;
-} = {
-  rootPath,
-  buildPath: path.resolve(rootPath, 'build'),
-  typesPath: path.resolve(rootPath, '_types'),
-  assetsPath: path.resolve(rootPath, 'src/assets'),
-  serverPath: path.resolve(rootPath, 'server'),
-  sourcePath: path.resolve(rootPath, 'src'),
-  stylesPath: path.resolve(rootPath, 'src/styles'),
-  themesPath: path.resolve(rootPath, 'src/styles/themes.scss'),
-  templatesPath: path.resolve(rootPath, 'templates'),
-  validatorsPath: path.resolve(rootPath, 'src/validators'),
-  nodeModulesPath: path.resolve(rootPath, 'node_modules'),
+const root = __dirname;
+
+const staticPaths = {
+  root,
+  env: path.resolve(root, 'env.ts'),
+  build: path.resolve(root, 'build'),
+  paths: path.resolve(root, 'paths.ts'),
+  types: path.resolve(root, '_types'),
+  assets: path.resolve(root, 'src/assets'),
+  server: path.resolve(root, 'server'),
+  source: path.resolve(root, 'src'),
+  styles: path.resolve(root, 'src/styles'),
+  themes: path.resolve(root, 'src/styles/themes.scss'),
+  webpack: path.resolve(root, '_webpack'),
+  templates: path.resolve(root, 'templates'),
+  validators: path.resolve(root, 'src/validators'),
+  nodeModules: path.resolve(root, 'node_modules'),
 };
 
-paths.generateValidationsConfig = [
-  {
-    folderPath: path.resolve(paths.sourcePath, 'api'),
-  },
-];
-paths.generateExportFilesConfig = [
-  {
-    folderPath: path.resolve(paths.sourcePath, 'formConfigs'),
-    exportDefault: false,
-  },
-  {
-    folderPath: path.resolve(paths.sourcePath, 'const'),
-    exportDefault: false,
-  },
-  {
-    folderPath: path.resolve(paths.sourcePath, 'utils'),
-    exportDefault: false,
-  },
-  {
-    folderPath: path.resolve(paths.serverPath, 'serverUtils'),
-    exportDefault: false,
-  },
-  {
-    folderPath: path.resolve(paths.sourcePath, 'api'),
-    exportDefault: false,
-  },
-  {
-    folderPath: path.resolve(paths.sourcePath, 'models'),
-    exportDefault: false,
-  },
-  {
-    folderPath: path.resolve(paths.sourcePath, 'pages'),
-    exportDefault: false,
-  },
-  {
-    folderPath: path.resolve(paths.sourcePath, 'actions/general'),
-    exportDefault: false,
-  },
-  {
-    folderPath: path.resolve(paths.serverPath, 'routeControllers'),
-    exportDefault: false,
-  },
-  {
-    folderPath: path.resolve(paths.validatorsPath, 'api'),
-    exportDefault: true,
-  },
-];
-paths.generateAssetsExportFilesConfig = [
-  {
-    folderPath: path.resolve(paths.assetsPath, 'icons'),
-    exportDefault: false,
-  },
-  {
-    folderPath: path.resolve(paths.assetsPath, 'images'),
-    exportDefault: true,
-  },
-];
+const configPaths: {
+  generateValidationsConfig: TypeValidatorsConfig;
+  generateExportFilesConfig: TypeReexportConfig;
+  generateAssetsExportFilesConfig: TypeExportObjectConfig;
+} = {
+  generateValidationsConfig: [
+    {
+      folderPath: path.resolve(staticPaths.source, 'api'),
+      triggerPath: path.resolve(staticPaths.source, 'models'),
+      targetFolder: staticPaths.validators,
+    },
+  ],
+  generateExportFilesConfig: [
+    { folderPath: path.resolve(staticPaths.source, 'formConfigs') },
+    { folderPath: path.resolve(staticPaths.source, 'const') },
+    { folderPath: path.resolve(staticPaths.source, 'utils') },
+    { folderPath: path.resolve(staticPaths.server, 'utils') },
+    { folderPath: path.resolve(staticPaths.source, 'api') },
+    { folderPath: path.resolve(staticPaths.source, 'models') },
+    { folderPath: path.resolve(staticPaths.source, 'pages') },
+    { folderPath: path.resolve(staticPaths.source, 'actions/general') },
+    { folderPath: path.resolve(staticPaths.server, 'controllers') },
+    { folderPath: path.resolve(staticPaths.validators, 'api'), exportDefault: true },
+  ],
+  generateAssetsExportFilesConfig: [
+    { folderPath: path.resolve(staticPaths.assets, 'icons') },
+    { folderPath: path.resolve(staticPaths.assets, 'images'), exportDefault: true },
+  ],
+};
 
-export { paths };
+export const paths = Object.assign({}, staticPaths, configPaths);
