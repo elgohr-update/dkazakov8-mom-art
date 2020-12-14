@@ -12,6 +12,7 @@ import { configOptimization } from './configs/configOptimization';
 import { configWatchOptions } from './configs/configWatchOptions';
 
 export default {
+  name: 'web',
   mode: configMode,
   node: configNode,
   entry: configEntry,

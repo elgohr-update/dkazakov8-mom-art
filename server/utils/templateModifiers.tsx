@@ -1,6 +1,9 @@
+import path from 'path';
+
 import { toJS } from 'mobx';
 import React from 'react';
 import _ from 'lodash';
+import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import { renderToString } from 'react-dom/server';
 
 import { App } from 'components/App';
@@ -8,6 +11,7 @@ import { escapeAllStrings } from 'utils';
 import { StoreContext } from 'components/StoreContext';
 import { hotReloadUrl, compressions } from 'const';
 import { env } from 'env';
+import { paths } from 'paths';
 
 function filterStore(store) {
   const excludedStores = ['actions', 'executions', 'getLn', 'proxy'];
@@ -72,14 +76,25 @@ export function injectMetaTags(str, store, getters) {
     );
 }
 
+const webStats = path.resolve(paths.build, 'web-loadable-stats.json');
+const webExtractor = new ChunkExtractor({
+  statsFile: webStats,
+  entrypoints: ['client'],
+});
+
 export function injectAppMarkup(str, store, api, actions, getters) {
-  const appMarkup = renderToString(
-    <StoreContext.Provider value={{ store, api, actions, getters }}>
-      <App />
-    </StoreContext.Provider>
+  const jsx = (
+    <ChunkExtractorManager extractor={webExtractor}>
+      <StoreContext.Provider value={{ store, api, actions, getters }}>
+        <App />
+      </StoreContext.Provider>
+    </ChunkExtractorManager>
   );
 
-  return str.replace(`<div id="app"></div>`, `<div id="app">${appMarkup || ''}</div>`);
+  return str
+    .replace(`<div id="app"></div>`, `<div id="app">${renderToString(jsx)}</div>`)
+    .replace('<!-- LINKS -->', [webExtractor.getLinkTags(), webExtractor.getStyleTags()].join('\n'))
+    .replace('<!-- SCRIPTS -->', webExtractor.getScriptTags());
 }
 
 export function injectBrowserReload(str) {

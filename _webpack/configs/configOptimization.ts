@@ -26,14 +26,6 @@ export const configOptimization: webpack.Configuration['optimization'] = {
         reuseExistingChunk: true,
         enforce: true,
       },
-      vendor: {
-        test: /node_modules/,
-        name: 'vendor',
-        chunks: 'all',
-        reuseExistingChunk: true,
-        enforce: true,
-        priority: -1,
-      },
     },
   },
   runtimeChunk: {

@@ -41,7 +41,7 @@ class TranslationItem extends ConnectedComponent<TranslationItemProps> {
 }
 
 @ConnectedComponent.observer
-export class EditLocalization extends ConnectedComponent {
+export default class EditLocalization extends ConnectedComponent {
   UNSAFE_componentWillMount() {
     const { actions } = this.context;
 

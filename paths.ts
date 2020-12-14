@@ -46,7 +46,6 @@ const configPaths: {
     { folderPath: path.resolve(staticPaths.server, 'utils') },
     { folderPath: path.resolve(staticPaths.source, 'api') },
     { folderPath: path.resolve(staticPaths.source, 'models') },
-    { folderPath: path.resolve(staticPaths.source, 'pages') },
     { folderPath: path.resolve(staticPaths.source, 'actions/general') },
     { folderPath: path.resolve(staticPaths.server, 'controllers') },
     { folderPath: path.resolve(staticPaths.validators, 'api'), exportDefault: true },

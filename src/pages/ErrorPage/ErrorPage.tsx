@@ -12,7 +12,7 @@ interface ErrorPageProps {
 }
 
 @ConnectedComponent.observer
-export class ErrorPage extends ConnectedComponent<ErrorPageProps> {
+export default class ErrorPage extends ConnectedComponent<ErrorPageProps> {
   UNSAFE_componentWillMount() {
     const { actions } = this.context;
 

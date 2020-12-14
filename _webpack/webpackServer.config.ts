@@ -13,6 +13,7 @@ import { configExternalsServer } from './configs/configExternalsServer';
 import { configOptimizationServer } from './configs/configOptimizationServer';
 
 export default {
+  name: 'node',
   node: configNode,
   mode: configMode,
   entry: configEntryServer,

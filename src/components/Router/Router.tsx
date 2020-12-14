@@ -1,52 +1,102 @@
-import _ from 'lodash';
 import React from 'react';
+import loadable from '@loadable/component';
+import { autorun, IReactionDisposer } from 'mobx';
 
-import { routes } from 'routes';
+import { routesObject } from 'routes';
 import { ConnectedComponent } from 'components/ConnectedComponent';
-import { Gallery, ErrorPage, About, Reviews, EditLocalization } from 'pages';
 
-export const routeComponents: Record<keyof typeof routes, { Component: React.ReactElement }> = {
+export const routeComponents: Record<
+  keyof typeof routesObject,
+  { Component: React.ReactElement; props?: Record<string, any> }
+> = {
   gallery: {
-    Component: <Gallery />,
+    Component: loadable(() => import('pages/Gallery')),
   },
   about: {
-    Component: <About />,
+    Component: loadable(() => import('pages/About')),
   },
   reviews: {
-    Component: <Reviews />,
+    Component: loadable(() => import('pages/Reviews')),
   },
   editLocalization: {
-    Component: <EditLocalization />,
+    Component: loadable(() => import('pages/EditLocalization')),
   },
   error404: {
-    Component: <ErrorPage errorNumber={404} />,
+    Component: loadable(() => import('pages/ErrorPage')),
+    props: {
+      errorNumber: 404,
+    },
   },
   error500: {
-    Component: <ErrorPage errorNumber={500} />,
+    Component: loadable(() => import('pages/ErrorPage')),
+    props: {
+      errorNumber: 500,
+    },
   },
 };
 
-@ConnectedComponent.observer
 export class Router extends ConnectedComponent {
-  render() {
+  state = {
+    LoadedComponent: null,
+    loadedComponentName: null,
+  };
+  componentChangeDisposer: IReactionDisposer;
+
+  UNSAFE_componentWillMount() {
     const {
       store: {
-        router: {
-          currentRoute: { name },
-        },
+        router: { currentRoute },
       },
     } = this.context;
 
-    const Component = _.get(routeComponents, `${name}.Component`);
+    this.componentChangeDisposer = autorun(() => {
+      if (currentRoute.name) this.setLoadedComponent();
+    });
+  }
 
-    if (!Component) {
-      if (typeof Component === 'undefined') {
-        console.error(`Router: component for ${name} is not defined`);
-      }
+  componentWillUnmount() {
+    this.componentChangeDisposer();
+  }
 
-      return null;
+  setLoadedComponent() {
+    /**
+     * Loads async components before rendering for disabling page flash
+     *
+     */
+
+    const { loadedComponentName } = this.state;
+    const {
+      store: {
+        router: { currentRoute },
+        ui: { firstRendered },
+      },
+    } = this.context;
+
+    if (loadedComponentName === currentRoute.name) return;
+
+    const componentConfig = routeComponents[currentRoute.name];
+
+    if (!componentConfig) {
+      return console.error(`Router: component for ${currentRoute.name} is not defined`);
     }
 
-    return Component;
+    if (IS_CLIENT && firstRendered) {
+      return componentConfig.Component.load().then(module =>
+        this.updateLoadedComponent(currentRoute.name, module.default, componentConfig.props)
+      );
+    }
+
+    this.updateLoadedComponent(currentRoute.name, componentConfig.Component, componentConfig.props);
+  }
+
+  updateLoadedComponent(name: string, Component: any, props: Record<string, any> = {}) {
+    this.setState({
+      LoadedComponent: <Component {...props} />,
+      loadedComponentName: name,
+    });
+  }
+
+  render() {
+    return this.state.LoadedComponent || null;
   }
 }

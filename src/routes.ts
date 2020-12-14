@@ -1,7 +1,7 @@
 import { addNames } from 'utils/addNames';
 import { RoutesType } from 'models';
 
-const routesObject: RoutesType = {
+export const routesObject = {
   gallery: {
     path: '/',
     beforeEnter({ actions }) {
@@ -29,4 +29,4 @@ const routesObject: RoutesType = {
   },
 };
 
-export const routes = addNames(routesObject);
+export const routes: RoutesType = addNames(routesObject);

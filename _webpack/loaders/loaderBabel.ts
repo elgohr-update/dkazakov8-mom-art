@@ -19,6 +19,6 @@ export const loaderBabel: webpack.RuleSetRule = {
   loader: 'babel-loader',
   options: {
     presets: [['@babel/preset-env', presetEnvOptions]],
-    plugins: [...babelConfigServer.plugins, '@babel/plugin-transform-react-jsx', 'lodash'],
+    plugins: [...babelConfigServer.plugins, 'lodash'],
   },
 };

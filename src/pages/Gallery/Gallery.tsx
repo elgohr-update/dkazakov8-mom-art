@@ -12,7 +12,7 @@ import { messages } from './messages';
 import styles from './Gallery.scss';
 
 @ConnectedComponent.observer
-export class Gallery extends ConnectedComponent {
+export default class Gallery extends ConnectedComponent {
   refGallery: HTMLElement;
   instanceScroll: HTMLElement;
 

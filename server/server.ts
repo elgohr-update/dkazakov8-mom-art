@@ -1,5 +1,6 @@
-import { isomorphPolyfills } from 'utils';
 import { createServer, updateTranslations, copyAssetsToCDN } from 'Server/utils';
+
+import { isomorphPolyfills } from 'utils';
 import { handleSession } from 'Server/middlewares/common/handleSession';
 import { handlePrometheus } from 'Server/middlewares/common/handlePrometheus';
 import { handleJsonRequests } from 'Server/middlewares/common/handleJsonRequests';

@@ -13,6 +13,7 @@ import { pluginDefine } from '../plugins/pluginDefine';
 import { pluginExtract } from '../plugins/pluginExtract';
 import { pluginPreload } from '../plugins/pluginPreload';
 import { pluginAnalyzer } from '../plugins/pluginAnalyzer';
+import { pluginLoadable } from '../plugins/pluginLoadable';
 import { pluginChangedFiles } from '../plugins/pluginChangedFiles';
 // import { pluginLodashModule } from '../plugins/pluginLodashModule';
 import { pluginCompressionGzip } from '../plugins/pluginCompressionGzip';
@@ -26,6 +27,7 @@ export const configPlugins: webpack.Configuration['plugins'] = [
   pluginDefine,
   pluginPreload,
   pluginExtract,
+  pluginLoadable,
   // pluginLodashModule,
   env.CIRCULAR_CHECK && pluginCircularDependency,
   env.BUNDLE_ANALYZER && pluginAnalyzer,

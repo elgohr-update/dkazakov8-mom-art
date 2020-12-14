@@ -2,6 +2,7 @@ import './styles/global.scss';
 
 import React from 'react';
 import { hydrate } from 'react-dom';
+import { loadableReady } from '@loadable/component';
 
 import { App } from 'components/App';
 import { StoreRoot } from 'stores/StoreRoot';
@@ -22,18 +23,20 @@ const store = new StoreRoot();
 const { api, actions } = actionsCreator(store);
 const getters = new StoreGetters(store);
 
-Promise.resolve()
-  .then(measureClient('onStoreInitializedClient'))
-  .then(() => actions.general.onStoreInitializedClient())
-  .then(measureClient('onStoreInitializedClient'))
+loadableReady(() => {
+  Promise.resolve()
+    .then(measureClient('onStoreInitializedClient'))
+    .then(() => actions.general.onStoreInitializedClient())
+    .then(measureClient('onStoreInitializedClient'))
 
-  .then(() => initAutorun({ store, actions, api, getters }))
+    .then(() => initAutorun({ store, actions, api, getters }))
 
-  .then(() => {
-    return hydrate(
-      <StoreContext.Provider value={{ store, actions, api, getters }}>
-        <App />
-      </StoreContext.Provider>,
-      document.getElementById('app')
-    );
-  });
+    .then(() => {
+      return hydrate(
+        <StoreContext.Provider value={{ store, actions, api, getters }}>
+          <App />
+        </StoreContext.Provider>,
+        document.getElementById('app')
+      );
+    });
+});

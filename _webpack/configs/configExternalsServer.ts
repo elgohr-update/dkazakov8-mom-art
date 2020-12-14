@@ -6,6 +6,4 @@
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 
-export const configExternalsServer: webpack.Configuration['externals'] = [
-  nodeExternals({ allowlist: ['react-markdown'] }),
-];
+export const configExternalsServer: webpack.Configuration['externals'] = [nodeExternals()];
