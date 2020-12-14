@@ -1,5 +1,4 @@
 import cn from 'classnames';
-import React from 'react';
 
 import { Icon } from 'components/Icon';
 import { Spinner } from 'components/Spinner';

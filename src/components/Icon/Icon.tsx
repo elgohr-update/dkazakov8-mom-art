@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import cn from 'classnames';
-import React from 'react';
 
 import { icons } from 'assets/icons';
 import { ConnectedComponent } from 'components/ConnectedComponent';

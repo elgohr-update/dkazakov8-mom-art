@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import React from 'react';
 import cn from 'classnames';
+import { ChangeEvent } from 'react';
 import { autorun, IReactionDisposer, runInAction } from 'mobx';
 
 import { system } from 'const';
@@ -72,9 +72,7 @@ export class Text<T extends TypeFormConfig<T>> extends ConnectedComponent<TextPr
     this.updateInputConfig({ isFocused: true, errors: [] });
   };
 
-  handleChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     this.updateInputConfig({ value });
   };
 

@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import React from 'react';
 
 import { TypeInputErrors } from 'models';
 import { ConnectedComponent } from 'components/ConnectedComponent';

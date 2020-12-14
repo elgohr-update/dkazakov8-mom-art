@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import cn from 'classnames';
-import React from 'react';
+import { ChangeEvent } from 'react';
 import { autorun, IReactionDisposer } from 'mobx';
 
 import { MessageObjectType } from 'common';
@@ -55,7 +55,7 @@ export class FileInput<T extends TypeFormConfig<T>> extends ConnectedComponent<F
     Object.assign(inputConfig, params);
   };
 
-  handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+  handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     this.updateInputConfig({ value: target.files[0] });
   };
 

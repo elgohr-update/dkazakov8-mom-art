@@ -13,5 +13,5 @@ export function readDirRecursive(dir) {
         })
       )
     )
-    .then(files => files.flat());
+    .then((files: Array<string>) => files.flat());
 }

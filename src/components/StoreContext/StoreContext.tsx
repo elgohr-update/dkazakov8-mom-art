@@ -1,5 +1,5 @@
-import React from 'react';
+import { createContext } from 'react';
 
 import { TypeGlobals } from 'models';
 
-export const StoreContext = React.createContext<TypeGlobals>(undefined);
+export const StoreContext = createContext<TypeGlobals>(undefined);

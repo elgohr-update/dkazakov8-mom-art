@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React from 'react';
+import { ReactNode, FormEvent } from 'react';
 
 import { TypeFormConfig, TypeFormSubmit } from 'models';
 import { scrollToFirstElement, getNotValidFieldsIds } from 'utils';
@@ -15,7 +15,7 @@ interface FormProps<T extends TypeFormConfig<T>> {
   className?: string;
   initialData?: { [Key in keyof T]?: Partial<T[Key]> };
   buttonsLineClassName?: string;
-  beforeSubmitElements?: Array<React.ReactNode>;
+  beforeSubmitElements?: Array<ReactNode>;
 }
 
 @ConnectedComponent.observer
@@ -47,7 +47,7 @@ export class Form<T extends TypeFormConfig<T>> extends ConnectedComponent<FormPr
     }
   };
 
-  handleFormSubmit = (event: React.FormEvent) => {
+  handleFormSubmit = (event: FormEvent) => {
     const { store } = this.context;
     const { formConfig, onSubmit } = this.props;
 

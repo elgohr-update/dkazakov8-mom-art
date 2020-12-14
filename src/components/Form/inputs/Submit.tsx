@@ -1,5 +1,4 @@
 import cn from 'classnames';
-import React from 'react';
 
 import { ConnectedComponent } from 'components/ConnectedComponent';
 import { TypeFormConfig, TypeInputSubmitConfig } from 'models';

@@ -1,7 +1,6 @@
 import path from 'path';
 
 import { toJS } from 'mobx';
-import React from 'react';
 import _ from 'lodash';
 import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import { renderToString } from 'react-dom/server';

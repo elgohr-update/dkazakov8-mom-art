@@ -30,7 +30,7 @@ const uploader = multer({
 
 function uploadFile({ req, res }) {
   return new Promise((resolve, reject) => {
-    uploader(req, res, err => (err ? reject(err) : resolve()));
+    uploader(req, res, err => (err ? reject(err) : resolve(null)));
   });
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import { MouseEvent } from 'react';
 
 import { TypeGalleryItem } from 'models';
 import { ConnectedComponent } from 'components/ConnectedComponent';
@@ -6,7 +6,7 @@ import { ConnectedComponent } from 'components/ConnectedComponent';
 import styles from './Gallery.scss';
 
 interface GalleryItemProps {
-  onClick: (event?: React.MouseEvent) => void;
+  onClick: (event?: MouseEvent) => void;
   imgData: TypeGalleryItem;
   width: string;
 }

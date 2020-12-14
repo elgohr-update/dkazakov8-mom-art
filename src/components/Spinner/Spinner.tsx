@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React from 'react';
+import { Component } from 'react';
 
 import styles from './Spinner.scss';
 
@@ -8,7 +8,7 @@ interface SpinnerProps {
   size: number;
 }
 
-export class Spinner extends React.Component<SpinnerProps> {
+export class Spinner extends Component<SpinnerProps> {
   render() {
     const { className, size } = this.props;
 

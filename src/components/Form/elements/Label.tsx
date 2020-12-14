@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React from 'react';
+import { MouseEvent } from 'react';
 
 import { MessageObjectType } from 'common';
 import { ConnectedComponent } from 'components/ConnectedComponent';
@@ -8,7 +8,7 @@ interface LabelProps {
   label: MessageObjectType | string;
   htmlFor: string;
 
-  onClick?: (event?: React.MouseEvent) => void;
+  onClick?: (event?: MouseEvent) => void;
   className?: string;
   labelData?: Record<string, any>;
 }

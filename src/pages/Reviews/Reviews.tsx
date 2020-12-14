@@ -1,4 +1,3 @@
-import React from 'react';
 import cn from 'classnames';
 import { observable, action, reaction, IReactionDisposer } from 'mobx';
 import ReactMarkdown from 'react-markdown';

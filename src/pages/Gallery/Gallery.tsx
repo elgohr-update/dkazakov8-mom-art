@@ -1,4 +1,4 @@
-import React from 'react';
+import { MouseEvent } from 'react';
 import Scrollbar from 'react-scrollbars-custom';
 
 import { gallery } from 'const';
@@ -25,7 +25,7 @@ export default class Gallery extends ConnectedComponent {
     });
   }
 
-  handleItemClick = (index: number) => (event: React.MouseEvent) => {
+  handleItemClick = (index: number) => (event: MouseEvent) => {
     const {
       actions,
       store: {

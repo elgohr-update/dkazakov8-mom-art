@@ -1,5 +1,4 @@
 import cn from 'classnames';
-import React from 'react';
 
 import { system } from 'const';
 import { Icon } from 'components/Icon';

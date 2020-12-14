@@ -154,7 +154,6 @@ module.exports = {
     'react/jsx-indent-props': ['off', 'error'],
     'react/jsx-indent': ['off', 'error'],
     'react/jsx-no-target-blank': 'off',
-    'react/jsx-uses-react': 'warn',
     'react/jsx-uses-vars': 'warn',
     'react/no-array-index-key': 'off',
     'react/no-danger': 'off',
@@ -274,6 +273,8 @@ module.exports = {
     'no-empty-function': 'off',
     'no-unused-vars': 'off',
     'import/default': 'off',
+    'react/jsx-uses-react': 'off',
+    'react/react-in-jsx-scope': 'off',
 
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     '@typescript-eslint/ban-ts-ignore': 'off',

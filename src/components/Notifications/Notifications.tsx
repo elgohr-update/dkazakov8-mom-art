@@ -1,5 +1,4 @@
 import cn from 'classnames';
-import React from 'react';
 
 import { generateArray } from 'utils';
 import { Icon } from 'components/Icon';

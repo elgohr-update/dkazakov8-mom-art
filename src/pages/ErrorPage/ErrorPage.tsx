@@ -1,5 +1,4 @@
 import cn from 'classnames';
-import React from 'react';
 
 import { Header } from 'components/Header';
 import { ConnectedComponent } from 'components/ConnectedComponent';

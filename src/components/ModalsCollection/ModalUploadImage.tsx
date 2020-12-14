@@ -1,5 +1,4 @@
 import cn from 'classnames';
-import React from 'react';
 
 import { Form } from 'components/Form';
 import { ConnectedComponent } from 'components/ConnectedComponent';

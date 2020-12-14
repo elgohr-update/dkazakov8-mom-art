@@ -1,4 +1,3 @@
-import React from 'react';
 import { observable, reaction, IReactionDisposer, action } from 'mobx';
 import ReactMarkdown from 'react-markdown';
 import Scrollbar from 'react-scrollbars-custom';

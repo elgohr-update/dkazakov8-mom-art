@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { fieldValidators } from 'utils';
 import { Form } from 'components/Form';
 import { Header } from 'components/Header';

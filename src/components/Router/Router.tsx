@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactElement } from 'react';
 import loadable from '@loadable/component';
 import { autorun, IReactionDisposer } from 'mobx';
 
@@ -7,7 +7,7 @@ import { ConnectedComponent } from 'components/ConnectedComponent';
 
 export const routeComponents: Record<
   keyof typeof routesObject,
-  { Component: React.ReactElement; props?: Record<string, any> }
+  { Component: ReactElement; props?: Record<string, any> }
 > = {
   gallery: {
     Component: loadable(() => import('pages/Gallery')),
