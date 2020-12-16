@@ -43,7 +43,7 @@ export function isomorphPolyfills() {
     enforceActions: 'always',
     disableErrorBoundaries: false,
     computedRequiresReaction: false,
-    reactionRequiresObservable: true,
+    reactionRequiresObservable: false,
     observableRequiresReaction: false,
   });
   initSentry();

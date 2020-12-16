@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import { TypeFormSystem, TypeInputTextConfig } from 'models';
-import { fieldValidators } from 'utils';
+import { fieldValidators } from 'utils/fieldValidators';
 import { messages } from 'components/ModalsCollection/messages';
 import styles from 'components/ModalsCollection/ModalsCollection.scss';
 

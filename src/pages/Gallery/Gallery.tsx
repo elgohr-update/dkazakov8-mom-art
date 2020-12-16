@@ -10,43 +10,42 @@ import { ConnectedComponent } from 'components/ConnectedComponent';
 import { GalleryItem } from './GalleryItem';
 import { messages } from './messages';
 import styles from './Gallery.scss';
-import { StoreGallery } from './stores/StoreGallery';
+import * as modularStores from './stores';
+import * as modularActions from './actions';
 
 @ConnectedComponent.observer
-class Gallery extends ConnectedComponent {
+export default class Gallery extends ConnectedComponent {
   refGallery: HTMLElement;
   instanceScroll: HTMLElement;
 
   UNSAFE_componentWillMount() {
     const { actions } = this.context;
+    const { store, extendActions } = this.context;
+
+    store.setStores(modularStores);
+    extendActions({ gallery: modularActions });
 
     actions.general.setMetaData({
       title: messages.metaTitle,
       description: messages.metaDescription,
     });
 
-    actions.general.getImages();
+    actions.gallery.getImages();
   }
 
   handleItemClick = (index: number) => (event: MouseEvent) => {
-    const {
-      actions,
-      store: {
-        gallery: { items },
-        user: { isLoggedIn },
-      },
-    } = this.context;
+    const { actions, store } = this.context;
 
     event.preventDefault();
 
-    if (isLoggedIn) {
+    if (store.user.isLoggedIn) {
       return actions.general.modalRaise({
         name: 'ModalUploadImage',
-        data: { ...items[index], index, totalItems: items.length },
+        data: { ...store.gallery.items[index], index, totalItems: store.gallery.items.length },
       });
     }
 
-    return actions.general.changeLightbox({ index, elements: items });
+    return actions.general.changeLightbox({ index, elements: store.gallery.items });
   };
 
   render() {
@@ -54,7 +53,6 @@ class Gallery extends ConnectedComponent {
       store,
       actions,
       store: {
-        gallery: { items },
         user: { isLoggedIn },
       },
     } = this.context;
@@ -69,7 +67,7 @@ class Gallery extends ConnectedComponent {
 
     const galleryNode = (
       <div className={styles.gallery} ref={node => (this.refGallery = node)}>
-        {items.map((imgData, index) => (
+        {store.gallery.items.map((imgData, index) => (
           <GalleryItem
             key={index}
             imgData={imgData}
@@ -117,8 +115,3 @@ class Gallery extends ConnectedComponent {
     );
   }
 }
-
-export default {
-  Component: Gallery,
-  stores: { gallery: new StoreGallery() },
-};

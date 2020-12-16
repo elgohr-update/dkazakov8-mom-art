@@ -1,10 +1,10 @@
 import { makeAutoObservable } from 'mobx';
 
 import { messages } from 'utils/messages';
-import { StoreRoot } from 'stores/StoreRoot';
+import { TypeStore } from 'models';
 
 export class StoreGetters {
-  constructor(private store: StoreRoot) {
+  constructor(private store: TypeStore) {
     makeAutoObservable(this);
   }
 

@@ -21,8 +21,8 @@ isomorphPolyfills();
 
 const store = new StoreRoot() as TypeStore;
 const getters = new StoreGetters(store);
-const { api, actions } = actionsCreator(store);
-const contextProps = { store, actions, api, getters };
+const { api, actions, extendActions } = actionsCreator(store);
+const contextProps = { store, actions, api, getters, extendActions };
 
 Promise.resolve()
   .then(() => loadableReady())

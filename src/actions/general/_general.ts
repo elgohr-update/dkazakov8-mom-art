@@ -4,7 +4,6 @@ export * from './auth';
 export * from './changeLightbox';
 export * from './deleteImage';
 export * from './getAllLocalization';
-export * from './getImages';
 export * from './getLocalization';
 export * from './handleApiError';
 export * from './handleFormError';

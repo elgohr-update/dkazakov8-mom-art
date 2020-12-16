@@ -30,9 +30,10 @@ export function handlePageRoutes(app) {
      *
      */
     const store = new StoreRoot() as TypeStore;
-    const measure = createMeasure();
-    const { api, actions } = actionsCreator(store, req, res);
     const getters = new StoreGetters(store);
+    const measure = createMeasure();
+    const { api, actions, extendActions } = actionsCreator(store, req, res);
+    const contextProps = { store, actions, api, getters, extendActions };
 
     Promise.resolve()
       .then(measure.wrap('onStoreInitializedServer'))
@@ -40,7 +41,7 @@ export function handlePageRoutes(app) {
       .then(measure.wrap('onStoreInitializedServer'))
 
       .then(measure.wrap('injectAppMarkup'))
-      .then(() => injectAppMarkup(template, store, api, actions, getters))
+      .then(() => injectAppMarkup(template, contextProps))
       .then(measure.wrap('injectAppMarkup'))
 
       .then(measure.wrap('injectOtherData'))

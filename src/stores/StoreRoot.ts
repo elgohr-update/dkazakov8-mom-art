@@ -1,5 +1,5 @@
-import { getLn } from 'utils';
-import { SkipFirstArgType, PropType } from 'common';
+import { getLn, mergeObservableDeep, unescapeAllStrings } from 'utils';
+import { SkipFirstArgType } from 'common';
 
 import { StoreUi } from './StoreUi';
 import { StoreUser } from './StoreUser';
@@ -22,9 +22,21 @@ export class StoreRoot {
     this.getLn = getLn.bind(null, { store: this });
   }
 
-  setStores = (store: { [StoreName in keyof StoreRoot]: PropType<StoreRoot, StoreName> }) => {
+  setStores = (store: any) => {
     Object.entries(store).forEach(([storeName, storeInstance]) => {
-      if (!this[storeName]) this[storeName] = storeInstance;
+      /**
+       * Client should recreate dynamic stores with initial data passed from server,
+       * because SSR does not serialize get() & set() statements
+       *
+       */
+
+      if (!this[storeName]) {
+        this[storeName] = storeInstance;
+
+        if (IS_CLIENT && window.INITIAL_DATA[storeName]) {
+          mergeObservableDeep(this[storeName], unescapeAllStrings(window.INITIAL_DATA[storeName]));
+        }
+      }
     });
   };
 }

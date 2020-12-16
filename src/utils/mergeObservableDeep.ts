@@ -10,6 +10,9 @@ export function mergeObservableDeep(
     const sourceValue = source[key];
 
     if (_.isPlainObject(sourceValue)) {
+      // eslint-disable-next-line no-continue
+      if (typeof targetValue === 'undefined') continue;
+
       if (!targetValue) {
         target[key] = observable({});
       }

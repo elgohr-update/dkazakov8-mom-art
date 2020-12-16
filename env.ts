@@ -42,7 +42,6 @@ class Env {
   GIT_COMMIT = '';
   HOT_RELOAD = false;
   HOT_RELOAD_PORT = 0;
-  HOT_RELOAD_CLIENT_URL = '';
   USE_TS_LOADER = false;
   POLYFILLING = false;
   DROP_CONSOLE = false;

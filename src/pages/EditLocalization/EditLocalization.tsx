@@ -39,7 +39,7 @@ class TranslationItem extends ConnectedComponent<TranslationItemProps> {
 }
 
 @ConnectedComponent.observer
-class EditLocalization extends ConnectedComponent {
+export default class EditLocalization extends ConnectedComponent {
   UNSAFE_componentWillMount() {
     const { actions } = this.context;
 
@@ -94,7 +94,3 @@ class EditLocalization extends ConnectedComponent {
     );
   }
 }
-
-export default {
-  Component: EditLocalization,
-};

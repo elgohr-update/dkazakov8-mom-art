@@ -1,4 +1,4 @@
 import { StoreRoot } from 'stores/StoreRoot';
-import GalleryConfig from 'pages/Gallery';
+import * as modularStores from 'pages/Gallery/stores';
 
-export type TypeStore = StoreRoot & typeof GalleryConfig.stores;
+export type TypeStore = StoreRoot & typeof modularStores;

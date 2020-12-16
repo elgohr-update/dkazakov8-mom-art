@@ -2,8 +2,9 @@ import path from 'path';
 
 import { toJS } from 'mobx';
 import _ from 'lodash';
+import { ReactElement } from 'react';
 import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
-import { renderToString } from 'react-dom/server';
+import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 
 import { App } from 'components/App';
 import { escapeAllStrings } from 'utils';
@@ -11,6 +12,7 @@ import { StoreContext } from 'components/StoreContext';
 import { hotReloadUrl, compressions } from 'const';
 import { env } from 'env';
 import { paths } from 'paths';
+import { TypeGlobals } from 'models';
 
 function filterStore(store) {
   const excludedStores = ['actions', 'executions', 'getLn', 'proxy'];
@@ -76,24 +78,47 @@ export function injectMetaTags(str, store, getters) {
 }
 
 const webStats = path.resolve(paths.build, 'web-loadable-stats.json');
-const webExtractor = new ChunkExtractor({
-  statsFile: webStats,
-  entrypoints: ['client'],
-});
 
-export function injectAppMarkup(str, store, api, actions, getters) {
-  const jsx = (
-    <ChunkExtractorManager extractor={webExtractor}>
-      <StoreContext.Provider value={{ store, api, actions, getters }}>
-        <App />
-      </StoreContext.Provider>
-    </ChunkExtractorManager>
+export function injectAppMarkup(str, contextProps: TypeGlobals) {
+  /**
+   * Firstly renderToString triggers componentWillMount in all React tree,
+   * which may call async actions, so we have to wait until onActionsFinished called
+   *
+   * Secondly, all actions are mocked and App rerenders using final contextProps.store
+   * (that was mutated in those actions)
+   *
+   * This technique allows to fetch data in ssr-mode in componentWillMount and supports async chunks,
+   * the one disadvantage is renderToString called twice. That's current price for comfortable development.
+   *
+   * If React had async method like ssrBeforeComponentMount, the way could be simpler and save
+   * our server some CPU resources
+   *
+   */
+
+  const webExtractor = new ChunkExtractor({
+    statsFile: webStats,
+    entrypoints: ['client'],
+  });
+
+  return new Promise(resolve => {
+    const AppWrapped = (
+      <ChunkExtractorManager extractor={webExtractor}>
+        <StoreContext.Provider value={contextProps}>
+          <App onActionsFinished={() => resolve(AppWrapped)} />
+        </StoreContext.Provider>
+      </ChunkExtractorManager>
+    );
+
+    renderToString(AppWrapped);
+  }).then((AppWrapped: ReactElement) =>
+    str
+      .replace(`<div id="app"></div>`, `<div id="app">${renderToString(AppWrapped)}</div>`)
+      .replace(
+        '<!-- LINKS -->',
+        [webExtractor.getLinkTags(), webExtractor.getStyleTags()].join('\n')
+      )
+      .replace('<!-- SCRIPTS -->', webExtractor.getScriptTags())
   );
-
-  return str
-    .replace(`<div id="app"></div>`, `<div id="app">${renderToString(jsx)}</div>`)
-    .replace('<!-- LINKS -->', [webExtractor.getLinkTags(), webExtractor.getStyleTags()].join('\n'))
-    .replace('<!-- SCRIPTS -->', webExtractor.getScriptTags());
 }
 
 export function injectBrowserReload(str) {

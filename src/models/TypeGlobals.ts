@@ -8,4 +8,5 @@ export type TypeGlobals = {
   store: TypeStore;
   actions: TypeActions;
   getters: StoreGetters;
+  extendActions: (modularActions: any, noWrapping?: boolean) => void;
 };
