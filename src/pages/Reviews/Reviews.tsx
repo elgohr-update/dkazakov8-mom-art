@@ -15,7 +15,7 @@ import { messages } from './messages';
 const minScrollAreaHeight = 100;
 
 @ConnectedComponent.observer
-export default class Reviews extends ConnectedComponent {
+class Reviews extends ConnectedComponent {
   state = observable({
     // Server does not have screen size, have to use a constant for correct hydration
     scrollAreaHeight: minScrollAreaHeight,
@@ -137,3 +137,7 @@ export default class Reviews extends ConnectedComponent {
     );
   }
 }
+
+export default {
+  Component: Reviews,
+};

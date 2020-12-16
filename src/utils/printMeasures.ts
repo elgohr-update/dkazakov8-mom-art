@@ -1,10 +1,10 @@
-import { RouteType } from 'models';
+import { RouteType, routes } from 'routes';
 
 function parseDuration(duration: number) {
   return Number(duration.toFixed(3));
 }
 
-export function printMeasures({ currentRoute }: { currentRoute: RouteType }) {
+export function printMeasures({ currentRoute }: { currentRoute: RouteType<keyof typeof routes> }) {
   const initialMeasures = JSON.parse(window.MEASURES);
 
   const customClientMeasures = performance

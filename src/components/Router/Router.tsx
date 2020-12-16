@@ -1,38 +1,9 @@
-import loadable, { LoadableComponent } from '@loadable/component';
+import { ReactElement } from 'react';
 import { autorun, IReactionDisposer } from 'mobx';
 
+import { TypeStore } from 'models';
 import { routes } from 'routes';
 import { ConnectedComponent } from 'components/ConnectedComponent';
-
-export const routeComponents: Record<
-  keyof typeof routes,
-  { Component: LoadableComponent<any>; props?: Record<string, any> }
-> = {
-  gallery: {
-    Component: loadable(() => import('pages/Gallery')),
-  },
-  about: {
-    Component: loadable(() => import('pages/About')),
-  },
-  reviews: {
-    Component: loadable(() => import('pages/Reviews')),
-  },
-  editLocalization: {
-    Component: loadable(() => import('pages/EditLocalization')),
-  },
-  error404: {
-    Component: loadable(() => import('pages/ErrorPage')),
-    props: {
-      errorNumber: 404,
-    },
-  },
-  error500: {
-    Component: loadable(() => import('pages/ErrorPage')),
-    props: {
-      errorNumber: 500,
-    },
-  },
-};
 
 export class Router extends ConnectedComponent {
   state = {
@@ -66,30 +37,32 @@ export class Router extends ConnectedComponent {
     const { loadedComponentName } = this.state;
     const {
       store: {
-        ui,
         router: { currentRoute },
+        setStores,
       },
     } = this.context;
 
     if (loadedComponentName === currentRoute.name) return;
 
-    const componentConfig = routeComponents[currentRoute.name];
+    const componentConfig = routes[currentRoute.name];
 
-    if (!componentConfig) {
-      return console.error(`Router: component for ${currentRoute.name} is not defined`);
-    }
+    return (
+      componentConfig.loader
+        .load()
+        // @ts-ignore (format of default export of pages is controlled by conventions)
+        .then((config: { default: { stores?: TypeStore; Component: ReactElement } }) => {
+          if (config.default.stores) setStores(config.default.stores);
 
-    if (IS_CLIENT && ui.firstRendered) {
-      return componentConfig.Component.load().then(module =>
-        // @ts-ignore (compiler does not know that pages have default exports)
-        this.updateLoadedComponent(currentRoute.name, module.default, componentConfig.props)
-      );
-    }
-
-    this.updateLoadedComponent(currentRoute.name, componentConfig.Component, componentConfig.props);
+          this.updateLoadedComponent(
+            currentRoute.name,
+            config.default.Component,
+            'props' in componentConfig ? componentConfig.props : {}
+          );
+        })
+    );
   }
 
-  updateLoadedComponent(name: string, Component: any, props: Record<string, any> = {}) {
+  updateLoadedComponent(name: string, Component: any, props: Record<string, any>) {
     this.setState({
       LoadedComponent: <Component {...props} />,
       loadedComponentName: name,

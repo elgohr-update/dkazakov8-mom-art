@@ -4,11 +4,10 @@ import { action, observable, runInAction } from 'mobx';
 import * as apiRaw from 'api';
 import { Express } from 'common';
 import { actions } from 'actions';
-import { StoreRoot } from 'stores/StoreRoot';
-import { TypeGlobals } from 'models';
+import { TypeGlobals, TypeStore } from 'models';
 
 export function actionsCreator(
-  store: StoreRoot,
+  store: TypeStore,
   req?: Express['Request'],
   res?: Express['Response']
 ): Omit<TypeGlobals, 'store' | 'getters'> {

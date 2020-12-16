@@ -10,9 +10,10 @@ import { ConnectedComponent } from 'components/ConnectedComponent';
 import { GalleryItem } from './GalleryItem';
 import { messages } from './messages';
 import styles from './Gallery.scss';
+import { StoreGallery } from './stores/StoreGallery';
 
 @ConnectedComponent.observer
-export default class Gallery extends ConnectedComponent {
+class Gallery extends ConnectedComponent {
   refGallery: HTMLElement;
   instanceScroll: HTMLElement;
 
@@ -23,6 +24,8 @@ export default class Gallery extends ConnectedComponent {
       title: messages.metaTitle,
       description: messages.metaDescription,
     });
+
+    actions.general.getImages();
   }
 
   handleItemClick = (index: number) => (event: MouseEvent) => {
@@ -114,3 +117,8 @@ export default class Gallery extends ConnectedComponent {
     );
   }
 }
+
+export default {
+  Component: Gallery,
+  stores: { gallery: new StoreGallery() },
+};

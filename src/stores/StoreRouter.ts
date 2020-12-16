@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 
-import { RouteType } from 'models';
+import { RouteType, routes } from 'routes';
 
 type MetaDataType = { title?: string; description?: string };
 
@@ -9,6 +9,6 @@ export class StoreRouter {
     makeAutoObservable(this);
   }
 
-  currentRoute: RouteType = null;
+  currentRoute: RouteType<keyof typeof routes> = null;
   metaData: MetaDataType = {};
 }

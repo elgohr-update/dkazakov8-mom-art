@@ -12,13 +12,14 @@ import {
   injectInitialStoreData,
 } from 'Server/utils';
 
-import { paths } from 'paths';
-import { errorsNames } from 'const';
-import { createMeasure } from 'utils';
-import { StoreRoot } from 'stores/StoreRoot';
-import { StoreGetters } from 'stores/StoreGetters';
-import { actionsCreator } from 'actionsCreator';
 import { env } from 'env';
+import { paths } from 'paths';
+import { TypeStore } from 'models';
+import { StoreRoot } from 'stores/StoreRoot';
+import { errorsNames } from 'const';
+import { StoreGetters } from 'stores/StoreGetters';
+import { createMeasure } from 'utils';
+import { actionsCreator } from 'actionsCreator';
 
 const template = fs.readFileSync(path.resolve(paths.build, 'template.html'), 'utf-8');
 
@@ -28,7 +29,7 @@ export function handlePageRoutes(app) {
      * Create clear store for each request
      *
      */
-    const store = new StoreRoot();
+    const store = new StoreRoot() as TypeStore;
     const measure = createMeasure();
     const { api, actions } = actionsCreator(store, req, res);
     const getters = new StoreGetters(store);
@@ -62,7 +63,7 @@ export function handlePageRoutes(app) {
         if (error.name === errorsNames.SILENT) {
           return Promise.resolve();
         } else if (error.name === errorsNames.REDIRECT) {
-          console.log('redirect', error.message);
+          // console.log('redirect', error.message);
 
           return res.redirect(error.message);
         }

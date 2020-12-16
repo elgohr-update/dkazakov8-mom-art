@@ -2,14 +2,14 @@ import _ from 'lodash';
 import { runInAction } from 'mobx';
 
 import { routing } from 'utils';
-import { routes } from 'routes';
 import { Express } from 'common';
-import { RouteType, TypeAction } from 'models';
+import { TypeAction } from 'models';
+import { RouteType, routes } from 'routes';
 
 type Params = {
   req?: Express['Request'];
   res?: Express['Response'];
-  route?: RouteType;
+  route?: RouteType<keyof typeof routes>;
 };
 
 export const redirectTo: TypeAction<Params> = (globals, { route, req, res }) => {

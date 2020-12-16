@@ -1,10 +1,10 @@
 import { MouseEvent } from 'react';
 
-import { RouteType } from 'models';
+import { RouteType, routes } from 'routes';
 import { ConnectedComponent } from 'components/ConnectedComponent';
 
 interface LinkProps {
-  route: RouteType;
+  route: RouteType<keyof typeof routes>;
   onClick?: (event?: MouseEvent) => void;
   className?: string;
 }

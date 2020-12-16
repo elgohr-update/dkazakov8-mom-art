@@ -8,6 +8,6 @@ import CircularDependencyPlugin from 'circular-dependency-plugin';
 export const pluginCircularDependency: any = new CircularDependencyPlugin({
   exclude: /node_modules/,
   failOnError: true,
-  allowAsyncCycles: false,
+  allowAsyncCycles: true,
   cwd: process.cwd(),
 });

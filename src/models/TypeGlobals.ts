@@ -1,10 +1,11 @@
-import { StoreRoot } from 'stores/StoreRoot';
+import { TypeApi } from 'models/TypeApi';
+import { TypeStore } from 'models/TypeStore';
+import { TypeActions } from 'models/TypeAction';
 import { StoreGetters } from 'stores/StoreGetters';
-import { TypeActions, TypeApi } from 'models';
 
 export type TypeGlobals = {
   api: TypeApi;
-  store: StoreRoot;
+  store: TypeStore;
   actions: TypeActions;
   getters: StoreGetters;
 };

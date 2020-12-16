@@ -1,7 +1,6 @@
 // This file is auto-generated
 
 export * from './ApiRoute';
-export * from './RoutesType';
 export * from './TypeAction';
 export * from './TypeApi';
 export * from './TypeFormConfig';
@@ -13,3 +12,4 @@ export * from './TypeInputFileConfig';
 export * from './TypeInputSubmitConfig';
 export * from './TypeInputTextConfig';
 export * from './TypeModals';
+export * from './TypeStore';

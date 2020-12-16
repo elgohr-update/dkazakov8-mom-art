@@ -1,5 +1,5 @@
 import { FieldValidatorType, MessageObjectType } from 'common';
-import { TypeInputErrors } from 'models';
+import { TypeInputErrors } from 'models/TypeInputErrors';
 import { icons } from 'assets/icons';
 
 export interface TypeInputTextConfig {

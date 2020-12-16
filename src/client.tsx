@@ -4,6 +4,7 @@ import { hydrate } from 'react-dom';
 import { loadableReady } from '@loadable/component';
 
 import { App } from 'components/App';
+import { TypeStore } from 'models';
 import { StoreRoot } from 'stores/StoreRoot';
 import { initAutorun } from 'autorun';
 import { StoreGetters } from 'stores/StoreGetters';
@@ -18,7 +19,7 @@ if (performance) {
 
 isomorphPolyfills();
 
-const store = new StoreRoot();
+const store = new StoreRoot() as TypeStore;
 const getters = new StoreGetters(store);
 const { api, actions } = actionsCreator(store);
 const contextProps = { store, actions, api, getters };
