@@ -3,7 +3,7 @@ import { toJS } from 'mobx';
 import { TypeAction } from 'models';
 import { unescapeAllStrings, printMeasures, mergeObservableDeep } from 'utils';
 
-export const onStoreInitializedClient: TypeAction = ({ store, actions }) => {
+export const onStoreInitializedClient: TypeAction = ({ store, actions }) =>
   /**
    * Here clear store is overwritten by values from backend
    * & fill store with client-specific values
@@ -14,7 +14,7 @@ export const onStoreInitializedClient: TypeAction = ({ store, actions }) => {
    *
    */
 
-  return Promise.resolve()
+  Promise.resolve()
     .then(() => mergeObservableDeep(store, unescapeAllStrings(window.INITIAL_DATA)))
     .then(() => actions.general.setScreenSize())
     .then(() => actions.general.setScreenSize())
@@ -29,4 +29,3 @@ export const onStoreInitializedClient: TypeAction = ({ store, actions }) => {
         store.ui.firstRendered = true;
       });
     });
-};

@@ -1,13 +1,12 @@
-import { ReactElement } from 'react';
-import loadable from '@loadable/component';
+import loadable, { LoadableComponent } from '@loadable/component';
 import { autorun, IReactionDisposer } from 'mobx';
 
-import { routesObject } from 'routes';
+import { routes } from 'routes';
 import { ConnectedComponent } from 'components/ConnectedComponent';
 
 export const routeComponents: Record<
-  keyof typeof routesObject,
-  { Component: ReactElement; props?: Record<string, any> }
+  keyof typeof routes,
+  { Component: LoadableComponent<any>; props?: Record<string, any> }
 > = {
   gallery: {
     Component: loadable(() => import('pages/Gallery')),
@@ -67,8 +66,8 @@ export class Router extends ConnectedComponent {
     const { loadedComponentName } = this.state;
     const {
       store: {
+        ui,
         router: { currentRoute },
-        ui: { firstRendered },
       },
     } = this.context;
 
@@ -80,8 +79,9 @@ export class Router extends ConnectedComponent {
       return console.error(`Router: component for ${currentRoute.name} is not defined`);
     }
 
-    if (IS_CLIENT && firstRendered) {
+    if (IS_CLIENT && ui.firstRendered) {
       return componentConfig.Component.load().then(module =>
+        // @ts-ignore (compiler does not know that pages have default exports)
         this.updateLoadedComponent(currentRoute.name, module.default, componentConfig.props)
       );
     }

@@ -1,7 +1,7 @@
 import _ from 'lodash';
+import { isLoggedIn } from 'Server/utils';
 
 import { db } from 'Server/db';
-import { isLoggedIn } from 'Server/utils';
 
 export function saveAllLocalization({ req }) {
   const { formData } = req.body;

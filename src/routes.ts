@@ -1,5 +1,5 @@
 import { addNames } from 'utils/addNames';
-import { RoutesType } from 'models';
+import { TypeGlobals } from 'models';
 
 export const routesObject = {
   gallery: {
@@ -29,4 +29,13 @@ export const routesObject = {
   },
 };
 
-export const routes: RoutesType = addNames(routesObject);
+export type RouteType = {
+  name: keyof typeof routesObject;
+  path: string;
+
+  rights?: string;
+  validators?: Record<string, any>[];
+  beforeEnter?: (params: TypeGlobals & { route?: RouteType }) => Promise<any>;
+};
+
+export const routes: Record<keyof typeof routesObject, RouteType> = addNames(routesObject);

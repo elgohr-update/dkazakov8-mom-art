@@ -22,7 +22,5 @@ export function getImages() {
       }
     })
     .then(db.getImages)
-    .then(imagesArray => {
-      return { images: imagesArray };
-    });
+    .then(imagesArray => ({ images: imagesArray }));
 }

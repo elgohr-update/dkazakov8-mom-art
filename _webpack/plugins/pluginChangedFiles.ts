@@ -24,6 +24,5 @@ class ChangedFiles {
   }
 }
 
-export const pluginChangedFiles = (logsPrefix: string): webpack.WebpackPluginInstance => {
-  return new ChangedFiles({ logsPrefix });
-};
+export const pluginChangedFiles = (logsPrefix: string): webpack.WebpackPluginInstance =>
+  new ChangedFiles({ logsPrefix });

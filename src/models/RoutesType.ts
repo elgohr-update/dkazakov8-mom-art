@@ -1,14 +1,3 @@
-import { TypeGlobals } from './TypeGlobals';
+import { RouteType } from 'routes';
 
-export type RouteType = {
-  path: string;
-
-  name?: string;
-  rights?: string;
-  validators?: Record<string, any>[];
-  beforeEnter?: (params: TypeGlobals & { route?: RouteType }) => Promise<any>;
-};
-
-export interface RoutesType {
-  [key: string]: RouteType;
-}
+export type { RouteType };

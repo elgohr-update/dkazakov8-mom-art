@@ -16,8 +16,8 @@ export function actionsCreator(
   const connectedActions: TypeGlobals['actions'] & {
     api: TypeGlobals['api'];
   } = {
-    ..._.mapValues(actions, actionGroup => {
-      return _.mapValues(actionGroup, fn => {
+    ..._.mapValues(actions, actionGroup =>
+      _.mapValues(actionGroup, fn => {
         const fnAction = action(fn);
 
         function wrapperAction(params) {
@@ -41,8 +41,8 @@ export function actionsCreator(
         wrapperAction.data = observable({ isExecuting: false });
 
         return wrapperAction;
-      });
-    }),
+      })
+    ),
     // @ts-ignore
     api: _.mapValues(apiRaw, (route, apiName) => {
       function wrapperAction(params) {

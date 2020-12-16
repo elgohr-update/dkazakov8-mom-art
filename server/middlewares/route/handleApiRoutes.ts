@@ -1,8 +1,8 @@
 import _ from 'lodash';
-
-import * as apiRaw from 'api';
 import { handleApiError } from 'Server/utils';
 import * as controllers from 'Server/controllers';
+
+import * as apiRaw from 'api';
 import { validateRequestParams } from 'actions/general/request';
 
 export function handleApiRoutes(app) {

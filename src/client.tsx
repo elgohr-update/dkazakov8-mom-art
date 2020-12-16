@@ -19,23 +19,24 @@ if (performance) {
 isomorphPolyfills();
 
 const store = new StoreRoot();
-const { api, actions } = actionsCreator(store);
 const getters = new StoreGetters(store);
+const { api, actions } = actionsCreator(store);
+const contextProps = { store, actions, api, getters };
 
-loadableReady(() => {
-  Promise.resolve()
-    .then(measureClient('onStoreInitializedClient'))
-    .then(() => actions.general.onStoreInitializedClient())
-    .then(measureClient('onStoreInitializedClient'))
+Promise.resolve()
+  .then(() => loadableReady())
 
-    .then(() => initAutorun({ store, actions, api, getters }))
+  .then(measureClient('onStoreInitializedClient'))
+  .then(() => actions.general.onStoreInitializedClient())
+  .then(measureClient('onStoreInitializedClient'))
 
-    .then(() => {
-      return hydrate(
-        <StoreContext.Provider value={{ store, actions, api, getters }}>
-          <App />
-        </StoreContext.Provider>,
-        document.getElementById('app')
-      );
-    });
-});
+  .then(() => initAutorun(contextProps))
+
+  .then(() =>
+    hydrate(
+      <StoreContext.Provider value={contextProps}>
+        <App />
+      </StoreContext.Provider>,
+      document.getElementById('app')
+    )
+  );

@@ -10,8 +10,8 @@ type Params = { formData: any; storePath: string };
 export const updateGalleryItem: TypeAction<Params> = (
   { store, api, actions },
   { formData, storePath }
-) => {
-  return api
+) =>
+  api
     .updateGalleryItem(formData)
     .then(data =>
       runInAction(() => {
@@ -26,4 +26,3 @@ export const updateGalleryItem: TypeAction<Params> = (
       })
     )
     .catch(error => actions.general.handleFormError({ error, storePath }));
-};

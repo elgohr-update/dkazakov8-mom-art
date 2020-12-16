@@ -9,5 +9,6 @@ import { getTerserConfig } from '../utils/getTerserConfig';
 
 export const configOptimizationServer: webpack.Configuration['optimization'] = {
   minimize: env.MINIMIZE_SERVER,
+  // @ts-ignore
   minimizer: [getTerserConfig()],
 };

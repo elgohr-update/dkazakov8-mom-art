@@ -4,8 +4,8 @@ import { setLanguageToSession } from 'utils';
 
 type Params = { req?: Express['Request']; res?: Express['Response'] };
 
-export const onStoreInitializedServer: TypeAction<Params> = ({ store, actions }, { req, res }) => {
-  return Promise.resolve()
+export const onStoreInitializedServer: TypeAction<Params> = ({ store, actions }, { req, res }) =>
+  Promise.resolve()
     .then(() => setLanguageToSession({ req, store }))
     .then(() => actions.general.setTheme({ theme: req.session.theme || store.ui.themesList[0] }))
     .then(() => actions.general.getLocalization({ language: req.session.language }))
@@ -16,4 +16,3 @@ export const onStoreInitializedServer: TypeAction<Params> = ({ store, actions },
       })
     )
     .then(() => actions.general.redirectTo({ req, res }));
-};

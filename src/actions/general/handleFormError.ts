@@ -7,8 +7,8 @@ import { scrollToFirstElement, getNotValidFieldsIds } from 'utils';
 
 type Params = { error: Error; storePath: string };
 
-export const handleFormError: TypeAction<Params> = ({ store, actions }, { error, storePath }) => {
-  return Promise.resolve()
+export const handleFormError: TypeAction<Params> = ({ store, actions }, { error, storePath }) =>
+  Promise.resolve()
     .then(() => JSON.parse(error.message))
     .then((errorParsed: { [key: string]: string }) => {
       Object.entries(errorParsed).forEach(([errorFieldName, errorConstant]) => {
@@ -34,4 +34,3 @@ export const handleFormError: TypeAction<Params> = ({ store, actions }, { error,
         delay: 3000,
       });
     });
-};

@@ -9,8 +9,5 @@ import babelConfigServer from '../../babel.config';
 
 export const loaderBabelServer: webpack.RuleSetRule = {
   loader: 'babel-loader',
-  options: {
-    presets: babelConfigServer.presets,
-    plugins: [...babelConfigServer.plugins],
-  },
+  options: babelConfigServer,
 };

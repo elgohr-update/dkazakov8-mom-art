@@ -7,11 +7,8 @@ import { messages } from '../messages';
 
 type Params = { formData: any; storePath: string };
 
-export const uploadImage: TypeAction<Params> = (
-  { store, actions, api },
-  { formData, storePath }
-) => {
-  return api
+export const uploadImage: TypeAction<Params> = ({ store, actions, api }, { formData, storePath }) =>
+  api
     .uploadImage(formData)
     .then(data =>
       runInAction(() => {
@@ -26,4 +23,3 @@ export const uploadImage: TypeAction<Params> = (
       })
     )
     .catch(error => actions.general.handleFormError({ error, storePath }));
-};

@@ -1,4 +1,4 @@
-type ObjectWithNamesType<T> = { [Key in keyof T]: T[Key] & { name: string } };
+type ObjectWithNamesType<T> = { [Key in keyof T]: T[Key] & { name: Key } };
 
 export function addNames<ObjectType>(obj: ObjectType): ObjectWithNamesType<ObjectType> {
   Object.entries(obj).forEach(([key, value]) => {

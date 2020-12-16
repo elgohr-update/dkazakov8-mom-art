@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import { routes } from 'routes';
 import { Express } from 'common';
-import { RouteType, RoutesType } from 'models';
+import { RouteType } from 'models';
 
 function isDynamic(param: string) {
   return param.indexOf(':') === 0;
@@ -12,7 +12,7 @@ function clearDynamic(param: string) {
   return param.replace(':', '');
 }
 
-function findRoute(params: { routesObject: RoutesType; pathname: string }) {
+function findRoute(params: { routesObject: Partial<typeof routes>; pathname: string }) {
   const { routesObject, pathname } = params;
 
   const pathnameArray = pathname.split('/').filter(Boolean);

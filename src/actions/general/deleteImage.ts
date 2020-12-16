@@ -6,8 +6,8 @@ import { TypeAction } from 'models';
 
 type Params = { id: string };
 
-export const deleteImage: TypeAction<Params> = ({ store, actions, api }, { id }) => {
-  return api
+export const deleteImage: TypeAction<Params> = ({ store, actions, api }, { id }) =>
+  api
     .deleteImage({ id })
     .then(data =>
       runInAction(() => {
@@ -21,4 +21,3 @@ export const deleteImage: TypeAction<Params> = ({ store, actions, api }, { id })
         delay: 3000,
       })
     );
-};

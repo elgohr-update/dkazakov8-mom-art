@@ -1,5 +1,6 @@
-import { db } from 'Server/db';
 import { isLoggedIn } from 'Server/utils';
+
+import { db } from 'Server/db';
 
 export function getAllLocalization({ req }) {
   return Promise.resolve()

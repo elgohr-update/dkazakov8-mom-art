@@ -31,5 +31,7 @@ export const configOptimization: webpack.Configuration['optimization'] = {
   runtimeChunk: {
     name: 'runtime',
   },
+  chunkIds: 'named', // keep chunks' filenames
+  // @ts-ignore
   minimizer: [getTerserConfig()],
 };

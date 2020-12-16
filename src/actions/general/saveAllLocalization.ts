@@ -8,8 +8,8 @@ type Params = { formData: any; storePath: string };
 export const saveAllLocalization: TypeAction<Params> = (
   { store, api, actions },
   { formData, storePath }
-) => {
-  return api
+) =>
+  api
     .saveAllLocalization({ formData })
     .then(() =>
       actions.general.raiseNotification({
@@ -20,4 +20,3 @@ export const saveAllLocalization: TypeAction<Params> = (
     )
     .then(() => actions.general.getLocalization({ language: store.ui.currentLanguage }))
     .catch(error => actions.general.handleFormError({ error, storePath }));
-};

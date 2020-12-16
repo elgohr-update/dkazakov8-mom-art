@@ -15,5 +15,6 @@ const publicPath = !env.CDN_ENABLED
 export const configOutput: webpack.Configuration['output'] = {
   path: paths.build,
   filename: env.FILENAME_HASH ? '[name].[contenthash].js' : '[name].js',
+  chunkFilename: env.FILENAME_HASH ? '[name].[contenthash].js' : '[name].js',
   publicPath,
 };
