@@ -43,6 +43,7 @@ class Env {
   HOT_RELOAD = false;
   HOT_RELOAD_PORT = 0;
   USE_TS_LOADER = false;
+  DEPS_GRAPH = false;
   POLYFILLING = false;
   DROP_CONSOLE = false;
   FILENAME_HASH = false;

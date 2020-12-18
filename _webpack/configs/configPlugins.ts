@@ -14,6 +14,7 @@ import { pluginExtract } from '../plugins/pluginExtract';
 import { pluginPreload } from '../plugins/pluginPreload';
 import { pluginAnalyzer } from '../plugins/pluginAnalyzer';
 import { pluginLoadable } from '../plugins/pluginLoadable';
+import { pluginDepsGraph } from '../plugins/pluginDepsGraph';
 import { pluginChangedFiles } from '../plugins/pluginChangedFiles';
 // import { pluginLodashModule } from '../plugins/pluginLodashModule';
 import { pluginCompressionGzip } from '../plugins/pluginCompressionGzip';
@@ -29,6 +30,7 @@ export const configPlugins: webpack.Configuration['plugins'] = [
   pluginExtract,
   pluginLoadable,
   // pluginLodashModule,
+  env.DEPS_GRAPH && pluginDepsGraph,
   env.CIRCULAR_CHECK && pluginCircularDependency,
   env.BUNDLE_ANALYZER && pluginAnalyzer,
   env.LOGS_WATCHED_FILES && pluginChangedFiles('[WEBPACK client]'),
