@@ -10,17 +10,8 @@ import { ruleBabel } from '../rules/ruleBabel';
 import { ruleFonts } from '../rules/ruleFonts';
 import { ruleImages } from '../rules/ruleImages';
 import { ruleSvgInline } from '../rules/ruleSvgInline';
-import { ruleSassThemes } from '../rules/ruleSassThemes';
 import { ruleLegacyFiles } from '../rules/ruleLegacyFiles';
 
 export const configModule: webpack.Configuration['module'] = {
-  rules: [
-    ruleSass,
-    ruleBabel,
-    ruleFonts,
-    ruleImages,
-    ruleSvgInline,
-    ruleSassThemes,
-    ruleLegacyFiles,
-  ],
+  rules: [ruleSass, ruleBabel, ruleFonts, ruleImages, ruleSvgInline, ruleLegacyFiles],
 };

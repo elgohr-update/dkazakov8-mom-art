@@ -1,8 +1,8 @@
 import { makeAutoObservable } from 'mobx';
 
-import { NotificationType, ValuesOfArrayType } from 'common';
+import { themes } from 'const';
 import { TypeModals } from 'models/TypeModals';
-import themes from 'styles/themes.scss';
+import { NotificationType, ValuesOfArrayType } from 'common';
 
 type LightboxType = {
   elementsArray: any[];

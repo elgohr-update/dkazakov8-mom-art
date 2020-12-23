@@ -1,16 +1,8 @@
 import path from 'path';
 
-export type TypeValidatorsConfig = Array<{
-  folderPath: string;
-  triggerPath: string;
-  targetFolder: string;
-}>;
-export type TypeReexportConfig = Array<{ folderPath: string; exportDefault?: boolean }>;
-export type TypeExportObjectConfig = TypeReexportConfig;
-
 const root = __dirname;
 
-const staticPaths = {
+export const paths = {
   root,
   env: path.resolve(root, 'env.ts'),
   build: path.resolve(root, 'build'),
@@ -25,37 +17,42 @@ const staticPaths = {
   templates: path.resolve(root, 'templates'),
   validators: path.resolve(root, 'src/validators'),
   nodeModules: path.resolve(root, 'node_modules'),
+  themesObject: path.resolve(root, 'src/const/themes.tsx'),
 };
 
-const configPaths: {
-  generateValidationsConfig: TypeValidatorsConfig;
-  generateExportFilesConfig: TypeReexportConfig;
-  generateAssetsExportFilesConfig: TypeExportObjectConfig;
+export const generatorConfigs: {
+  theme: Array<{ filePath: string; targetFile: string }>;
+  validation: Array<{
+    folderPath: string;
+    triggerPath: string;
+    targetFolder: string;
+  }>;
+  reexport: Array<{ folderPath: string; exportDefault?: boolean }>;
+  reexportAssets: Array<{ folderPath: string; exportDefault?: boolean }>;
 } = {
-  generateValidationsConfig: [
+  validation: [
     {
-      folderPath: path.resolve(staticPaths.source, 'api'),
-      triggerPath: path.resolve(staticPaths.source, 'models'),
-      targetFolder: staticPaths.validators,
+      folderPath: path.resolve(paths.source, 'api'),
+      triggerPath: path.resolve(paths.source, 'models'),
+      targetFolder: paths.validators,
     },
   ],
-  generateExportFilesConfig: [
-    { folderPath: path.resolve(staticPaths.source, 'formConfigs') },
-    { folderPath: path.resolve(staticPaths.source, 'const') },
-    { folderPath: path.resolve(staticPaths.source, 'utils') },
-    { folderPath: path.resolve(staticPaths.server, 'utils') },
-    { folderPath: path.resolve(staticPaths.source, 'api') },
-    { folderPath: path.resolve(staticPaths.source, 'models') },
-    { folderPath: path.resolve(staticPaths.source, 'actions/general') },
-    { folderPath: path.resolve(staticPaths.source, 'pages/gallery/stores') },
-    { folderPath: path.resolve(staticPaths.source, 'pages/gallery/actions') },
-    { folderPath: path.resolve(staticPaths.server, 'controllers') },
-    { folderPath: path.resolve(staticPaths.validators, 'api'), exportDefault: true },
+  reexport: [
+    { folderPath: path.resolve(paths.source, 'formConfigs') },
+    { folderPath: path.resolve(paths.source, 'const') },
+    { folderPath: path.resolve(paths.source, 'utils') },
+    { folderPath: path.resolve(paths.server, 'utils') },
+    { folderPath: path.resolve(paths.source, 'api') },
+    { folderPath: path.resolve(paths.source, 'models') },
+    { folderPath: path.resolve(paths.source, 'actions/general') },
+    { folderPath: path.resolve(paths.source, 'pages/gallery/stores') },
+    { folderPath: path.resolve(paths.source, 'pages/gallery/actions') },
+    { folderPath: path.resolve(paths.server, 'controllers') },
+    { folderPath: path.resolve(paths.validators, 'api'), exportDefault: true },
   ],
-  generateAssetsExportFilesConfig: [
-    { folderPath: path.resolve(staticPaths.assets, 'icons') },
-    { folderPath: path.resolve(staticPaths.assets, 'images'), exportDefault: true },
+  reexportAssets: [
+    { folderPath: path.resolve(paths.assets, 'icons') },
+    { folderPath: path.resolve(paths.assets, 'images'), exportDefault: true },
   ],
+  theme: [{ filePath: paths.themes, targetFile: paths.themesObject }],
 };
-
-export const paths = Object.assign({}, staticPaths, configPaths);

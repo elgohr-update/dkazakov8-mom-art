@@ -1,8 +1,8 @@
 import { runInAction } from 'mobx';
 
-import { setThemeToHTML } from 'utils';
+import { themes } from 'const';
 import { TypeAction } from 'models';
-import themes from 'styles/themes.scss';
+import { setThemeToHTML } from 'utils';
 
 type Params = { theme: string };
 

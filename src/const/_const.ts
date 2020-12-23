@@ -6,3 +6,4 @@ export * from './gallery';
 export * from './hotReloadUrl';
 export * from './notificationTypes';
 export * from './system';
+export * from './themes';

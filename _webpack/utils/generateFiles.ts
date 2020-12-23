@@ -6,12 +6,7 @@ import chalk from 'chalk';
 import { ESLint } from 'eslint';
 
 import { env } from '../../env';
-import {
-  paths,
-  TypeReexportConfig,
-  TypeValidatorsConfig,
-  TypeExportObjectConfig,
-} from '../../paths';
+import { paths, generatorConfigs } from '../../paths';
 import eslintConfig from '../../eslint.config';
 import { Compiler } from '../../lib/ts-interface-builder';
 
@@ -71,57 +66,115 @@ function createPackageFile(folderPath: string) {
   return Promise.resolve();
 }
 
-class GenerateFiles {
-  _saveFile(params: { content?: string; filePath: string; noEslint?: boolean }) {
-    const { content, filePath, noEslint } = params;
+function saveFile(params: { content?: string; filePath: string; noEslint?: boolean }) {
+  const { content, filePath, noEslint } = params;
 
-    if (content == null) return false;
+  if (content == null) return false;
 
-    const oldFileContent = fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf-8') : '';
+  const oldFileContent = fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf-8') : '';
 
-    return Promise.resolve()
-      .then(() => (noEslint ? content : this._formatTextWithEslint(content)))
-      .then(formattedNewContent => {
-        if (oldFileContent === formattedNewContent) return false;
+  return Promise.resolve()
+    .then(() => (noEslint ? content : formatTextWithEslint(content)))
+    .then(formattedNewContent => {
+      if (oldFileContent === formattedNewContent) return false;
 
-        return fs.promises.writeFile(filePath, formattedNewContent, 'utf8').then(() => {
-          if (env.LOGS_GENERATE_FILES) console.log(`${logsPrefix} Changed: ${filePath}`);
+      return fs.promises.writeFile(filePath, formattedNewContent, 'utf8').then(() => {
+        if (env.LOGS_GENERATE_FILES) console.log(`${logsPrefix} Changed: ${filePath}`);
 
-          return true;
-        });
+        return true;
       });
+    });
+}
+
+function objToString(obj: Record<string, any>) {
+  // Format like Prettier instead of calling _formatTextWithEslint to save some time
+  return `{\n${_.entries(obj)
+    .map(pair => `${_.repeat(' ', tabWidth)}${pair.join(': ')}`)
+    .join(',\n')},\n};\n`;
+}
+
+function formatTextWithEslint(str: string) {
+  return eslint.lintText(str).then(data => data[0].output || str);
+}
+
+function createExportObjectFromFilesArray(params: {
+  folderName: string;
+  filesNames: string[];
+  exportDefault: boolean;
+}) {
+  const { folderName, filesNames, exportDefault } = params;
+
+  return filesNames.reduce((exportObject, fileName) => {
+    const { name: fileNameNoExt } = path.parse(fileName);
+
+    const paramName = _.camelCase(fileNameNoExt);
+    let paramValue = `require('./${folderName}/${fileName}')`;
+    paramValue = exportDefault ? `${paramValue}.default` : paramValue;
+
+    return { ...exportObject, [paramName]: paramValue };
+  }, {});
+}
+
+function convertScssToJsObject(source) {
+  const themesObject = {};
+  const fullThemesArray = source.match(/\.([^}]|\s)*}/g) || [];
+
+  fullThemesArray.forEach(fullThemeStr => {
+    const theme = fullThemeStr.match(/\.\w+\s{/g)[0].replace(/\W/g, '');
+    themesObject[theme] = {};
+
+    const variablesMatches = fullThemeStr.match(/--(.*:[^;]*)/g) || [];
+
+    variablesMatches.forEach(varMatch => {
+      const [key, value] = varMatch.split(': ');
+      themesObject[theme][key] = value;
+    });
+  });
+
+  return themesObject;
+}
+
+function checkThemesEquality(themes) {
+  const themesArray = Object.keys(themes);
+
+  themesArray.forEach(themeStr => {
+    const themeObject = themes[themeStr];
+    const otherThemesArray = themesArray.filter(t => t !== themeStr);
+
+    Object.keys(themeObject).forEach(variableName => {
+      otherThemesArray.forEach(otherThemeStr => {
+        const otherThemeObject = themes[otherThemeStr];
+
+        if (!otherThemeObject[variableName]) {
+          throw new Error(
+            `checkThemesEquality: theme ${otherThemeStr} has no variable ${variableName}`
+          );
+        }
+      });
+    });
+  });
+}
+
+function promiseAllOrdered(promiseArray: Array<Promise<any>>) {
+  const results = [];
+
+  function executePromise(index: number) {
+    if (!promiseArray[index]) return results;
+
+    return promiseArray[index].then(res => {
+      results.push(res);
+
+      return executePromise(index + 1);
+    });
   }
 
-  _objToString(obj: Record<string, any>) {
-    // Format like Prettier instead of calling _formatTextWithEslint to save some time
-    return `{\n${_.entries(obj)
-      .map(pair => `${_.repeat(' ', tabWidth)}${pair.join(': ')}`)
-      .join(',\n')},\n};\n`;
-  }
+  return executePromise(0);
+}
 
-  _formatTextWithEslint(str: string) {
-    return eslint.lintText(str).then(data => data[0].output || str);
-  }
-
-  _createExportObjectFromFilesArray(params: {
-    folderName: string;
-    filesNames: string[];
-    exportDefault: boolean;
-  }) {
-    const { folderName, filesNames, exportDefault } = params;
-
-    return filesNames.reduce((exportObject, fileName) => {
-      const { name: fileNameNoExt } = path.parse(fileName);
-
-      const paramName = _.camelCase(fileNameNoExt);
-      let paramValue = `require('./${folderName}/${fileName}')`;
-      paramValue = exportDefault ? `${paramValue}.default` : paramValue;
-
-      return { ...exportObject, [paramName]: paramValue };
-    }, {});
-  }
-
-  generateExportFiles(params: TypeProcessParams<TypeReexportConfig>): Promise<boolean> {
+class GenerateFiles {
+  generateReexport(
+    params: TypeProcessParams<typeof generatorConfigs['reexport']>
+  ): Promise<boolean> {
     const { configRaw, rebuildAll, changedFiles } = params;
 
     let configFiltered = configRaw;
@@ -148,7 +201,7 @@ class GenerateFiles {
         return Promise.resolve()
           .then(() => createPackageFile(folderPath))
           .then(() =>
-            this._saveFile({
+            saveFile({
               content,
               filePath: path.resolve(folderPath, getReexportFileName(folderName)),
               noEslint: true,
@@ -158,7 +211,9 @@ class GenerateFiles {
     ).then(filesSavedMarks => filesSavedMarks.some(Boolean));
   }
 
-  generateValidationFiles(params: TypeProcessParams<TypeValidatorsConfig>): Promise<boolean> {
+  generateValidators(
+    params: TypeProcessParams<typeof generatorConfigs['validation']>
+  ): Promise<boolean> {
     const { configRaw, rebuildAll, changedFiles } = params;
 
     let configFiltered = configRaw;
@@ -184,7 +239,7 @@ class GenerateFiles {
           inlineImports: true,
         });
         const saveFilePromises = compilerResults.map(result =>
-          this._saveFile({
+          saveFile({
             content: result.content,
             filePath: path.resolve(generatedFolderPath, path.parse(result.filePath).base),
           })
@@ -195,7 +250,9 @@ class GenerateFiles {
     ).then(filesSavedMarks => filesSavedMarks.some(Boolean));
   }
 
-  generateAssetsExportFiles(params: TypeProcessParams<TypeExportObjectConfig>): Promise<boolean> {
+  generateReexportAssets(
+    params: TypeProcessParams<typeof generatorConfigs['reexportAssets']>
+  ): Promise<boolean> {
     const { configRaw, rebuildAll, changedFiles } = params;
 
     let configFiltered = configRaw;
@@ -213,16 +270,16 @@ class GenerateFiles {
         const generatedFileName = `${folderName}.ts`;
         const generatedFilePath = path.resolve(parentPath, generatedFileName);
         const childrenNames = getFilteredChildren(folderPath).names;
-        const exportObject = this._createExportObjectFromFilesArray({
+        const exportObject = createExportObjectFromFilesArray({
           folderName,
           filesNames: childrenNames,
           exportDefault,
         });
-        const content = `// This file is auto-generated\n\nexport const ${folderName} = ${this._objToString(
+        const content = `// This file is auto-generated\n\nexport const ${folderName} = ${objToString(
           exportObject
         )}`;
 
-        return this._saveFile({
+        return saveFile({
           content,
           filePath: generatedFilePath,
           noEslint: true,
@@ -231,53 +288,81 @@ class GenerateFiles {
     ).then(filesSavedMarks => filesSavedMarks.some(Boolean));
   }
 
+  generateTheme(params: TypeProcessParams<typeof generatorConfigs['theme']>): Promise<boolean> {
+    const { configRaw, rebuildAll, changedFiles } = params;
+
+    let configFiltered = configRaw;
+
+    if (!rebuildAll) {
+      configFiltered = configFiltered.filter(({ filePath }) =>
+        changedFiles.some(fPath => fPath.includes(filePath))
+      );
+    }
+
+    return Promise.all(
+      configFiltered.map(({ filePath, targetFile }) => {
+        const { name: targetFileName } = path.parse(targetFile);
+
+        const fileContent = fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf-8') : '';
+
+        const themes = convertScssToJsObject(fileContent);
+
+        checkThemesEquality(themes);
+
+        const content = `// This file is auto-generated\n\nexport const ${targetFileName} = ${JSON.stringify(
+          themes
+        )}`;
+
+        return saveFile({
+          content,
+          filePath: targetFile,
+        });
+      })
+    ).then(filesSavedMarks => filesSavedMarks.some(Boolean));
+  }
+
   process({ changedFiles }: { changedFiles?: string[] }) {
     const startTime = Date.now();
-    const isFirstGeneration = changedFiles == null;
-    let filesChanged = false;
+    const rebuildAll = changedFiles == null;
 
-    // Order matters
-    return Promise.resolve()
-      .then(() =>
-        this.generateValidationFiles({
-          configRaw: paths.generateValidationsConfig,
-          rebuildAll: isFirstGeneration,
-          changedFiles,
-        })
-      )
-      .then(changedMark => changedMark && (filesChanged = true))
+    return promiseAllOrdered([
+      // Order matters - we need reexport files for new validators
+      this.generateValidators({
+        configRaw: generatorConfigs.validation,
+        rebuildAll,
+        changedFiles,
+      }),
+      this.generateReexport({
+        configRaw: generatorConfigs.reexport,
+        rebuildAll,
+        changedFiles,
+      }),
+      this.generateReexportAssets({
+        configRaw: generatorConfigs.reexportAssets,
+        rebuildAll,
+        changedFiles,
+      }),
+      this.generateTheme({
+        configRaw: generatorConfigs.theme,
+        rebuildAll,
+        changedFiles,
+      }),
+    ]).then(changedMarks => {
+      const filesChanged = changedMarks.some(Boolean);
 
-      .then(() =>
-        this.generateExportFiles({
-          configRaw: paths.generateExportFilesConfig,
-          rebuildAll: isFirstGeneration,
-          changedFiles,
-        })
-      )
-      .then(changedMark => changedMark && (filesChanged = true))
+      console.log('filesChanged', filesChanged);
+      if (rebuildAll || filesChanged) {
+        const endTime = Date.now();
 
-      .then(() =>
-        this.generateAssetsExportFiles({
-          changedFiles,
-          configRaw: paths.generateAssetsExportFilesConfig,
-          rebuildAll: isFirstGeneration,
-        })
-      )
-      .then(changedMark => changedMark && (filesChanged = true))
+        console.log(
+          '%s Finished generating files within %s seconds',
+          logsPrefix,
+          chalk.blue(String((endTime - startTime) / 1000))
+        );
+      }
 
-      .then(() => {
-        if (isFirstGeneration || filesChanged) {
-          const endTime = Date.now();
-
-          console.log(
-            '%s Finished generating files within %s seconds',
-            logsPrefix,
-            chalk.blue(String((endTime - startTime) / 1000))
-          );
-        }
-
-        return filesChanged;
-      });
+      return filesChanged;
+    });
   }
 }
 
