@@ -133,7 +133,5 @@ Promise.resolve()
   .then(() => compareEnvFiles())
   .then(() => fsExtra.emptyDirSync(paths.build))
   .then(() => generateFiles.process({}))
-  .then(() =>
-    run(path.resolve(__dirname, 'webpackParallel.config.ts'), parallelOptions, afterFirstBuild)
-  )
+  .then(() => run(path.resolve(__dirname, 'parallel.config.ts'), parallelOptions, afterFirstBuild))
   .catch(console.error);

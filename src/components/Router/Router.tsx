@@ -3,8 +3,8 @@
  *
  */
 
-import { autorun, IReactionDisposer } from 'mobx';
 import loadable from '@loadable/component';
+import { autorun, IReactionDisposer } from 'mobx';
 
 import { routes } from 'routes';
 import { ConnectedComponent } from 'components/ConnectedComponent';
@@ -76,7 +76,6 @@ export class Router extends ConnectedComponent {
     const {
       store: {
         router: { currentRoute },
-        ui,
       },
     } = this.context;
 
@@ -85,25 +84,15 @@ export class Router extends ConnectedComponent {
     const componentConfig = routesObject[currentRoute.name];
 
     /**
-     * Client app should not try to load initial chunks, they are already included
-     * in page markup by SSR
-     *
-     * Manual loading by load() allows to update page component after full loading to prevent
-     * fallback-component or page flash happen
-     *
-     * TODO: handle network error
+     * Manual loading allows CLIENT to update page component after full loading
+     * to prevent fallback-component or page flash happen
      *
      */
 
-    if (IS_CLIENT && ui.firstRendered) {
-      return componentConfig.loader.load().then(config => {
-        this.updateLoadedComponent(
-          currentRoute.name,
-          // @ts-ignore
-          config.default,
-          'props' in componentConfig ? componentConfig.props : {}
-        );
-      });
+    if (IS_CLIENT) {
+      return componentConfig.loader
+        .load()
+        .then(module => this.updateLoadedComponent(module.default));
     }
 
     /**
@@ -111,17 +100,22 @@ export class Router extends ConnectedComponent {
      *
      */
 
-    return this.updateLoadedComponent(
-      currentRoute.name,
-      componentConfig.loader,
-      'props' in componentConfig ? componentConfig.props : {}
-    );
+    return this.updateLoadedComponent(componentConfig.loader);
   }
 
-  updateLoadedComponent(name: string, Component: any, props: Record<string, any>) {
+  updateLoadedComponent(Component: any) {
+    const {
+      store: {
+        router: { currentRoute },
+      },
+    } = this.context;
+
+    const componentConfig = routesObject[currentRoute.name];
+    const props = 'props' in componentConfig ? componentConfig.props : {};
+
     this.setState({
       LoadedComponent: <Component {...props} />,
-      loadedComponentName: name,
+      loadedComponentName: currentRoute.name,
     });
   }
 

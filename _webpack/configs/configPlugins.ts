@@ -16,7 +16,7 @@ import { pluginAnalyzer } from '../plugins/pluginAnalyzer';
 import { pluginLoadable } from '../plugins/pluginLoadable';
 import { pluginDepsGraph } from '../plugins/pluginDepsGraph';
 import { pluginChangedFiles } from '../plugins/pluginChangedFiles';
-// import { pluginLodashModule } from '../plugins/pluginLodashModule';
+import { pluginLodashModule } from '../plugins/pluginLodashModule';
 import { pluginCompressionGzip } from '../plugins/pluginCompressionGzip';
 import { pluginCompressionBrotli } from '../plugins/pluginCompressionBrotli';
 import { pluginCircularDependency } from '../plugins/pluginCircularDependency';
@@ -29,7 +29,7 @@ export const configPlugins: webpack.Configuration['plugins'] = [
   pluginPreload,
   pluginExtract,
   pluginLoadable,
-  // pluginLodashModule,
+  pluginLodashModule,
   env.DEPS_GRAPH && pluginDepsGraph,
   env.CIRCULAR_CHECK && pluginCircularDependency,
   env.BUNDLE_ANALYZER && pluginAnalyzer,

@@ -8,7 +8,7 @@ import CompressionPlugin from 'compression-webpack-plugin';
 
 export const pluginCompressionGzip: webpack.WebpackPluginInstance = new CompressionPlugin({
   test: /\.(js|css)$/i,
-  filename: '[path].gz',
+  filename: '[name][ext].gz',
   algorithm: 'gzip',
   deleteOriginalAssets: false,
   compressionOptions: {

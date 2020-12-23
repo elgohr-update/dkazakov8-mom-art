@@ -32,7 +32,7 @@
       }
     },
     "build": {
-      "command": "babel-node --extensions .js,.jsx,.ts,.tsx ./_webpack/webpackBuider.ts"
+      "command": "babel-node --extensions .js,.jsx,.ts,.tsx ./_webpack/buider.ts"
     },
     "reload-browser": {
       "command": "babel-node --extensions .js,.jsx,.ts,.tsx ./server/watchServer.ts"
