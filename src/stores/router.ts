@@ -4,7 +4,7 @@ import { RouteType, routes } from 'routes';
 
 type MetaDataType = { title?: string; description?: string };
 
-export class StoreRouter {
+class StoreRouter {
   constructor() {
     makeAutoObservable(this);
   }
@@ -12,3 +12,5 @@ export class StoreRouter {
   currentRoute: RouteType<keyof typeof routes> = null;
   metaData: MetaDataType = {};
 }
+
+export const router = new StoreRouter();

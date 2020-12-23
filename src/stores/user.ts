@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx';
 
 import { authFormConfig } from 'formConfigs';
 
-export class StoreUser {
+class StoreUser {
   constructor() {
     makeAutoObservable(this);
   }
@@ -16,3 +16,5 @@ export class StoreUser {
     return Boolean(this.email);
   }
 }
+
+export const user = new StoreUser();

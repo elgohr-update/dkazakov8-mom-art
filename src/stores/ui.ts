@@ -12,7 +12,7 @@ type LightboxType = {
 
 const languagesList: ('ru' | 'en')[] = ['ru', 'en'];
 
-export class StoreUi {
+class StoreUi {
   constructor() {
     makeAutoObservable(this);
   }
@@ -54,3 +54,5 @@ export class StoreUi {
     return this.modalIsOpen && this.modals[0].isLeaving;
   }
 }
+
+export const ui = new StoreUi();

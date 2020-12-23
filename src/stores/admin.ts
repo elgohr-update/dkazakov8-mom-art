@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx';
 
 import { MessageObjectType } from 'common';
 
-export class StoreAdmin {
+class StoreAdmin {
   constructor() {
     makeAutoObservable(this);
   }
@@ -10,3 +10,5 @@ export class StoreAdmin {
   translations: { [key: string]: MessageObjectType } = {};
   form = {};
 }
+
+export const admin = new StoreAdmin();

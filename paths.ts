@@ -27,7 +27,7 @@ export const generatorConfigs: {
     triggerPath: string;
     targetFolder: string;
   }>;
-  reexport: Array<{ folderPath: string; exportDefault?: boolean }>;
+  reexport: Array<{ folderPath: string; exportDefault?: boolean; exportInnerFolder?: string }>;
   reexportAssets: Array<{ folderPath: string; exportDefault?: boolean }>;
 } = {
   validation: [
@@ -40,6 +40,7 @@ export const generatorConfigs: {
   reexport: [
     { folderPath: path.resolve(paths.source, 'formConfigs') },
     { folderPath: path.resolve(paths.source, 'const') },
+    { folderPath: path.resolve(paths.source, 'stores') },
     { folderPath: path.resolve(paths.source, 'utils') },
     { folderPath: path.resolve(paths.server, 'utils') },
     { folderPath: path.resolve(paths.source, 'api') },
@@ -47,6 +48,8 @@ export const generatorConfigs: {
     { folderPath: path.resolve(paths.source, 'actions/general') },
     { folderPath: path.resolve(paths.source, 'pages/gallery/stores') },
     { folderPath: path.resolve(paths.source, 'pages/gallery/actions') },
+    { folderPath: path.resolve(paths.source, 'pages'), exportInnerFolder: 'actions' },
+    { folderPath: path.resolve(paths.source, 'pages'), exportInnerFolder: 'stores' },
     { folderPath: path.resolve(paths.server, 'controllers') },
     { folderPath: path.resolve(paths.validators, 'api'), exportDefault: true },
   ],

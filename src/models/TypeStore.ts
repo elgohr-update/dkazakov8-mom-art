@@ -1,4 +1,5 @@
-import { StoreRoot } from 'stores/StoreRoot';
-import * as modularStores from 'pages/Gallery/stores';
+import { StoreRoot } from 'store';
+import * as staticStores from 'stores';
+import * as modularStores from 'pages/stores';
 
-export type TypeStore = StoreRoot & typeof modularStores;
+export type TypeStore = StoreRoot & typeof staticStores & typeof modularStores;

@@ -1,5 +1,5 @@
 import { actions } from 'actions';
-import * as modularActions from 'pages/Gallery/actions';
+import * as modularActions from 'pages/actions';
 import { SkipFirstArgType } from 'common';
 
 import { TypeGlobals } from './TypeGlobals';

@@ -16,7 +16,6 @@ export const onStoreInitializedClient: TypeAction = ({ store, actions }) =>
 
   Promise.resolve()
     .then(() => mergeObservableDeep(store, unescapeAllStrings(window.INITIAL_DATA)))
-    .then(() => console.js(store))
     .then(() => actions.general.setScreenSize())
     .then(() => actions.general.setScreenSize())
     .then(() => {

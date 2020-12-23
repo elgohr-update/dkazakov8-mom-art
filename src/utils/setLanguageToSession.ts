@@ -1,10 +1,10 @@
 import { errorsNames } from 'const';
 import { Express } from 'common';
-import { StoreRoot } from 'stores/StoreRoot';
+import { TypeStore } from 'models';
 
 import { createError } from './createError';
 
-export function setLanguageToSession(params: { req: Express['Request']; store: StoreRoot }) {
+export function setLanguageToSession(params: { req: Express['Request']; store: TypeStore }) {
   const { req, store } = params;
 
   /**

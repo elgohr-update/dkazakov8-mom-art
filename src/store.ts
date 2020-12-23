@@ -1,24 +1,15 @@
 import { getLn, mergeObservableDeep, unescapeAllStrings } from 'utils';
 import { SkipFirstArgType } from 'common';
-
-import { StoreUi } from './StoreUi';
-import { StoreUser } from './StoreUser';
-import { StoreAdmin } from './StoreAdmin';
-import { StoreRouter } from './StoreRouter';
+import * as staticStores from 'stores';
 
 export class StoreRoot {
   // Sometimes we need to get texts in stores or actions, so React component is not a way
   getLn: SkipFirstArgType<typeof getLn>;
 
-  // Dynamic stores are in models/TypeStore
+  constructor() {
+    // Dynamic stores are in models/TypeStore
+    Object.assign(this, staticStores);
 
-  constructor(
-    // Common stores
-    public ui = new StoreUi(),
-    public user = new StoreUser(),
-    public admin = new StoreAdmin(),
-    public router = new StoreRouter()
-  ) {
     this.getLn = getLn.bind(null, { store: this });
   }
 
@@ -31,11 +22,11 @@ export class StoreRoot {
        */
 
       if (!this[storeName]) {
+        const initialData = IS_CLIENT ? window.INITIAL_DATA[storeName] : null;
+
         this[storeName] = storeInstance;
 
-        if (IS_CLIENT && window.INITIAL_DATA[storeName]) {
-          mergeObservableDeep(this[storeName], unescapeAllStrings(window.INITIAL_DATA[storeName]));
-        }
+        if (initialData) mergeObservableDeep(this[storeName], unescapeAllStrings(initialData));
       }
     });
   };

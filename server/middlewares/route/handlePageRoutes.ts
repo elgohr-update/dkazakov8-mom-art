@@ -15,9 +15,9 @@ import {
 import { env } from 'env';
 import { paths } from 'paths';
 import { TypeStore } from 'models';
-import { StoreRoot } from 'stores/StoreRoot';
+import { StoreRoot } from 'store';
 import { errorsNames } from 'const';
-import { StoreGetters } from 'stores/StoreGetters';
+import { StoreGetters } from 'getters';
 import { createMeasure } from 'utils';
 import { actionsCreator } from 'actionsCreator';
 

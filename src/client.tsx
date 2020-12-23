@@ -5,9 +5,9 @@ import { loadableReady } from '@loadable/component';
 
 import { App } from 'components/App';
 import { TypeStore } from 'models';
-import { StoreRoot } from 'stores/StoreRoot';
+import { StoreRoot } from 'store';
 import { initAutorun } from 'autorun';
-import { StoreGetters } from 'stores/StoreGetters';
+import { StoreGetters } from 'getters';
 import { StoreContext } from 'components/StoreContext';
 import { actionsCreator } from 'actionsCreator';
 import { measureClient, isomorphPolyfills } from 'utils';

@@ -2,16 +2,16 @@ import { MouseEvent } from 'react';
 import Scrollbar from 'react-scrollbars-custom';
 
 import { gallery } from 'const';
+import { Icon } from 'components/Icon';
 import { Header } from 'components/Header';
 import { Footer } from 'components/Footer';
-import { Icon } from 'components/Icon';
 import { ConnectedComponent } from 'components/ConnectedComponent';
 
+import * as modularStores from './stores';
+import * as modularActions from './actions';
 import { GalleryItem } from './GalleryItem';
 import { messages } from './messages';
 import styles from './Gallery.scss';
-import * as modularStores from './stores';
-import * as modularActions from './actions';
 
 @ConnectedComponent.observer
 export default class Gallery extends ConnectedComponent {

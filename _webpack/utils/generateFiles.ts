@@ -186,24 +186,33 @@ class GenerateFiles {
     }
 
     return Promise.all(
-      configFiltered.map(({ folderPath, exportDefault }) => {
+      configFiltered.map(({ folderPath, exportDefault, exportInnerFolder }) => {
         const { base: folderName } = path.parse(folderPath);
 
         const childrenNames = getFilteredChildren(folderPath).names;
         const content = childrenNames.reduce((template, fileName) => {
           const { name: fileNameNoExt } = path.parse(fileName);
 
-          return exportDefault
-            ? `${template}export { default as ${fileNameNoExt} } from './${fileNameNoExt}';\n`
-            : `${template}export * from './${fileNameNoExt}';\n`;
+          const exportModel = exportDefault ? `{ default as ${fileNameNoExt} }` : `*`;
+          const exportPathModel = exportInnerFolder
+            ? `./${fileNameNoExt}/${exportInnerFolder}`
+            : `./${fileNameNoExt}`;
+
+          if (exportInnerFolder && !fs.existsSync(path.resolve(folderPath, exportPathModel)))
+            return template;
+
+          return `${template}export ${exportModel} from '${exportPathModel}';\n`;
         }, '// This file is auto-generated\n\n');
 
         return Promise.resolve()
-          .then(() => createPackageFile(folderPath))
+          .then(() => (exportInnerFolder ? Promise.resolve() : createPackageFile(folderPath)))
           .then(() =>
             saveFile({
               content,
-              filePath: path.resolve(folderPath, getReexportFileName(folderName)),
+              filePath: path.resolve(
+                folderPath,
+                exportInnerFolder ? `${exportInnerFolder}.ts` : getReexportFileName(folderName)
+              ),
               noEslint: true,
             })
           );
@@ -350,7 +359,6 @@ class GenerateFiles {
     ]).then(changedMarks => {
       const filesChanged = changedMarks.some(Boolean);
 
-      console.log('filesChanged', filesChanged);
       if (rebuildAll || filesChanged) {
         const endTime = Date.now();
 

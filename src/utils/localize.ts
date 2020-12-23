@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import { MessageObjectType } from 'common';
-import { StoreRoot } from 'stores/StoreRoot';
+import { TypeStore } from 'models';
 
 const showNoTextMessage = false;
 
@@ -59,7 +59,7 @@ function replacePlurals(values: { [key: string]: string | number }, formattedMes
 }
 
 export function getLn(
-  { store }: { store: StoreRoot },
+  { store }: { store: TypeStore },
   // type string is for IDE jumping, the real is MessageObjectType
   messageObject: string | MessageObjectType,
   values?: { [key: string]: string | number }
