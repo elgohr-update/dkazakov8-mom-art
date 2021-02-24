@@ -1,5 +1,6 @@
 import _ from 'lodash';
 
+// Webpack does not provide types for this, says just 'string'
 type Devtool =
   | 'eval'
   | 'eval-cheap-source-map'
